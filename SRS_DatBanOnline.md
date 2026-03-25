@@ -5,7 +5,7 @@
 |-----------|----------|
 | Phiên bản | 1.0 |
 | Ngày tạo | 25/03/2026 |
-| Nền tảng | React Native / Flutter |
+| Nền tảng | React Native |
 | Người dùng | Khách hàng, Admin hệ thống |
 
 ---
@@ -41,7 +41,7 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 - **Khách hàng (Customer):** Tìm kiếm nhà hàng, đặt bàn, thanh toán và đánh giá dịch vụ.
 - **Admin hệ thống:** Quản lý nhà hàng, menu, đơn đặt bàn và người dùng.
 
-Ứng dụng hoạt động trên nền tảng mobile iOS và Android, sử dụng công nghệ React Native hoặc Flutter.
+Ứng dụng hoạt động trên nền tảng mobile iOS và Android, sử dụng công nghệ React Native.
 
 ### 1.3 Định nghĩa & Từ viết tắt
 
@@ -73,10 +73,9 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 |------------|-------|
 | Nền tảng | iOS 13+ và Android 8.0+ |
 | Kết nối | Internet (WiFi / 4G/5G) |
-| Công nghệ | React Native hoặc Flutter |
-| Backend | REST API / Firebase |
+| Công nghệ | React Native |
+| Backend | MongoDB |
 | Thanh toán | VNPay / Momo / Stripe |
-| Thông báo | Firebase Cloud Messaging (FCM) |
 
 ---
 
@@ -93,7 +92,7 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 #### Luồng chính
 
 1. Người dùng mở ứng dụng → chọn "Đăng ký" hoặc "Đăng nhập"
-2. Nhập thông tin (tên, email, mật khẩu) hoặc chọn đăng nhập Google/Facebook
+2. Nhập thông tin (tên, email, mật khẩu) hoặc chọn đăng nhập bằng tài khoản mạng xã hội (Google, Facebook,...)
 3. Hệ thống xác thực thông tin người dùng
 4. Đăng nhập thành công → chuyển về màn hình chính
 
@@ -108,7 +107,7 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 | Mã | Mô tả |
 |----|-------|
 | FR-01.1 | Hệ thống cho phép đăng ký bằng email và mật khẩu |
-| FR-01.2 | Hỗ trợ đăng nhập bằng Google / Facebook (OAuth 2.0) |
+| FR-01.2 | Hỗ trợ đăng nhập bằng tài khoản mạng xã hội (Google, Facebook) (OAuth 2.0) |
 | FR-01.3 | Mật khẩu phải có ít nhất 8 ký tự, gồm chữ và số |
 | FR-01.4 | Hệ thống gửi email xác nhận sau khi đăng ký thành công |
 | FR-01.5 | Hỗ trợ chức năng quên mật khẩu qua email OTP |
@@ -168,7 +167,7 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 #### Luồng chính
 
 1. Khách hàng chọn nhà hàng → nhấn "Đặt bàn"
-2. Chọn ngày, giờ, số lượng người (người lớn, trẻ em)
+2. Chọn ngày, giờ, số lượng người
 3. Chọn khu vực / loại bàn (trong nhà, ngoài trời, phòng riêng)
 4. Nhập yêu cầu đặc biệt: dị ứng thực phẩm, dịp đặc biệt, v.v.
 5. Xác nhận thông tin → chuyển sang thanh toán hoặc gửi yêu cầu
@@ -186,7 +185,7 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 |----|-------|
 | FR-03.1 | Cho phép chọn ngày và giờ đặt bàn từ lịch/calendar |
 | FR-03.2 | Hiển thị các khung giờ còn trống / đã đầy theo thời gian thực |
-| FR-03.3 | Nhập số lượng khách (người lớn và trẻ em riêng biệt) |
+| FR-03.3 | Nhập số lượng khách |
 | FR-03.4 | Chọn loại bàn / khu vực ngồi phù hợp |
 | FR-03.5 | Nhập ghi chú / yêu cầu đặc biệt (tối đa 500 ký tự) |
 | FR-03.6 | Xem lại toàn bộ thông tin trước khi xác nhận đặt bàn |
@@ -314,43 +313,6 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 
 ---
 
-### UC-07: Thông báo đẩy (Push Notification)
-
-**Mô tả:** Hệ thống gửi thông báo đẩy đến người dùng về các sự kiện quan trọng liên quan đến đơn đặt bàn và hoạt động tài khoản.
-
-**Người dùng liên quan:** Khách hàng, Admin
-
-#### Luồng chính
-
-1. Xảy ra sự kiện (xác nhận đơn, nhắc lịch, khuyến mãi...)
-2. Server gửi push notification đến thiết bị người dùng qua FCM
-3. Thông báo hiển thị trên màn hình / notification tray
-4. Người dùng nhấn vào → chuyển đến màn hình liên quan trong app
-
-#### Luồng thay thế
-
-- Thiết bị tắt thông báo → lưu trong Notification Center của app
-- Gửi lại nếu thất bại lần đầu sau 5 phút
-
-#### Yêu cầu chức năng
-
-| Mã | Mô tả |
-|----|-------|
-| FR-07.1 | Gửi thông báo khi đơn được xác nhận hoặc từ chối |
-| FR-07.2 | Nhắc nhở trước giờ đặt bàn 1 giờ và 24 giờ |
-| FR-07.3 | Thông báo khi đơn bị Admin huỷ |
-| FR-07.4 | Thông báo khi giao dịch thanh toán thành công / thất bại |
-| FR-07.5 | Gửi thông báo khuyến mãi / ưu đãi đặc biệt |
-| FR-07.6 | Người dùng có thể bật / tắt từng loại thông báo trong cài đặt |
-| FR-07.7 | Lưu lịch sử thông báo trong ứng dụng (Notification Center) |
-| FR-07.8 | Admin gửi thông báo hàng loạt đến tất cả người dùng |
-
-> **Điều kiện tiên quyết:** Người dùng đã cấp quyền nhận thông báo cho ứng dụng.
->
-> **Điều kiện hậu:** Thông báo được gửi đến đúng người dùng trong thời gian thực.
-
----
-
 ### UC-08: Quản lý Menu nhà hàng
 
 **Mô tả:** Admin quản lý toàn bộ danh sách món ăn, danh mục, giá cả và trạng thái của menu nhà hàng.
@@ -420,5 +382,3 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 | UC-08 | Quản lý Menu nhà hàng | Admin | 🟢 Thấp hơn | UC-02 |
 
 ---
-
-*— Hết tài liệu SRS — Phiên bản 1.0 — 25/03/2026 —*
