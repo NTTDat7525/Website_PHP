@@ -75,7 +75,7 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 | Kết nối | Internet (WiFi / 4G/5G) |
 | Công nghệ | React Native |
 | Backend | MongoDB |
-| Thanh toán | VNPay / Momo / Stripe |
+| Thanh toán | VNPay / Momo |
 
 ---
 
