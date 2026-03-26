@@ -83,11 +83,21 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 
 ---
 
-### UC-01: Đăng ký / Đăng nhập
+### UC-01:Đăng nhập
 
 **Mô tả:** Khách hàng tạo tài khoản và đăng nhập vào hệ thống để sử dụng các tính năng cá nhân hóa.
+           Admin đăng nhập vào hệ thống quản lý riêng
 
 **Người dùng liên quan:** Khách hàng, Admin
+
+### Luồng nghiệp vụ (User Workflow)
+| Bước | Hành động người dùng | Phản hồi hệ thống |
+| :--- | :--- | :--- |
+| 1 | Truy cập URL `/login` | Hiển thị Form đăng nhập (Username, Password, ). |
+| 2 | Nhập thông tin và nhấn "Login" | Validate định dạng dữ liệu đầu vào . |
+| 3 | Hệ thống kiểm tra thông tin | Server băm Password, so khớp với DB. Kiểm tra trạng thái tài khoản. |
+| 4 | Xác thực thành công | Khởi tạo Session/Token, chuyển hướng về Dashboard. |
+| 5 | Xác thực thất bại | Giữ nguyên trang, hiển thị thông báo lỗi và xóa trường Password. |
 
 #### Luồng chính
 
@@ -118,13 +128,80 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 >
 > **Điều kiện hậu:** Người dùng được xác thực và có session JWT hợp lệ.
 
+### 4. Ràng buộc kỹ thuật & Bảo mật (Technical Constraints)
+Mã hóa đường truyền: Bắt buộc TLS 1.2+ (HTTPS). Hủy bỏ mọi request qua HTTP thường.
+* **Bảo mật lưu trữ**: Không lưu Plaintext. Sử dụng Argon2id (ưu tiên) hoặc Bcrypt với salt-round tối thiểu là 10.
+* **Chống Brute-force**: * Sai 5 lần/1 phút: Khóa IP trong 15 phút.
+                     Sai 10 lần liên tiếp: Khóa tài khoản, yêu cầu Reset Password qua Email.
+* **Session Management**: Token phải có thời hạn (Expired time) và được thu hồi (Revoke) ngay khi người dùng Log out.
+
+### 5. Trường hợp ngoại lệ & Xử lý lỗi (Edge Cases)
+* **Trường hợp:** Người dùng nhập Username chứa kí tự đặc biệt.  
+  * **Xử lý:** Hiển thị lỗi ngay tại field: "Username chỉ có chữ và số, không chứa kí tự đặc biệt".
+* **Trường hợp:** Tài khoản đã bị quản trị viên khóa .  
+  * **Xử lý:** Thông báo: "Tài khoản của bạn tạm thời bị đình chỉ. Vui lòng liên hệ Admin".
+* **Trường hợp:** Token CSRF hết hạn (do để trang quá lâu).  
+  * **Xử lý:** Redirect về trang login với thông báo "Phiên làm việc hết hạn, vui lòng thử lại".
+* **Trường hợp:** Mất kết nối Database).  
+  * **Xử lý:** Hiển thị lỗi 500 với thông báo thân thiện: "Hệ thống đang bận, vui lòng quay lại sau".
+
+### 6. Giao diện (UI/UX)
+* Thiết kế Responsive (hoạt động tốt trên cả Desktop và Mobile).
+* Nút "Login" hiển thị trạng thái `processing` (spinner) khi đang gửi request.
+* Hỗ trợ phím tắt: Nhấn `Enter` để gửi form.
+
 ---
+### UC-02: Đăng ký
 
-### UC-02: Tìm kiếm & Xem nhà hàng
 
-**Mô tả:** Khách hàng tìm kiếm nhà hàng theo tên, địa điểm, loại ẩm thực hoặc duyệt danh sách nhà hàng nổi bật.
+### 1. Mô tả tổng quan (Description)
+Cho phép người dùng mới tạo tài khoản để truy cập hệ thống. Chức năng này bao gồm việc thu thập thông tin cá nhân, kiểm tra tính duy nhất của username và mã hóa mật khẩu trước khi lưu trữ.
+
+### 2. Luồng nghiệp vụ (User Workflow)
+| Bước | Hành động người dùng | Phản hồi hệ thống |
+| :--- | :--- | :--- |
+| 1 | Truy cập URL /register | Hiển thị Form đăng ký (Username, Email, Password, Confirm Password). |
+| 2 | Nhập thông tin và nhấn "Sign Up" | Kiểm tra dữ liệu trống và định dạng (Client-side). |
+| 3 | Hệ thống kiểm tra trùng lặp | Check Username trong Database xem đã tồn tại chưa. |
+| 4 | Xác thực thành công | Băm (Hash) mật khẩu và tạo bản ghi người dùng mới với trạng thái Active. |
+| 5 | Xác thực thất bại | Giữ nguyên trang, hiển thị thông báo lỗi |
+
+### 3. Yêu cầu dữ liệu (Data Requirements)
+* **Username:**`string`, tối đa 30 ký tự, không chứa ký tự đặc biệt.
+* **Email:** `string`, định dạng email hợp lệ, bắt buộc.
+* **Password:** `string`, tối thiểu 8 ký tự, ẩn ký tự khi nhập, bắt buộc.
+* **Confirm Password:** `string`, phải trùng khớp hoàn toàn với trường Password.
+
+### 4. Ràng buộc kỹ thuật & Bảo mật (Technical Constraints)
+* **Mã hóa:** Mật khẩu không bao giờ được lưu dưới dạng văn bản thuần (Plaintext). Sử dụng thuật toán `Argon2` hoặc `Bcrypt`.
+
+### 5. Trường hợp ngoại lệ & Xử lý lỗi (Edge Cases)
+* **Trường hợp:** Password và Confirm Password không khớp.  
+  * **Xử lý:** Hiển thị lỗi: "Confirm Password không trùng khớp".
+* **Trường hợp:** Username đã được đăng ký trước đó.  
+  * **Xử lý:** Thông báo: "Username này đã được sử dụng.".
+* **Trường hợp:** Nhập toàn khoảng trắng vào trường Username.  
+  * **Xử lý:** Hệ thống tự động trim() hoặc báo lỗi "Tên không được để trống".
+
+### 6. Giao diện (UI/UX)
+* Thiết kế đồng bộ với trang Login (cùng tông màu, font chữ).
+* Nút "Đã có tài khoản? Đăng nhập ngay" đặt ở dưới cùng để điều hướng nhanh.
+* Hỗ trợ phím tắt: Nhấn `Enter` để gửi form.
+
+
+### UC-03: Tìm kiếm & Xem nhà hàng
+
+**Mô tả:** Cung cấp công cụ cho phép người dùng tìm kiếm nhà hàng dựa trên từ khóa (tên, món ăn) và bộ lọc (vị trí, đánh giá, khoảng giá). Người dùng có thể xem danh sách kết quả và nhấn vào để xem chi tiết thông tin của một nhà hàng cụ thể.
 
 **Người dùng liên quan:** Khách hàng
+
+### 2. Luồng nghiệp vụ (User Workflow)
+| Bước | Hành động người dùng | Phản hồi hệ thống |
+| :--- | :--- | :--- |
+| 1 | Truy cập trang tìm kiếm | Hiển thị thanh tìm kiếm và danh sách bàn mặc định. |
+| 2 | Nhập từ khóa và chọn các bộ lọc | Hệ thống tự động hoặc đợi nhấn "Search" để gửi yêu cầu lọc dữ liệu. |
+| 3 | Xem danh sách kết quả | Hiển thị danh sách các "Card" bàn (Hình ảnh, Tên, Khoảng giá). |
+| 4 | Nhấn vào một nhà hàng cụ thể | Hệ thống chuyển hướng sang trang khác để xem chi tiết. |
 
 #### Luồng chính
 
@@ -152,6 +229,43 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 | FR-02.7 | Tìm kiếm theo vị trí hiện tại (GPS / Location Services) |
 | FR-02.8 | Sắp xếp kết quả theo: gần nhất, đánh giá cao nhất, mới nhất |
 
+### 3. Yêu cầu dữ liệu (Data Requirements)
+#### 3.1. Dữ liệu đầu vào (Input Fields)
+* **Email:** `string`, định dạng email hợp lệ, bắt buộc.
+* **Password:** `string`, tối thiểu 8 ký tự, ẩn ký tự khi nhập, bắt buộc.
+* **Remember Me:** `boolean`, tùy chọn (mặc định false).
+
+
+* **Keyword**: `string`, tìm theo tên nhà hàng hoặc loại món ăn.
+* **Category**: `dropdown/tag`, lọc theo loại (Đồ Á Á, Đồ Âu, Cafe, v.v.).
+* **Rating**: `number`, lọc nhà hàng có số sao từ x trở lên.
+* **Price Range**: `enum`, lọc theo mức giá ($, $$, $$$).
+
+#### 3.2. Dữ liệu lưu trữ (Database - Bảng `users`)
+* `email`: unique, index.
+* `password`: hashed string.
+* `last_login_at`: timestamp (để theo dõi truy cập).
+* `login_ip`: string (phục vụ Audit Log).
+
+* `name`: Tên bàn.
+* `images`: Mảng các đường dẫn ảnh (URL).
+* `average_rating`: Điểm đánh giá trung bình.
+* `opening_hours`: Giờ hoạt động (ví dụ: 08:00 - 22:00).
+* `menu_items`: Danh sách bàn đó.
+
+### 4. Ràng buộc kỹ thuật & Bảo mật (Technical Constraints)
+* **Phân trang (Pagination)**: Nếu kết quả > 12 bàn, phải thực hiện phân trang (Load more hoặc nút chuyển trang) để tránh quá tải trình duyệt.
+* **Hình ảnh**: Ảnh nhà hàng nên được tối ưu dung lượng (Lazy loading) để trang tải nhanh hơn.
+
+### 5. Trường hợp ngoại lệ & Xử lý lỗi (Edge Cases)
+* **Trường hợp:** Không tìm thấy kết quả nào phù hợp.  
+  * **Xử lý:** Hiển thị thông báo "Rất tiếc, không tìm thấy nhà hàng nào phù hợp với yêu cầu của bạn".
+* **Trường hợp:** Bàn đã được đặt.  
+  * **Xử lý:** Hiển thị nhãn "Đã đặt" màu xám trên Card bàn để người dùng biết.
+
+### 6. Giao diện (UI/UX)
+* Search Bar: Đặt ở vị trí nổi bật (Header hoặc giữa Banner).
+
 > **Điều kiện tiên quyết:** Có kết nối internet. Dữ liệu nhà hàng đã được Admin cập nhật.
 >
 > **Điều kiện hậu:** Hiển thị đúng thông tin nhà hàng được chọn.
@@ -163,6 +277,14 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 **Mô tả:** Khách hàng thực hiện đặt bàn tại nhà hàng đã chọn, chỉ định ngày giờ, số lượng khách và yêu cầu đặc biệt.
 
 **Người dùng liên quan:** Khách hàng
+
+### 2. Luồng nghiệp vụ (User Workflow)
+| Bước | Hành động người dùng | Phản hồi hệ thống |
+| :--- | :--- | :--- |
+| 1 |Chọn mục "Đặt bàn" | Hiển thị lịch, danh sách khung giờ . |
+| 2 | Chọn ngày, giờ và số lượng khách|	Kiểm tra tính khả dụng của bàn trong Database. |
+| 3 | Chọn bàn cụ thể (tùy chọn) | Đánh dấu bàn đã chọn, tính toán tiền cọc (nếu có). |
+| 4 | Nhập thông tin liên hệ và "Xác nhận"| Gửi yêu cầu đặt bàn và hiển thị thông báo "Đang chờ xử lý". |
 
 #### Luồng chính
 
@@ -192,6 +314,26 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 | FR-03.7 | Gửi xác nhận đặt bàn qua email / SMS / thông báo đẩy |
 | FR-03.8 | Khách hàng có thể xem lịch sử đặt bàn của mình |
 
+
+
+### 3. Yêu cầu dữ liệu (Data Requirements)
+#### 3.1. Dữ liệu đầu vào (Input Fields)
+* Ngày đặt: date, không được là ngày trong quá khứ.
+* Giờ đặt: time, nằm trong khung giờ hoạt động của nhà hàng.
+* Số lượng khách: integer, tối thiểu 1.
+* Thông tin liên hệ: Tên, Số điện thoại (định dạng số VN).
+
+#### 3.2. Dữ liệu lưu trữ (Database - Bảng `users`)
+* customer_id: khóa ngoại từ bảng users.
+* table_id: ID bàn được chọn.
+* reservation_time: datetime.
+* status: pending, confirmed, cancelled, completed.
+
+4. Ràng buộc kỹ thuật & Bảo mật (Chung cho các chức năng)
+* Xác thực: Chỉ người dùng đã đăng nhập mới được Đặt bàn.
+* Đồng bộ hóa: Sử dụng Websocket để cập nhật trạng thái bàn trống theo thời gian thực.
+
+
 > **Điều kiện tiên quyết:** Khách hàng đã đăng nhập. Nhà hàng còn chỗ trống trong khung giờ được chọn.
 >
 > **Điều kiện hậu:** Đơn đặt bàn được tạo với trạng thái "Chờ xác nhận".
@@ -203,6 +345,14 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 **Mô tả:** Admin xem và xử lý các đơn đặt bàn; Khách hàng có thể huỷ đơn của mình theo chính sách quy định.
 
 **Người dùng liên quan:** Admin, Khách hàng
+
+### 2. Luồng nghiệp vụ (User Workflow)
+| Bước | Hành động người dùng | Phản hồi hệ thống |
+| :--- | :--- | :--- |
+| 1 | Truy cập Dashboard "Quản lý đặt bàn"| Hiển thị danh sách các yêu cầu đặt bàn theo dòng thời gian. |
+| 2 | Sử dụng bộ lọc (Ngày, Trạng thái)|Cập nhật danh sách hiển thị tương ứng. |
+| 3 | Nhấn "Phê duyệt" hoặc "Hủy" | Cập nhật trạng thái trong DB, giải phóng hoặc giữ chỗ bàn. |
+| 4 | Thay đổi vị trí bàn cho khách| Cập nhật lại số bàn trong chi tiết đơn đặt.|
 
 #### Luồng chính
 
@@ -229,6 +379,12 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 | FR-04.6 | Lưu lịch sử toàn bộ trạng thái đơn để truy vết |
 | FR-04.7 | Admin xem thống kê đơn theo ngày / tuần / tháng |
 
+### 3. Yêu cầu dữ liệu (Data Requirements)
+#### 3.1. Dữ liệu đầu vào (Input Fields)
+* Trạng thái cập nhật: string (duyệt/hủy).
+* Ghi chú: text (lý do hủy hoặc yêu cầu đặc biệt).
+
+
 > **Điều kiện tiên quyết:** Đơn đặt bàn đã được tạo với trạng thái "Chờ xác nhận".
 >
 > **Điều kiện hậu:** Trạng thái đơn được cập nhật và khách hàng được thông báo.
@@ -240,6 +396,15 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 **Mô tả:** Khách hàng thanh toán đặt cọc hoặc toàn bộ hóa đơn trực tuyến thông qua cổng thanh toán tích hợp.
 
 **Người dùng liên quan:** Khách hàng
+
+### 2. Luồng nghiệp vụ (User Workflow)
+| Bước | Hành động người dùng | Phản hồi hệ thống |
+| :--- | :--- | :--- |
+| 1 | Chọn "Thanh toán" tại đơn hàng/đặt bàn | Chọn "Thanh toán" tại đơn hàng/đặt bàn |
+| 2 | Chọn phương thức và nhấn "Xác nhận"| Gọi API cổng thanh toán, chuyển hướng người dùng đến trang thanh toán. |
+| 3 | Thực hiện thanh toán tại cổng trung gian | Trả về kết quả (Success/Fail) qua URL Redirect/IPN. |
+| 4 | Hệ thống nhận kết quả | Cập nhật trạng thái hóa đơn là "Đã thanh toán" và hiển thị hóa đơn điện tử. |
+
 
 #### Luồng chính
 
@@ -272,6 +437,10 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 >
 > **Điều kiện hậu:** Giao dịch được ghi nhận, trạng thái đơn cập nhật sang "Đã thanh toán".
 
+### 3. Yêu cầu dữ liệu (Data Requirements)
+#### 3.1. Dữ liệu đầu vào (Input Fields)
+* Phương thức thanh toán: string (Credit Card, E-wallet).
+* Mã giao dịch: Sinh tự động bởi hệ thống.
 ---
 
 ### UC-06: Đánh giá & Bình luận
@@ -279,6 +448,14 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 **Mô tả:** Sau khi sử dụng dịch vụ, khách hàng có thể đánh giá và để lại bình luận về nhà hàng.
 
 **Người dùng liên quan:** Khách hàng, Admin
+
+### 2. Luồng nghiệp vụ (User Workflow)
+| Bước | Hành động người dùng | Phản hồi hệ thống |
+| :--- | :--- | :--- |
+| 1 | Truy cập lịch sử đơn hàng đã hoàn tất | Hiển thị nút "Đánh giá".|
+| 2 | Chọn số sao (1-5) và nhập nội dung| Kiểm tra độ dài nội dung và tính hợp lệ. |
+| 3 | Tải ảnh minh họa (tùy chọn) | Lưu trữ ảnh.|
+| 4 | Nhấn "Gửi đánh giá" | Hiển thị đánh giá công khai trên trang chi tiết nhà hàng/món ăn. |
 
 #### Luồng chính
 
@@ -311,6 +488,17 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 >
 > **Điều kiện hậu:** Đánh giá được lưu và hiển thị công khai, điểm TB nhà hàng được cập nhật.
 
+### 3. Yêu cầu dữ liệu (Data Requirements)
+#### 3.1. Dữ liệu đầu vào (Input Fields)
+* Rating: integer (1 đến 5).
+* Comment: string, tối đa 500 ký tự.
+* Images: file, định dạng .jpg, .png, tối đa 3 ảnh.
+
+#### 3.2. Dữ liệu lưu trữ (Database - Bảng `users`)
+* rating: tinyint.
+* content: text.
+* is_verified_purchase: boolean (chỉ cho phép khách đã dùng bữa đánh giá).
+
 ---
 
 ### UC-08: Quản lý Menu nhà hàng
@@ -318,6 +506,14 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 **Mô tả:** Admin quản lý toàn bộ danh sách món ăn, danh mục, giá cả và trạng thái của menu nhà hàng.
 
 **Người dùng liên quan:** Admin
+
+### 2. Luồng nghiệp vụ (User Workflow)
+| Bước | Hành động người dùng | Phản hồi hệ thống |
+| :--- | :--- | :--- |
+| 1 | Truy cập "Quản lý Menu" | Danh sách món ăn phân theo danh mục (Khai vị, Món chính...). |
+| 2 | Nhấn "Thêm món mới" | Hiển thị Form nhập liệu (Tên, Giá, Mô tả, Ảnh). |
+| 3 | Chỉnh sửa thông tin món ăn/Giá | Cập nhật tức thời giá trị mới lên giao diện khách hàng. |
+| 4 | Gạt switch "Hết hàng" | Món ăn sẽ hiển thị nhãn "Out of stock" và khóa nút đặt món. |
 
 #### Luồng chính
 
@@ -348,6 +544,17 @@ Tài liệu này mô tả các yêu cầu phần mềm (SRS) cho ứng dụng di
 > **Điều kiện tiên quyết:** Admin đã đăng nhập với quyền quản lý nhà hàng.
 >
 > **Điều kiện hậu:** Menu được cập nhật và hiển thị chính xác trên app khách hàng.
+
+### 3. Yêu cầu dữ liệu (Data Requirements)
+#### 3.1. Dữ liệu đầu vào (Input Fields)
+* Tên món: string, bắt buộc.
+* Giá: decimal, không âm.
+* Danh mục: dropdown (chọn từ danh sách có sẵn).
+
+#### 3.2. Dữ liệu lưu trữ (Database - Bảng `users`)
+* name, description, price.
+* image_url: đường dẫn ảnh.
+* is_available: boolean.
 
 ---
 
