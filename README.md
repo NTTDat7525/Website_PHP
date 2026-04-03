@@ -21,4 +21,4 @@
 8. Chức năng thống kê doanh thu [Click here](./DOCS/SRS_ThongKeDoanhThu.md)
 
 # Báo cáo tiến độ
-- Báo cáo tiến độ 3/4/2026 [Click here](./REPORT/REPORT_20260403.md)
+- Báo cáo tiến độ 3/4/2026 [Click here](./REPORTS/REPORT_20260403.md)
