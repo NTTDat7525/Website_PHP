@@ -8,23 +8,16 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Sign up
-    public function signup(Request $request)
+    public function register(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:100',
-            'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|min:8',
-            'phone' => 'nullable|string|max:20'
+            'username' => 'required|string',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|min:6',
         ]);
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'phone' => $validated['phone'] ?? null,
-            'role' => 'customer'
-        ]);
+        $validated['password'] = bcrypt($validated['password']);
+        $user = User::create($validated);
 
         return response()->json([
             'message' => 'Đăng ký thành công',
@@ -32,18 +25,17 @@ class AuthController extends Controller
         ], 201);
     }
 
-    // Log in
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|string|email',
+            'username' => 'required|string',
             'password' => 'required|string'
         ]);
 
-        $user = User::where('email', $credentials['email'])->first();
+        $user = User::where('username', $credentials['username'])->first();
 
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return response()->json(['message' => 'Email hoặc mật khẩu không đúng'], 401);
+        if (!$user || !bcrypt($credentials['password'], $user->password)) {
+            return response()->json(['message' => 'Tên người dùng hoặc mật khẩu không đúng'], 401);
         }
 
         return response()->json([
@@ -53,7 +45,6 @@ class AuthController extends Controller
         ], 200);
     }
 
-    // Log out
     public function logout(Request $request)
     {
         return response()->json(['message' => 'Đăng xuất thành công'], 200);

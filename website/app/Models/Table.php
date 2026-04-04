@@ -3,14 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Table extends Model
 {
-    protected $table = 'tables';
-    protected $fillable = ['type', 'capacity', 'status'];
+    use HasFactory;
+
+    protected $fillable = ['name', 'capacity', 'status'];
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 
     public function orders()
     {
-        return $this->hasMany(Order::class, 'table_id');
+        return $this->hasMany(Order::class);
     }
 }

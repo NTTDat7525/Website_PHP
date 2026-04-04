@@ -1,69 +1,70 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\FoodController;
+use App\Http\Controllers\BookingController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+// xác thực người dùng
+Route::prefix('auth')->group(function (){
+    Route::post('/signup', [AuthController::class, 'signup']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
+//============ PUBLIC ROUTES =============
 
-// ============= PUBLIC ROUTES (No authentication required) =============
-
-// Authentication Routes
-Route::post('/auth/signup', [AuthController::class, 'signup']);
-Route::post('/auth/login', [AuthController::class, 'login']);
-Route::post('/auth/logout', [AuthController::class, 'logout']);
-
-// Browse Tables (Trang chủ, Tìm kiếm)
-Route::get('/tables', [TableController::class, 'list']);
+// trang chủ, tìm kiếm
+Route::get('/tables', [TableController::class, 'index']);
 Route::get('/tables/search', [TableController::class, 'search']);
 Route::get('/tables/{id}', [TableController::class, 'show']);
 
+// danh sách món ăn
+Route::get('/foods', [FoodController::class, 'index']);
+Route::get('/foods/{id}', [FoodController::class, 'show']);
 
-// ============= CUSTOMER ROUTES (User authentication required) =============
+
+// ============= CUSTOMER ROUTES=============
 
 Route::middleware('user')->group(function () {
-    // User Profile (Quản lý tài khoản - Cập nhật thông tin cá nhân)
+    // quản lý tài khoản
     Route::get('/user/profile', [UserController::class, 'getProfile']);
     Route::put('/user/profile', [UserController::class, 'updateProfile']);
     Route::put('/user/change-password', [UserController::class, 'changePassword']);
 
-    // Orders (Xem lịch sử & Đặt bàn)
-    Route::post('/orders', [OrderController::class, 'create']);                    // Đặt bàn
-    Route::get('/orders/{userId}', [OrderController::class, 'getUserOrders']);     // Xem lịch sử
-    Route::put('/orders/{id}/cancel', [OrderController::class, 'cancel']);          // Hủy đơn
+    // đặt bàn
+    Route::post('/bookings', [BookingController::class, 'store']);
+    Route::get('/bookings/{userId}', [BookingController::class, 'getUserBookings']);
+    Route::put('/bookings/{id}/cancel', [BookingController::class, 'cancel']);
+
+    // đơn hàng
+    Route::post('/orders', [OrderController::class, 'store']);
+    Route::get('/orders/{userId}', [OrderController::class, 'getUserOrders']);
+    Route::put('/orders/{id}/cancel', [OrderController::class, 'cancel']);
 });
 
 
-// ============= ADMIN ROUTES (Admin authentication required) =============
+// ============= ADMIN ROUTES =============
 
-Route::middleware('admin')->group(function () {
-    // Revenue Management (Xem doanh thu)
-    Route::get('/admin/revenue', [AdminController::class, 'viewRevenue']);
+Route::middleware('admin')->prefix('admin')->group(function () {
+    // xem doanh thu
+    Route::get('/revenue', [OrderController::class, 'revenue']);
 
-    // User Management (Quản lý người dùng)
-    Route::get('/admin/users', [AdminController::class, 'listUsers']);
-    Route::get('/admin/users/{id}', [AdminController::class, 'showUser']);
+    // quản lý người dùng
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
-    // Table Management (Quản lý bàn)
-    Route::post('/admin/tables', [AdminController::class, 'addTable']);             // Thêm bàn
-    Route::put('/admin/tables/{id}', [AdminController::class, 'updateTable']);      // Cập nhật bàn
-    Route::delete('/admin/tables/{id}', [AdminController::class, 'deleteTable']);   // Xóa bàn
+    // quản lý bàn
+    Route::post('/tables', [TableController::class, 'store']);
+    Route::put('/tables/{id}', [TableController::class, 'update']);
+    Route::delete('/tables/{id}', [TableController::class, 'destroy']);
 
-    // Order Management (Quản lý đơn)
-    Route::get('/admin/orders', [AdminController::class, 'listOrders']);            // Danh sách đơn
-    Route::get('/admin/orders/{id}', [AdminController::class, 'showOrder']);        // Chi tiết đơn
-    Route::put('/admin/orders/{id}', [AdminController::class, 'updateOrderStatus']); // Cập nhật trạng thái đơn
+    // quản lý đơn
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::get('/orders/{id}', [OrderController::class, 'show']);
+    Route::put('/orders/{id}', [OrderController::class, 'update']);
+    Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
 });

@@ -8,15 +8,18 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    // Get user profile
-    public function getProfile(Request $request)
+//lấy tất cả user
+    public function index()
     {
-        $userId = $request->input('user_id');
-        $user = User::find($userId);
-
-        if (!$user) {
-            return response()->json(['message' => 'Người dùng không tồn tại'], 404);
-        }
+        return response()->json([
+            'data' => User::all(), 
+            'message' => 'API người dùng hoạt động'
+            ], 200);
+    }
+//lấy thông tin cá nhân 1 user
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
 
         return response()->json([
             'message' => 'Lấy thông tin cá nhân thành công',
@@ -24,7 +27,6 @@ class UserController extends Controller
         ], 200);
     }
 
-    // Update user profile
     public function updateProfile(Request $request)
     {
         $userId = $request->input('user_id');
@@ -35,7 +37,6 @@ class UserController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => 'nullable|string|max:100',
             'phone' => 'nullable|string|max:20'
         ]);
 
@@ -47,7 +48,6 @@ class UserController extends Controller
         ], 200);
     }
 
-    // Change password
     public function changePassword(Request $request)
     {
         $userId = $request->input('user_id');
@@ -62,12 +62,19 @@ class UserController extends Controller
             'new_password' => 'required|string|min:8|different:current_password'
         ]);
 
-        if (!Hash::check($validated['current_password'], $user->password)) {
+        if (!bcrypt($validated['current_password'], $user->password)) {
             return response()->json(['message' => 'Mật khẩu hiện tại không đúng'], 401);
         }
 
-        $user->update(['password' => Hash::make($validated['new_password'])]);
+        $user->update(['password' => bcrypt($validated['new_password'])]);
 
         return response()->json(['message' => 'Thay đổi mật khẩu thành công'], 200);
+    }
+
+    public function destroy($id)
+    {
+        User::destroy($id);
+
+        return response()->json(['message' => 'Xóa người dùng thành công'], 200);
     }
 }

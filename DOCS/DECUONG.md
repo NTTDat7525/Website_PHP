@@ -127,6 +127,8 @@ Việc áp dụng mô hình MVC giúp:
 | type | VARCHAR(50) | Loại |
 | capacity | INT | Sức chứa |
 | status | ENUM | available / reserved |
+| created_at| TIMESTAMP | thời điểm tạo |
+| updated_at | TIMESTAMP | Thời điểm cập nhật |
 
 ---
 
@@ -140,6 +142,8 @@ Việc áp dụng mô hình MVC giúp:
 | time | DATETIME | Thời gian |
 | status | ENUM | pending / confirmed / completed |
 | total_price | DECIMAL | Tổng tiền |
+| created_at| TIMESTAMP | thời điểm tạo |
+| updated_at | TIMESTAMP | Thời điểm cập nhật |
 
 ---
 

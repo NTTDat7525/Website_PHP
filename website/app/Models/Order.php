@@ -1,26 +1,32 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
-    protected $table = 'orders';
-    protected $fillable = ['user_id', 'table_id', 'time', 'status', 'total_price'];
+    use HasFactory;
 
-    protected $casts = [
-        'time' => 'datetime',
-        'total_price' => 'decimal:2',
-    ];
+    protected $fillable = ['booking_id', 'table_id', 'user_id', 'status'];
+
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
+
+    public function table()
+    {
+        return $this->belongsTo(Table::class);
+    }
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function table()
+    public function items()
     {
-        return $this->belongsTo(Table::class, 'table_id');
+        return $this->hasMany(OrderItem::class);
     }
 }

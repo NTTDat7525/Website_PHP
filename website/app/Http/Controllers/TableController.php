@@ -7,54 +7,80 @@ use Illuminate\Http\Request;
 
 class TableController extends Controller
 {
-    // Tìm kiếm bàn (Search tables)
-    public function search(Request $request)
-    {
-        $capacity = $request->input('capacity');
-        $type = $request->input('type');
-        $status = $request->input('status', 'available');
-
-        $query = Table::where('status', $status);
-
-        if ($capacity) {
-            $query->where('capacity', '>=', $capacity);
-        }
-
-        if ($type) {
-            $query->where('type', $type);
-        }
-
-        $tables = $query->get();
-
-        return response()->json([
-            'message' => 'Tìm kiếm thành công',
-            'data' => $tables
-        ], 200);
-    }
-
-    // Danh sách tất cả bàn (List all tables)
-    public function list()
+    // Lấy danh sách tất cả bàn
+    public function index()
     {
         $tables = Table::all();
-
-        return response()->json([
-            'message' => 'Lấy danh sách bàn thành công',
-            'data' => $tables
-        ], 200);
+        return response()->json($tables, 200);
     }
 
-    // Chi tiết bàn
+    // Lấy chi tiết một bàn theo ID
     public function show($id)
     {
-        $table = Table::find($id);
+        $table = Table::findOrFail($id);
+        return response()->json($table, 200);
+    }
 
-        if (!$table) {
-            return response()->json(['message' => 'Bàn không tồn tại'], 404);
+    // Thêm bàn mới
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|unique:tables',
+            'capacity' => 'required|integer|min:1',
+            'status' => 'in:available,reserved,occupied'
+        ]);
+
+        $table = Table::create($validated);
+        return response()->json($table, 201);
+    }
+
+    // Cập nhật thông tin bàn
+    public function update(Request $request, $id)
+    {
+        $table = Table::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'sometimes|string|unique:tables,name,' . $id,
+            'capacity' => 'sometimes|integer|min:1',
+            'status' => 'sometimes|in:available,reserved,occupied'
+        ]);
+
+        $table->update($validated);
+        return response()->json($table, 200);
+    }
+
+    // Xóa bàn
+    public function destroy($id)
+    {
+        $table = Table::findOrFail($id);
+
+        // Chỉ cho phép xóa nếu bàn đang trống
+        if ($table->status !== 'available') {
+            return response()->json(['error' => 'Bàn đang được sử dụng, không thể xóa'], 400);
         }
 
-        return response()->json([
-            'message' => 'Lấy thông tin bàn thành công',
-            'data' => $table
-        ], 200);
+        $table->delete();
+        return response()->json(['message' => 'Xóa bàn thành công'], 200);
+    }
+
+    // Đặt trạng thái bàn thành "occupied"
+    public function occupy($id)
+    {
+        $table = Table::findOrFail($id);
+
+        if ($table->status !== 'reserved') {
+            return response()->json(['error' => 'Bàn phải được đặt trước khi chuyển sang trạng thái đang sử dụng'], 400);
+        }
+
+        $table->update(['status' => 'occupied']);
+        return response()->json(['message' => 'Bàn đang được sử dụng'], 200);
+    }
+
+    // Giải phóng bàn (trở lại trạng thái available)
+    public function release($id)
+    {
+        $table = Table::findOrFail($id);
+        $table->update(['status' => 'available']);
+        return response()->json(['message' => 'Bàn đã trống'], 200);
     }
 }
