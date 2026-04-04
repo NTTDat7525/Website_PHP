@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('sessions', function (Blueprint $table) {
             $table->id()->primary();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('token')->unique();
-            $table->dateTime('start_time');
-            $table->dateTime('end_time')->nullable();
-            $table->timestamps();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->text('payload');
+            $table->integer('last_activity')->index();
         });
     }
 
