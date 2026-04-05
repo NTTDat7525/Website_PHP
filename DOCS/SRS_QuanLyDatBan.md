@@ -15,6 +15,7 @@ Chức năng này giúp người dùng linh hoạt điều chỉnh kế hoạch,
 
 ### 2. Luồng nghiệp vụ (User Workflow)
 * Hủy lịch đặt bàn
+  
 | Bước | Hành động người dùng        | Phản hồi hệ thống               |
 | :--- | :-------------------------- | :------------------------------ |
 | 1    | Truy cập `/my-reservations` | Hiển thị danh sách đơn          |
@@ -24,6 +25,7 @@ Chức năng này giúp người dùng linh hoạt điều chỉnh kế hoạch,
 | 5    | Thành công                  | Cập nhật trạng thái = Cancelled |
 
 * Thay đổi thông tin đơn đặt
+  
 | Bước | Hành động người dùng                | Phản hồi hệ thống         |
 | :--- | :---------------------------------- | :------------------------ |
 | 1    | Chọn đơn cần chỉnh sửa              | Hiển thị thông tin        |
