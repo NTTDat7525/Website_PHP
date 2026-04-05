@@ -12,6 +12,7 @@ Chức năng Xem lịch sử đặt bàn cho phép khách hàng (Customer) xem l
 Người dùng có thể theo dõi trạng thái đơn, xem chi tiết từng lần đặt bàn và quản lý lịch sử sử dụng dịch vụ. Chức năng này giúp nâng cao trải nghiệm người dùng và hỗ trợ kiểm tra thông tin khi cần thiết.
 ### 2. Luồng nghiệp vụ (User Workflow)
 * Xem danh sách lịch sử đặt bàn
+
 | Bước | Hành động người dùng        | Phản hồi hệ thống                       |
 | :--- | :-------------------------- | :-------------------------------------- |
 | 1    | Truy cập `/my-reservations` | Hiển thị danh sách đơn                  |
@@ -19,6 +20,7 @@ Người dùng có thể theo dõi trạng thái đơn, xem chi tiết từng l�
 | 3    | Cuộn trang / phân trang     | Tải thêm dữ liệu                        |
 
 * Xem chi tiết đơn đặt bàn
+
 | Bước | Hành động người dùng                                 | Phản hồi hệ thống       |
 | :--- | :--------------------------------------------------- | :---------------------- |
 | 1    | Nhấn vào một đơn                                     | Hiển thị chi tiết       |
