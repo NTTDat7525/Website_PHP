@@ -5,39 +5,61 @@
 | Mã UC             | UC-07 |
 | Tên chức năng     | Quản lý đơn |
 | Người dùng liên quan | Admin |
-| Ưu tiên           | 🔴 Cao |
 
----
 
-## Mô tả
+### 1. Mô tả tổng quan (Description)
+Chức năng Quản lý đơn đặt bàn cho phép Admin theo dõi, kiểm tra và cập nhật trạng thái của các đơn đặt bàn trong hệ thống.
 
-Cho phép Admin theo dõi và cập nhật trạng thái đơn đặt.
+Hệ thống hỗ trợ quản lý toàn bộ vòng đời của một đơn đặt bàn từ khi được tạo đến khi hoàn tất hoặc bị hủy. Điều này giúp nhà hàng kiểm soát tình trạng bàn, tối ưu vận hành và nâng cao chất lượng phục vụ khách hàng.
 
----
+### 2. Luồng nghiệp vụ (User Workflow)
+* Xem chi tiết đơn
+| Bước | Hành động Admin                                      | Phản hồi hệ thống           |
+| :--- | :--------------------------------------------------- | :-------------------------- |
+| 1    | Nhấn vào đơn                                         | Hiển thị thông tin chi tiết |
+| 2    | Xem thông tin (khách hàng, thời gian, số người, bàn) | Hiển thị đầy đủ dữ liệu     |
 
-## Luồng chính
+* Cập nhật trạng thái đơn
+| Bước | Hành động Admin                                       | Phản hồi hệ thống                        |
+| :--- | :---------------------------------------------------- | :--------------------------------------- |
+| 1    | Chọn trạng thái mới (Confirm / Completed / Cancelled) | Validate trạng thái hợp lệ               |
+| 2    | Nhấn "Update"                                         | Gửi request cập nhật                     |
+| 3    | Thành công                                            | Lưu trạng thái mới và hiển thị thông báo |
 
-1. Admin xem danh sách đơn.
-2. Chọn đơn cần xử lý.
-3. Cập nhật trạng thái.
 
----
+### 3. Yêu cầu dữ liệu (Data Requirements)
+#### 3.1. Dữ liệu đầu vào (Input Fields)
+* **Reservation ID**: int, bắt buộc
+* **Status**: enum
+* Pending Chờ xác nhận
+* Confirmed Đã xác nhận
+* Completed Đã hoàn thành
+* Cancelled Đã hủy
 
-## Luồng thay thế
+#### 3.2. Dữ liệu lưu trữ (Database - Bảng `users`)
+* id: primary key
+* table_id: liên kết bàn
+* reservation_time: datetime
+* number_of_guests: int
+* status: enum
+* note: string (tùy chọn)
+* created_at: timestamp
+* updated_at: timestamp
 
-- Trạng thái không hợp lệ → báo lỗi.
+### 4. Ràng buộc kỹ thuật & Bảo mật (Technical Constraints)
+* **Phân quyền:** Chỉ Admin mới được truy cập chức năng này
+* **Xác thực:** Bắt buộc đăng nhập trước khi truy cập.
+* **Data Integrity:** Không cho phép cập nhật trạng thái không hợp lệ (ví dụ: Completed → Pending).
+* **Logging:** Lưu log thay đổi trạng thái (Admin ID, thời gian, trạng thái cũ → mới).
 
----
+### 5. Trường hợp ngoại lệ & Xử lý lỗi (Edge Cases)
+* **Trường hợp:** Đơn không tồn tại.  
+  * **Xử lý:** Hiển thị: "Đơn đặt bàn không tồn tại".
+* **Trường hợp:** Trạng thái không hợp lệ.  
+  * **Xử lý:** Hiển thị: "Không thể cập nhật trạng thái này".
+* **Trường hợp:** Mất kết nối server  
+  * **Xử lý:** Hiển thị: "Không thể kết nối đến hệ thống".
 
-## Yêu cầu chức năng
-
-| Mã     | Mô tả |
-|--------|-------|
-| FR-07.1 | Xem danh sách đơn |
-| FR-07.2 | Cập nhật trạng thái |
-| FR-07.3 | Hiển thị chi tiết |
-
----
-
-> **Điều kiện tiên quyết:** Admin đăng nhập  
-> **Điều kiện hậu:** Trạng thái đơn được cập nhật
+### 6. Giao diện (UI/UX)
+* Popup xác nhận khi thay đổi trạng thái
+* Hiển thị thông báo (toast) khi cập nhật thành công/thất bại
