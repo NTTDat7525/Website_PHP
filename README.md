@@ -23,3 +23,4 @@
 # Báo cáo tiến độ
 - Báo cáo tiến độ 3/4/2026 [Click here](./REPORTS/REPORT_20260403.md)
 - Báo cáo tiến độ 4/4/2026 [Click here](./REPORTS/REPORT_20260404.md)
+- Báo cáo tiến độ 5/4/2026 [Click here](./REPORTS/REPORT_20260405.md)
