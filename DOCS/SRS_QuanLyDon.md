@@ -14,12 +14,14 @@ Hệ thống hỗ trợ quản lý toàn bộ vòng đời của một đơn đ�
 
 ### 2. Luồng nghiệp vụ (User Workflow)
 * Xem chi tiết đơn
+
 | Bước | Hành động Admin                                      | Phản hồi hệ thống           |
 | :--- | :--------------------------------------------------- | :-------------------------- |
 | 1    | Nhấn vào đơn                                         | Hiển thị thông tin chi tiết |
 | 2    | Xem thông tin (khách hàng, thời gian, số người, bàn) | Hiển thị đầy đủ dữ liệu     |
 
 * Cập nhật trạng thái đơn
+
 | Bước | Hành động Admin                                       | Phản hồi hệ thống                        |
 | :--- | :---------------------------------------------------- | :--------------------------------------- |
 | 1    | Chọn trạng thái mới (Confirm / Completed / Cancelled) | Validate trạng thái hợp lệ               |
