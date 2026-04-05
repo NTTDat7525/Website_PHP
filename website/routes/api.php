@@ -10,7 +10,7 @@ use App\Http\Controllers\BookingController;
 
 // xác thực người dùng
 Route::prefix('auth')->group(function (){
-    Route::post('/signup', [AuthController::class, 'signup']);
+    Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });

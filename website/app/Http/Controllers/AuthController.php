@@ -8,6 +8,18 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
+    public function showRegisterForm()
+    {
+        return view('auth.register');
+    }
+
+
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -34,7 +46,7 @@ class AuthController extends Controller
 
         $user = User::where('username', $credentials['username'])->first();
 
-        if (!$user || !bcrypt($credentials['password'], $user->password)) {
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json(['message' => 'Tên người dùng hoặc mật khẩu không đúng'], 401);
         }
 
