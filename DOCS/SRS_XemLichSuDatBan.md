@@ -61,3 +61,9 @@ Người dùng có thể theo dõi trạng thái đơn, xem chi tiết từng l�
 * Có bộ lọc theo trạng thái / thời gian
 * Có nút "Xem chi tiết"
 * Hiển thị loading khi tải dữ liệu
+
+
+
+## Phần 2: Đặc tả chức năng (Functional Requirements)
+- Là một khách hàng, tôi muốn xem lịch sử đặt bàn của mình để theo dõi các lần đặt trước đây.
+- Là một khách hàng, tôi muốn xem chi tiết từng đơn đặt bàn để biết thông tin như thời gian, số lượng khách .

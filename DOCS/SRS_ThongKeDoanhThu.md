@@ -66,3 +66,9 @@ Hệ thống cung cấp các báo cáo theo thời gian (ngày, tháng, năm), g
 * Số lượng đơn hoàn thành
 * Có loading khi xử lý dữ liệu
 
+
+## Phần 2: Đặc tả chức năng (Functional Requirements)
+- Là một quản trị viên, tôi muốn xem báo cáo doanh thu để đánh giá hiệu quả hoạt động kinh doanh của nhà hàng.
+- Là một quản trị viên, tôi muốn xem tổng doanh thu theo khoảng thời gian để nắm được tình hình kinh doanh.
+- Là một quản trị viên, tôi muốn chọn khoảng thời gian (ngày, tháng, năm) để xem doanh thu tương ứng.
+- Là một quản trị viên, tôi muốn sử dụng các bộ lọc nhanh (hôm nay, 7 ngày, 30 ngày) để thao tác nhanh hơn.

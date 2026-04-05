@@ -60,8 +60,8 @@
 ---
 
 ## Phần 1: Mô hình hóa quy trình (Business Flow)  
-- Sơ đồ Use Case Customer: [Click here](/PICTURES/Active_Datban.png)  
-- Sơ đồ Activity: [Click here](/PICTURES/UC_Datban.png)  
+- Sơ đồ Use Case Customer: [Click here](/PICTURES/UC_Datban.png)  
+- Sơ đồ Activity: [Click here](/PICTURES/Active_Datban.png)
 
 ---
 

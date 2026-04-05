@@ -74,3 +74,15 @@ Chức năng này giúp người dùng linh hoạt điều chỉnh kế hoạch,
 * Hiển thị trạng thái rõ ràng
 * Có loading khi gửi request
 * Thông báo thành công/thất bại (toast)
+
+## Phần 1: Mô hình hóa quy trình (Business Flow)  
+- Sơ đồ Use Case: [Click here](/PICTURES/UC_QLdatban.png)
+- Sơ đồ Activity:
+    - Chức năng hủy đặt bàn[Click here](/PICTURES/Active_Huydat.png)
+    - Chức năng thay đổi thông tin đơn đặt bàn [Click here](/PICTURES/Active_Doithongtindat.png)
+
+## Phần 2: Đặc tả chức năng (Functional Requirements)
+- Là một khách hàng, tôi muốn quản lý các đơn đặt bàn của mình để có thể điều chỉnh hoặc hủy khi cần thiết.
+- Là một khách hàng, tôi muốn hủy đơn đặt bàn khi không còn nhu cầu để giải phóng bàn cho người khác.
+- Là một khách hàng, tôi muốn nhận được thông báo xác nhận sau khi hủy đơn để đảm bảo thao tác đã thành công.
+- Là một khách hàng, tôi muốn chỉnh sửa thông tin đơn đặt bàn (thời gian, số lượng khách, bàn) để phù hợp với kế hoạch của mình.

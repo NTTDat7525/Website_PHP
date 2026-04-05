@@ -63,3 +63,14 @@ Hệ thống hỗ trợ quản lý toàn bộ vòng đời của một đơn đ�
 ### 6. Giao diện (UI/UX)
 * Popup xác nhận khi thay đổi trạng thái
 * Hiển thị thông báo (toast) khi cập nhật thành công/thất bại
+
+
+## Phần 1: Mô hình hóa quy trình (Business Flow)  
+- Sơ đồ Use Case: [Click here](/PICTURES/UC_QLdondatban.png)
+- Sơ đồ Activity:
+    - Chức năng đổi trang thái đơn[Click here](/PICTURES/Active_Doitrangthaidon.png)
+
+## Phần 2: Đặc tả chức năng (Functional Requirements)
+- Là một quản lý, tôi muốn xem chi tiết từng đơn đặt bàn để biết thông tin khách hàng, thời gian và số lượng khách.
+- Là một quản lý, tôi muốn cập nhật trạng thái đơn (Pending, Confirmed, Completed, Cancelled) để phản ánh đúng tình trạng phục vụ.
+- Là một quản lý, tôi muốn nhận được thông báo khi cập nhật trạng thái thành công để đảm bảo thao tác đã được thực hiện.

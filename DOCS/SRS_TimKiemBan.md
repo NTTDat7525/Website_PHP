@@ -70,3 +70,15 @@ Xem chi tiết bàn
 * Hiển thị danh sách bàn dạng:
     * Card view (ảnh + thông tin)
 * Hiển thị loading khi tìm kiếm
+
+## Phần 1: Mô hình hóa quy trình (Business Flow)  
+- Sơ đồ Activity:
+    - Chức năng tìm kiếm bàn [Click here](/PICTURES/Active_Timkiem.png)
+
+
+## Phần 2: Đặc tả chức năng (Functional Requirements)
+- Là một khách hàng, tôi muốn nhập số lượng người để tìm bàn có sức chứa phù hợp.
+- Là một khách hàng, tôi muốn chọn ngày và giờ đặt bàn để kiểm tra tình trạng bàn theo thời gian mong muốn.
+- Là một khách hàng, tôi muốn chọn loại bàn (thường, VIP, ngoài trời) để phù hợp với nhu cầu sử dụng.
+- Là một khách hàng, tôi muốn xem danh sách các bàn còn trống để lựa chọn.
+- Là một khách hàng, tôi muốn xem thông tin chi tiết của từng bàn (sức chứa, loại bàn, mô tả) để quyết định chính xác.

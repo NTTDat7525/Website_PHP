@@ -59,7 +59,7 @@
 ---
 
 ## Phần 1: Mô hình hóa quy trình (Business Flow)  
-- Sơ đồ Use Case Admin: [Click here](/PICTURES/UC_QLdatban.png)
+- Sơ đồ Use Case Admin: [Click here](/PICTURES/UC_QLban.png)
 - Sơ đồ Activity:
     - Chức năng thêm bàn[Click here](/PICTURES/Active_Themban.png)
     - Chức năng xóa bàn [Click here](/PICTURES/Active_Xoaban.png)

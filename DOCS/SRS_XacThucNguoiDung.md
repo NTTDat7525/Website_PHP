@@ -111,3 +111,17 @@ Cho phép người dùng mới tạo tài khoản để truy cập hệ thống.
 * Thiết kế đồng bộ với trang Login (cùng tông màu, font chữ).
 * Nút "Đã có tài khoản? Đăng nhập ngay" đặt ở dưới cùng để điều hướng nhanh.
 * Hỗ trợ phím tắt: Nhấn `Enter` để gửi form.
+
+## Phần 1: Mô hình hóa quy trình (Business Flow)  
+- Sơ đồ Use Case: [Click here](/PICTURES/UC_Xacthucnguoidung.png)
+- Sơ đồ Activity:
+    - Chức năng đăng nhập [Click here](/PICTURES/Active_Dangnhap.png)
+    - Chức năng đăng ký [Click here](/PICTURES/Active_Dangky.png)
+
+## Phần 2: Đặc tả chức năng (Functional Requirements)
+- Là một người dùng, tôi muốn đăng ký và đăng nhập vào hệ thống để sử dụng các chức năng đặt bàn.
+- Là một khách hàng, tôi muốn nhận thông báo khi đăng ký thành công để biết rằng tài khoản đã được tạo.
+- Là một người dùng, tôi muốn đăng nhập vào hệ thống bằng email và mật khẩu để truy cập tài khoản của mình.
+- Là một người dùng, tôi muốn hệ thống kiểm tra thông tin đăng nhập để đảm bảo tính bảo mật.
+- Là một người dùng, tôi muốn nhận thông báo lỗi khi nhập sai thông tin để có thể thử lại.
+- Là một người dùng, tôi muốn đặt lại mật khẩu khi quên để có thể truy cập lại tài khoản.

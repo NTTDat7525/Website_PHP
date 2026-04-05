@@ -80,3 +80,16 @@ Chức năng này giúp đảm bảo tính bảo mật, tính cá nhân hóa và
 * Giao diện thân thiện, dễ sử dụng.
 * Nút "Save" và "Change Password" hiển thị loading khi xử lý.
 * Hiển thị thông báo thành công/thất bại rõ ràng.
+
+## Phần 1: Mô hình hóa quy trình (Business Flow)  
+- Sơ đồ Use Case: [Click here](/PICTURES/UC_QLtaikhoan.png)
+- Sơ đồ Activity:
+    - Chức năng thay đổi thông tin tài khoản [Click here](/PICTURES/Active_Doithongtintaikhoan.png)
+    - Chức năng thay đổi mật khẩu [Click here](/PICTURES/Active_Doimatkhau.png)
+
+## Phần 2: Đặc tả chức năng (Functional Requirements)
+- Là một người dùng, tôi muốn chỉnh sửa thông tin cá nhân (tên, email, số điện thoại, địa chỉ) để đảm bảo thông tin luôn chính xác.
+- Là một người dùng, tôi muốn nhận được thông báo sau khi cập nhật thông tin để xác nhận thay đổi đã thành công.
+- Là một người dùng, tôi muốn thay đổi mật khẩu để tăng tính bảo mật cho tài khoản.
+- Là một người dùng, tôi muốn hệ thống yêu cầu nhập mật khẩu hiện tại khi đổi mật khẩu để đảm bảo an toàn.
+- Là một người dùng, tôi muốn đăng xuất khỏi hệ thống để bảo vệ tài khoản khi không sử dụng.
