@@ -16,13 +16,15 @@ Chức năng này giúp đảm bảo tính bảo mật, tính cá nhân hóa và
 ### 2. Luồng nghiệp vụ (User Workflow)
 
 * Đăng xuất
+
 | Bước | Hành động người dùng | Phản hồi hệ thống                              |
 | :--- | :------------------- | :--------------------------------------------- |
 | 1    | Nhấn nút "Logout"    | Gửi request đăng xuất                          |
 | 2    | Hệ thống xử lý       | Xóa Session/Token                              |
 | 3    | Hoàn tất             | Chuyển hướng về trang chủ hoặc trang đăng nhập |
 
-* Đổi mật khẩu 
+* Đổi mật khẩu
+
 | Bước | Hành động người dùng                              | Phản hồi hệ thống                             |
 | :--- | :------------------------------------------------ | :-------------------------------------------- |
 | 1    | Truy cập trang `đổi mật khẩu`                 | Hiển thị form đổi mật khẩu                    |
@@ -31,7 +33,8 @@ Chức năng này giúp đảm bảo tính bảo mật, tính cá nhân hóa và
 | 4    | Hợp lệ                                            | Cập nhật mật khẩu mới (hash)                  |
 | 5    | Thành công                                        | Thông báo thành công và yêu cầu đăng nhập lại |
 
-* Cập nhật thông tin tài khoản 
+* Cập nhật thông tin tài khoản
+
 | Bước | Hành động người dùng                      | Phản hồi hệ thống                      |
 | :--- | :---------------------------------------- | :------------------------------------- |
 | 1    | Truy cập `/profile`                       | Hiển thị thông tin hiện tại            |
