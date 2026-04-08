@@ -1,21 +1,42 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tìm kiếm bàn - Restaurant Management</title>
+    <title>Đặt Bàn - Golden Spoons</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-50 text-gray-800">
 
-    <header class="bg-indigo-700 py-12 px-4 text-center">
-        <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">Golden Spoon</h1>
-        <p class="text-indigo-100">Tìm kiếm không gian phù hợp cho bữa tiệc của bạn</p>
+<body class="bg-gray-50">
+
+    <nav class="fixed top-0 left-0 right-0 bg-white shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="{{ route('customer.dashboard') }}" class="text-2xl font-bold text-amber-700">Golden Spoons</a>
+                <div class="flex items-center gap-6">
+                    <a href="{{ route('customer.booking') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Đặt bàn</a>
+                    <a href="{{ route('customer.menu') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Thực đơn</a>
+                    <a href="{{ route('customer.bookings') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Đặt bàn của tôi</a>
+                    <a href="{{ route('customer.profile') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Tài khoản</a>
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium">
+                            Đăng xuất
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-16 bg-amber-700 py-8 px-4 text-center">
+        <h1 class="text-4xl font-bold text-white mb-2">Đặt Bàn</h1>
+        <p class="text-amber-100">Tìm kiếm không gian phù hợp cho bữa tiệc của bạn</p>
     </header>
 
-    <div class="max-w-7xl mx-auto px-4 -mt-10 pb-20">
-        
+    <div class="max-w-7xl mx-auto px-4 -mt-6 pb-20">
+
         <div class="bg-white p-6 rounded-2xl shadow-xl border border-gray-100 mb-10">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="space-y-2">
@@ -62,7 +83,7 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            
+
             <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 border border-gray-100 flex flex-col">
                 <div class="relative h-48 overflow-hidden">
                     <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800" alt="Bàn VIP" class="w-full h-full object-cover">
@@ -71,7 +92,6 @@
                 <div class="p-5 flex-grow">
                     <div class="flex justify-between items-start mb-2">
                         <h3 class="text-lg font-bold">Phòng Hoàng Gia V01</h3>
-                        <p class="text-indigo-600 font-bold">$25/h</p>
                     </div>
                     <div class="space-y-2 mb-6">
                         <div class="flex items-center text-sm text-gray-500">
@@ -98,7 +118,6 @@
                 <div class="p-5 flex-grow">
                     <div class="flex justify-between items-start mb-2">
                         <h3 class="text-lg font-bold">Bàn Sân Vườn G12</h3>
-                        <p class="text-indigo-600 font-bold">$10/h</p>
                     </div>
                     <div class="space-y-2 mb-6">
                         <div class="flex items-center text-sm text-gray-500">
@@ -125,7 +144,6 @@
                 <div class="p-5 flex-grow">
                     <div class="flex justify-between items-start mb-2">
                         <h3 class="text-lg font-bold">Bàn Cửa Sổ W04</h3>
-                        <p class="text-indigo-600 font-bold">$15/h</p>
                     </div>
                     <div class="space-y-2 mb-6">
                         <div class="flex items-center text-sm text-gray-500">
@@ -156,4 +174,5 @@
     </div>
 
 </body>
+
 </html>

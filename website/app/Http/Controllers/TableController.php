@@ -76,7 +76,7 @@ class TableController extends Controller
         return response()->json(['message' => 'Bàn đang được sử dụng'], 200);
     }
 
-    // Giải phóng bàn (trở lại trạng thái available)
+    // Set trạng thái bàn thành "available"
     public function release($id)
     {
         $table = Table::findOrFail($id);

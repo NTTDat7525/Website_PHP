@@ -47,18 +47,26 @@ class AuthController extends Controller
         $user = User::where('username', $credentials['username'])->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return response()->json(['message' => 'Tên người dùng hoặc mật khẩu không đúng'], 401);
+            return back()->with('error', 'Tên người dùng hoặc mật khẩu không đúng');
         }
 
-        return response()->json([
-            'message' => 'Đăng nhập thành công',
-            'user' => $user,
-            'role' => $user->role
-        ], 200);
+        // Đăng nhập người dùng
+        auth()->login($user);
+
+        // Redirect theo role
+        if ($user->role === 'admin') {
+            return redirect('/admin/dashboard');
+        }
+
+        return redirect('/customer/dashboard');
     }
 
     public function logout(Request $request)
     {
-        return response()->json(['message' => 'Đăng xuất thành công'], 200);
+        auth()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
     }
 }
