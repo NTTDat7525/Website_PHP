@@ -225,7 +225,7 @@ website/
 1. **Clone hoặc tải source code**:
 
    ```bash
-   cd d:/Website/Final
+   cd website
    ```
 
 2. **Cài đặt dependencies PHP**:
