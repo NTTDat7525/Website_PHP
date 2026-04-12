@@ -8,63 +8,45 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\BookingController;
 
-// xác thực người dùng
-Route::prefix('auth')->group(function (){
+// ============= AUTHENTICATION =============
+Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
-//============ PUBLIC ROUTES =============
 
-// trang chủ, tìm kiếm
-Route::get('/tables', [TableController::class, 'index']);
-Route::get('/tables/search', [TableController::class, 'search']);
-Route::get('/tables/{id}', [TableController::class, 'show']);
+// ============= CUSTOMER API ROUTES =============
+Route::middleware('auth:sanctum')->prefix('customer')->group(function () {
+    Route::get('/tables', [TableController::class, 'index']);
+    Route::get('/tables/{id}', [TableController::class, 'show']);
+    Route::get('/tables/available', [TableController::class, 'available']);
 
-// danh sách món ăn
-Route::get('/foods', [FoodController::class, 'index']);
-Route::get('/foods/{id}', [FoodController::class, 'show']);
-
-
-// ============= CUSTOMER ROUTES=============
-
-Route::middleware('user')->group(function () {
-    // quản lý tài khoản
-    Route::get('/user/profile', [UserController::class, 'getProfile']);
-    Route::put('/user/profile', [UserController::class, 'updateProfile']);
-    Route::put('/user/change-password', [UserController::class, 'changePassword']);
-
-    // đặt bàn
     Route::post('/bookings', [BookingController::class, 'store']);
-    Route::get('/bookings/{userId}', [BookingController::class, 'getUserBookings']);
-    Route::put('/bookings/{id}/cancel', [BookingController::class, 'cancel']);
+    Route::get('/bookings', [BookingController::class, 'index']);
+    Route::get('/bookings/{id}', [BookingController::class, 'show']);
+    Route::put('/bookings/{id}', [BookingController::class, 'update']);
+    Route::delete('/bookings/{id}', [BookingController::class, 'destroy']);
 
-    // đơn hàng
-    Route::post('/orders', [OrderController::class, 'store']);
-    Route::get('/orders/{userId}', [OrderController::class, 'getUserOrders']);
-    Route::put('/orders/{id}/cancel', [OrderController::class, 'cancel']);
+
+    // Tài khoản - Profile
+    Route::get('/profile', [UserController::class, 'show']);
+    Route::put('/profile', [UserController::class, 'update']);
+    Route::put('/profile/password', [UserController::class, 'updatePassword']);
 });
 
-
-// ============= ADMIN ROUTES =============
-
-Route::middleware('admin')->prefix('admin')->group(function () {
-    // xem doanh thu
-    Route::get('/revenue', [OrderController::class, 'revenue']);
-
-    // quản lý người dùng
-    Route::get('/users', [UserController::class, 'index']);
-    Route::get('/users/{id}', [UserController::class, 'show']);
-    Route::delete('/users/{id}', [UserController::class, 'destroy']);
-
-    // quản lý bàn
+// ============= ADMIN API ROUTES =============
+Route::middleware('auth:sanctum', 'admin')->prefix('admin')->group(function () {
+    Route::get('/tables', [TableController::class, 'index']);
     Route::post('/tables', [TableController::class, 'store']);
     Route::put('/tables/{id}', [TableController::class, 'update']);
     Route::delete('/tables/{id}', [TableController::class, 'destroy']);
 
-    // quản lý đơn
-    Route::get('/orders', [OrderController::class, 'index']);
-    Route::get('/orders/{id}', [OrderController::class, 'show']);
-    Route::put('/orders/{id}', [OrderController::class, 'update']);
-    Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
+    Route::get('/bookings', [BookingController::class, 'index']);
+    Route::put('/bookings/{id}', [BookingController::class, 'update']);
+    Route::delete('/bookings/{id}', [BookingController::class, 'destroy']);
+
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
 });

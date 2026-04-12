@@ -16,6 +16,7 @@ class TablesTableSeeder extends Seeder
                 'name' => 'Bàn số ' . $i,
                 'capacity' => rand(2, 6),
                 'status' => 'available',
+                'location' => 'Khu vực ' . rand(1, 3)
             ]);
         }
     }

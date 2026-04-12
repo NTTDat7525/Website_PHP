@@ -8,10 +8,19 @@ use Illuminate\Http\Request;
 class TableController extends Controller
 {
     // Lấy danh sách tất cả bàn
-    public function index()
+    public function index(Request $request)
     {
-        $tables = Table::all();
-        return response()->json($tables, 200);
+        $query = Table::query();
+
+        // Lọc theo khu vực
+        if ($request->location) {
+            $query->where('location', $request->location);
+        }
+
+        // Phân trang 9 bàn / trang
+        $tables = $query->paginate(9);
+
+        return view('pages.home', compact('tables'));
     }
 
     // Lấy chi tiết một bàn theo ID

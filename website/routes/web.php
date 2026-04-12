@@ -5,40 +5,40 @@ use App\Http\Controllers\AuthController;
 use App\Models\Table;
 
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('home');
-
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
-
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::prefix('customer')->group(function () {
+// ============= CUSTOMER WEB ROUTES =============
+Route::prefix('customer')->middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
-        $tables = Table::all();
+        $tables = Table::paginate(9);
         return view('customer.dashboard', compact('tables'));
     })->name('customer.dashboard');
 
-    Route::get('/booking', function () {
+    Route::get('/booking/{id?}', function ($id = null) {
+        $table = $id ? Table::findOrFail($id) : null;
         $tables = Table::all();
-        return view('booking.search', compact('tables'));
+        return view('customer.booking', compact('table', 'tables'));
     })->name('customer.booking');
 
     Route::get('/bookings', function () {
-        return view('booking.history');
+        return view('customer.history');
     })->name('customer.bookings');
 
-    Route::get('/menu', function () {
-        return view('booking.menu');
-    })->name('customer.menu');
+    Route::get('/search', function () {
+        return view('customer.search');
+    })->name('customer.search');
 
     Route::get('/profile', function () {
-        return view('profile.profile');
+        return view('customer.profile');
     })->name('customer.profile');
 });
 
-Route::prefix('admin')->group(function () {
+// ============= ADMIN WEB ROUTES =============
+Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');

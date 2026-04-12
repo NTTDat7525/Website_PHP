@@ -15,8 +15,8 @@
             <div class="flex justify-between items-center h-16">
                 <a href="{{ route('customer.dashboard') }}" class="text-2xl font-bold text-amber-700">Golden Spoons</a>
                 <div class="flex items-center gap-6">
-                    <a href="{{ route('customer.booking') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Đặt bàn</a>
-                    <a href="{{ route('customer.menu') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Thực đơn</a>
+                    <a href="{{ route('customer.dashboard') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Đặt bàn</a>
+                    <a href="{{ route('customer.search') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Tìm kiếm</a>
                     <a href="{{ route('customer.bookings') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Đặt bàn của tôi</a>
                     <a href="{{ route('customer.profile') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Tài khoản</a>
                     <form method="POST" action="{{ route('logout') }}" class="inline">

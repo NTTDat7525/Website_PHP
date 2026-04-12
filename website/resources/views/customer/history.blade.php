@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thực Đơn - Golden Spoons</title>
+    <title>Lịch Sử Đặt Bàn - Golden Spoons</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -15,8 +15,8 @@
             <div class="flex justify-between items-center h-16">
                 <a href="{{ route('customer.dashboard') }}" class="text-2xl font-bold text-amber-700">Golden Spoons</a>
                 <div class="flex items-center gap-6">
-                    <a href="{{ route('customer.booking') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Đặt bàn</a>
-                    <a href="{{ route('customer.menu') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Thực đơn</a>
+                    <a href="{{ route('customer.dashboard') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Đặt bàn</a>
+                    <a href="{{ route('customer.search') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Tìm kiếm</a>
                     <a href="{{ route('customer.bookings') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Đặt bàn của tôi</a>
                     <a href="{{ route('customer.profile') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Tài khoản</a>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
@@ -31,25 +31,29 @@
     </nav>
 
     <main class="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 class="text-4xl font-bold text-gray-900 mb-8">Thực Đơn</h1>
+        <h1 class="text-4xl font-bold text-gray-900 mb-8">Lịch Sử Đặt Bàn</h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Tên Món Ăn</h3>
-                <p class="text-gray-600 mb-3">Mô tả món ăn</p>
-                <p class="text-lg font-bold text-red-600">280,000 VND</p>
+        <div class="space-y-4">
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition border-l-4 border-green-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Bàn A1 - 4 người</h3>
+                        <p class="text-gray-600 mt-2">08/04/2026 - 19:00</p>
+                        <p class="text-sm text-gray-500 mt-1">Mã đặt: #12345</p>
+                    </div>
+                    <span class="inline-block bg-green-100 text-green-800 px-4 py-2 rounded font-semibold text-sm">Đã xác nhận</span>
+                </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Tên Món Ăn</h3>
-                <p class="text-gray-600 mb-3">Mô tả món ăn</p>
-                <p class="text-lg font-bold text-red-600">250,000 VND</p>
-            </div>
-
-            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Tên Món Ăn</h3>
-                <p class="text-gray-600 mb-3">Mô tả món ăn</p>
-                <p class="text-lg font-bold text-red-600">120,000 VND</p>
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition border-l-4 border-yellow-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Bàn B2 - 6 người</h3>
+                        <p class="text-gray-600 mt-2">10/04/2026 - 12:00</p>
+                        <p class="text-sm text-gray-500 mt-1">Mã đặt: #12346</p>
+                    </div>
+                    <span class="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded font-semibold text-sm">Chờ xác nhận</span>
+                </div>
             </div>
         </div>
     </main>
