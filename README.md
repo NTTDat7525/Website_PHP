@@ -299,8 +299,8 @@ website/
 
 1. Truy cập `http://127.0.0.1:8000/login`
 2. Nhập tên đăng nhập và mật 
-- username: user1
-- password: user1
+- username: customer
+- password: password
 3. Nhấn "Đăng nhập"
 4. Sau khi đăng nhập, khách hàng có thể:
    - Xem danh sách bàn trên Dashboard
@@ -314,7 +314,7 @@ website/
 1. Truy cập `http://127.0.0.1:8000/login`
 2. Đăng nhập với tài khoản admin
 - username: admin
-- password: passwword
+- password: password
 3. Chuyển hướng tới `http://127.0.0.1:8000/admin/dashboard`
 4. Tại trang admin, quản trị viên có thể:
    - Xem tổng quan thống kê
