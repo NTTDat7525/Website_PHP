@@ -1,42 +1,16 @@
 # Website Đặt Bàn Online - Golden Spoons
 
-Dự án xây dựng một hệ thống website đặt bàn online cho nhà hàng **Golden Spoons** sử dụng **Laravel 11** và **Tailwind CSS**. Hệ thống cung cấp đầy đủ chức năng cho **khách hàng** (đặt bàn, xem menu, quản lý lịch sử) và **quản trị viên** (quản lý bàn, đặt bàn, khách hàng, doanh thu, báo cáo).
+Dự án xây dựng một hệ thống website đặt bàn online cho nhà hàng **Golden Spoons** sử dụng **Laravel 11** và **Tailwind CSS**. Hệ thống cung cấp đầy đủ chức năng cho **khách hàng** (đặt bàn, quản lý lịch sử) và **quản trị viên** (quản lý bàn, đặt bàn, khách hàng, doanh thu, báo cáo).
 
 ---
 
-## 👥 Thành viên
+## Thành viên
 
 | STT | Họ và tên             | Mã sinh viên |
 | --- | --------------------- | ------------ |
 | 1   | Nguyễn Trịnh Tiến Đạt | 23810310142  |
 | 2   | Bùi Minh Đức          | 23810310110  |
 | 3   | Đồng Việt Tiến        | 23810310148  |
-
----
-
-## Phân công công việc
-
-### Nguyễn Trịnh Tiến Đạt - Hệ thống API và Database
-
-- Quản lý database và migration
-- Xây dựng API và model
-
-### Đồng Việt Tiến - Giao diện Website Khách Hàng
-
-- Trang Dashboard khách hàng
-- Chức năng đặt bàn
-- Chức năng xem menu
-- Chức năng xem lịch sử đặt bàn
-- Chức năng quản lý hồ sơ cá nhân
-
-### Bùi Minh Đức - Giao diện Website Quản Lý (Admin)
-
-- Bảng điều khiển admin
-- Quản lý đặt bàn
-- Quản lý danh sách bàn
-- Quản lý người dùng
-- Thống kê doanh thu
-- Báo cáo hệ thống
 
 ---
 
@@ -71,30 +45,16 @@ website/
 │   ├── Http/
 │   │   ├── Controllers/          # Controllers cho các trang
 │   │   ├── Middleware/           # Middleware (Auth, Admin, ...)
-│   │   └── UserController.php
 │   ├── Models/
 │   │   ├── User.php              # Model User
 │   │   ├── Table.php             # Model Bàn
 │   │   ├── Booking.php           # Model Đặt bàn
-│   │   ├── Food.php              # Model Thực đơn
-│   │   ├── Order.php             # Model Hóa đơn
-│   │   ├── OrderItem.php         # Model Chi tiết hóa đơn
 │   │   └── Session.php           # Model Session
 │   └── Providers/
-│       └── AppServiceProvider.php
 │
 ├── bootstrap/
-│   ├── app.php
-│   ├── providers.php
-│   └── cache/
 │
 ├── config/
-│   ├── app.php
-│   ├── auth.php
-│   ├── database.php
-│   ├── mail.php
-│   ├── session.php
-│   └── ...
 │
 ├── database/
 │   ├── factories/
@@ -103,58 +63,38 @@ website/
 │   │   ├── *_create_users_table.php
 │   │   ├── *_create_tables_table.php
 │   │   ├── *_create_bookings_table.php
-│   │   ├── *_create_foods_table.php
-│   │   ├── *_create_orders_table.php
-│   │   ├── *_create_order_items_table.php
 │   │   └── *_create_sessions_table.php
 │   └── seeders/
-│       ├── DatabaseSeeder.php
-│       ├── UsersTableSeeder.php
-│       ├── TablesTableSeeder.php
-│       └── FoodsTableSeeder.php
 │
 ├── public/
-│   ├── index.php                 # Entry point
-│   └── robots.txt
 │
 ├── resources/
 │   ├── css/
-│   │   └── app.css
 │   ├── js/
-│   │   ├── app.js
-│   │   └── bootstrap.js
 │   └── views/
 │       ├── auth/
 │       │   ├── login.blade.php   # Trang đăng nhập
 │       │   └── register.blade.php  # Trang đăng ký
 │       ├── customer/
 │       │   └── dashboard.blade.php # Dashboard khách hàng (Danh sách bàn)
-│       ├── booking/
 │       │   ├── search.blade.php  # Đặt bàn (tìm kiếm)
+|       |   ├── booking.blade.php # Chi tiết đặt bàn
 │       │   ├── history.blade.php # Lịch sử đặt bàn
-│       │   └── menu.blade.php    # Thực đơn
-│       ├── profile/
 │       │   └── profile.blade.php # Quản lý hồ sơ cá nhân
 │       └── admin/
 │           ├── dashboard.blade.php    # Dashboard admin
 │           ├── bookings.blade.php     # Quản lý đặt bàn
 │           ├── tables.blade.php       # Quản lý bàn
 │           ├── users.blade.php        # Quản lý người dùng
-│           ├── revenue.blade.php      # Thống kê doanh thu
-│           └── reports.blade.php      # Báo cáo hệ thống
+│           └── revenue.blade.php      # Thống kê doanh thu
 │
 ├── routes/
 │   ├── web.php                   # Routes chính cho web
 │   └── api.php                   # Routes API
 │
 ├── storage/
-│   ├── app/
-│   ├── framework/
-│   └── logs/
 │
 ├── tests/
-│   ├── Feature/
-│   └── Unit/
 │
 ├── .env                          # Biến môi trường
 ├── composer.json                 # Dependencies PHP
@@ -175,9 +115,6 @@ website/
 - **users** – Lưu thông tin người dùng (khách hàng, admin)
 - **tables** – Danh sách các bàn trong nhà hàng (tên, sức chứa, trạng thái)
 - **bookings** – Lịch sử đặt bàn (ngày, giờ, người dùng, bàn, trạng thái)
-- **foods** – Danh sách thực đơn (tên, giá, mô tả)
-- **orders** – Hóa đơn (tổng tiền, trạng thái)
-- **order_items** – Chi tiết hóa đơn (món ăn, số lượng, giá)
 - **sessions** – Lưu session người dùng
 
 ---
@@ -191,7 +128,6 @@ website/
 | **Dashboard**       | Hiển thị danh sách bàn với trạng thái (Trống/Đã đặt/Đang sử dụng) |
 | **Đặt Bàn**         | Tìm kiếm và đặt bàn theo số lượng khách, ngày, giờ                |
 | **Lịch Sử Đặt Bàn** | Xem lịch sử các đặt bàn của khách hàng                            |
-| **Thực Đơn**        | Xem danh sách menu các món ăn                                     |
 | **Hồ Sơ Cá Nhân**   | Xem và chỉnh sửa thông tin tài khoản                              |
 | **Đăng Ký**         | Tạo tài khoản khách hàng mới                                      |
 | **Đăng Nhập**       | Xác thực người dùng                                               |
