@@ -4,56 +4,52 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\Table;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
     // Danh sách booking
-    public function index() {
-        return response()->json(Booking::with(['user','table'])->get(), 200);
+    public function index(Request $request)
+    {
+        $date = $request->booking_date;
+        $time = $request->booking_time;
+
+        $tables = \App\Models\Table::all(); // sau này filter
+
+        return view('customer.booking-list', compact('tables', 'date', 'time'));
     }
 
-    // Chi tiết booking
-    public function show($id) {
-        $booking = Booking::with(['user','table'])->findOrFail($id);
-        return response()->json($booking, 200);
-    }
-
-    // Tạo booking mới
-    public function store(Request $request) {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'table_id' => 'required|exists:tables,id',
-            'booking_time' => 'required|date',
-            'guest_count' => 'required|integer|min:1',
-        ]);
-
-        // Kiểm tra bàn có trống không
-        $table = Table::find($validated['table_id']);
-        if ($table->status !== 'available') {
+    //hiển thị form đặt bàn
+    public function create($id) {
+        $table = Table::findOrFail($id);
+        if($table->status !== 'available') {
             return response()->json(['error' => 'Bàn đã được đặt trước'], 400);
         }
-
-        $booking = Booking::create($validated);
-        $table->update(['status' => 'reserved']);
-
-        return response()->json($booking, 201);
+        return view('customer.booking', compact('table'));
     }
 
-    // Cập nhật booking
-    public function update(Request $request, $id) {
-        $booking = Booking::findOrFail($id);
-        $booking->update($request->all());
-        return response()->json($booking, 200);
-    }
+    public function store(Request $request, $id)
+    {
+        $table = Table::findOrFail($id);
 
-    // Hủy booking
-    public function destroy($id) {
-        $booking = Booking::findOrFail($id);
-        $booking->delete();
+        if ($table->status !== 'available') {
+            return redirect()->back()->with('error', 'Bàn đã được đặt');
+        }
 
-        // Trả bàn về trạng thái available
-        $booking->table->update(['status' => 'available']);
+        // tạo booking
+        Booking::create([
+            'user_id' => Auth::id(),
+            'table_id' => $table->id,
+            'booking_time' => $request->booking_time,
+            'status' => 'reserved',
+        ]);
 
-        return response()->json(['message' => 'Hủy đặt bàn thành công'], 200);
+        // cập nhật trạng thái bàn
+        $table->update([
+            'status' => 'reserved'
+        ]);
+
+        return redirect()->route('customer.dashboard')
+            ->with('success', 'Đặt bàn thành công');
     }
 }

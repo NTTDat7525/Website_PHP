@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -39,34 +40,38 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'username' => 'required|string',
-            'password' => 'required|string'
+        $credentials = $request->only('username', 'password');
+
+        if (Auth::attempt($credentials)) {
+
+            $request->session()->regenerate();
+
+            $user = Auth::user();
+
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+
+            return redirect()->route('customer.dashboard');
+        }
+
+        return back()->withErrors([
+            'login' => 'Tên người dùng hoặc mật khẩu không đúng'
         ]);
-
-        $user = User::where('username', $credentials['username'])->first();
-
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return back()->with('error', 'Tên người dùng hoặc mật khẩu không đúng');
-        }
-
-        // Đăng nhập người dùng
-        auth()->login($user);
-
-        // Redirect theo role
-        if ($user->role === 'admin') {
-            return redirect('/admin/dashboard');
-        }
-
-        return redirect('/customer/dashboard');
     }
 
     public function logout(Request $request)
     {
-        auth()->logout();
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('login');
+    }
+
+    public function profile()
+    {
+        $user = Auth::user();
+        return view('customer.profile', compact('user'));
     }
 }

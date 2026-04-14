@@ -19,9 +19,4 @@ class Booking extends Model
     {
         return $this->belongsTo(Table::class);
     }
-
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-    }
 }

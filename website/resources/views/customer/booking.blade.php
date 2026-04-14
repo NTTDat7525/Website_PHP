@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đặt bàn - Golden Spoons</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .sidebar-menu {
             transition: all 0.3s ease;
@@ -56,93 +57,77 @@
 </head>
 
 <body class="bg-slate-950 text-slate-100">
-    <nav class="fixed top-0 left-0 right-0 h-16 bg-slate-900/95 backdrop-blur-md z-40 border-b border-slate-800 flex items-center px-6">
-        <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
-            <a href="{{ route('customer.dashboard') }}" class="text-2xl font-bold text-white hover:text-violet-400 transition">
-                Golden Spoons
-            </a>
-            <div class="flex items-center gap-8">
-                <a href="#" class="text-slate-300 hover:text-white transition font-medium">Explore</a>
-                <a href="{{ route('customer.bookings') }}" class="text-slate-300 hover:text-white transition font-medium">Reservations</a>
-                <a href="#" class="text-slate-300 hover:text-white transition font-medium">Favorites</a>
-                <div class="relative group">
-                    <button class="p-2">
-                        <svg class="w-6 h-6 text-slate-400 hover:text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                    </button>
-                    <div class="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-lg hidden group-hover:block z-50 border border-slate-700">
-                        <a href="{{ route('customer.profile') }}" class="block px-4 py-2 hover:bg-slate-700 rounded-t-lg text-sm">Tài khoản</a>
-                        <form method="POST" action="{{ route('logout') }}" class="block">
-                            @csrf
-                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-slate-700 rounded-b-lg text-red-400 text-sm">Đăng xuất</button>
-                        </form>
+    <nav class="fixed top-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md z-50 border-b border-slate-800">
+        <div class="w-full px-4">
+            <div class="flex justify-between items-center h-24">
+
+                <div class="flex items-center gap-6 ml-4">
+                    <a href="{{ route('customer.dashboard') }}"
+                        class="text-4xl font-bold bg-gradient-to-r from-[#4647D3] to-[#8126CF] text-transparent bg-clip-text">
+                        Golden Spoons
+                    </a>
+
+                    <div class="hidden md:block w-96 ml-10">
+                        <div class="relative">
+                            <input type="text" placeholder="Tìm kiếm bàn..."
+                                class="w-full px-4 py-2 bg-slate-800 text-slate-100 rounded-lg border border-slate-700 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
+                        </div>
                     </div>
+                </div>
+
+                <div class="flex items-center gap-6 mr-4">
+
+                    <a href="#" class="text-slate-300 hover:text-white transition">
+                        Khám phá
+                    </a>
+
+                    <a href="{{ route('customer.booking.index') }}"
+                        class="text-slate-300 hover:text-white transition">
+                        Đặt bàn
+                    </a>
+
+                    <a href="#" class="text-slate-300 hover:text-white transition">
+                        Yêu thích
+                    </a>
+
+                    <div class="relative group">
+                        <button class="p-2 hover:bg-slate-800 rounded-lg transition text-slate-400 hover:text-slate-200">
+                            <i class="fas fa-user-circle text-3xl"></i>
+                        </button>
+
+                        <div class="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-lg hidden group-hover:block z-50 border border-slate-700">
+                            <a href=""
+                                class="block px-4 py-2 hover:bg-slate-700 rounded-t-lg">
+                                Tài khoản
+                            </a>
+                            <a href=""
+                                class="block px-4 py-2 hover:bg-slate-700">
+                                Tìm kiếm
+                            </a>
+                            <form method="POST" action="">
+                                @csrf
+                                <button type="submit"
+                                    class="w-full text-left px-4 py-2 hover:bg-slate-700 rounded-b-lg text-red-400">
+                                    Đăng xuất
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </nav>
 
     <div class="flex pt-16 min-h-screen gap-0">
-        <aside class="w-40 bg-slate-900 border-r border-slate-800 p-6 fixed left-0 top-16 bottom-0 overflow-y-auto">
-            <div class="mb-12">
-                <h3 class="text-sm font-bold text-violet-400 tracking-wider mb-4">MAITRED'</h3>
-                <p class="text-xs text-slate-500">HIGH-TECH HOSPITALITY</p>
-            </div>
-
-            <nav class="space-y-2">
-                <a href="{{ route('customer.dashboard') }}" class="sidebar-menu flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-white rounded-lg transition">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M3 13h2v8H3zm4-8h2v16H7zm4-2h2v18h-2zm4-2h2v20h-2zm4 4h2v16h-2z"></path>
-                    </svg>
-                    <span class="text-sm">DASHBOARD</span>
-                </a>
-                <button href="#" class="sidebar-menu w-full flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-white rounded-lg transition">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path>
-                    </svg>
-                    <span class="text-sm">TABLE MAP</span>
-                </button>
-                <a href="{{ route('customer.bookings') }}" class="sidebar-menu flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-white rounded-lg transition">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5-10H7v2h7V9zm6 0h-2v2h2V9zM9 5H7v2h2V5zm6 0h-2v2h2V5z"></path>
-                    </svg>
-                    <span class="text-sm">BOOKINGS</span>
-                </a>
-                <a href="#" class="sidebar-menu flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-white rounded-lg transition">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2V17zm4 0h-2V7h2V17zm4 0h-2v-4h2V17z"></path>
-                    </svg>
-                    <span class="text-sm">ANALYTICS</span>
-                </a>
-                <a href="#" class="sidebar-menu flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-white rounded-lg transition">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
-                    </svg>
-                    <span class="text-sm">STAFF</span>
-                </a>
-            </nav>
-
-            <div class="mt-12 pt-6 border-t border-slate-700">
-                <button class="w-full px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition font-medium text-sm">
-                    QUICK BOOK
-                </button>
-            </div>
-
-            <div class="mt-auto pt-6">
-                <p class="text-xs text-slate-500">Help</p>
-            </div>
-        </aside>
-
-        <main class="ml-40 flex-1 p-8">
+        <main class="ml-20 flex-1 p-8 mt-8 mr-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-2 space-y-8">
                     <div>
                         <div class="inline-block mb-4 px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded text-xs font-semibold uppercase">
-                            ✕ LIVE AVAILABILITY / Table Selection / {{ $table?->location ?? 'Grand Hall' }}
+                            TRẠNG THÁI TRỰC TIẾP / CHỌN BÀN / {{ $table?->location ?? 'Sảnh Chính' }}
                         </div>
-                        <h1 class="text-4xl font-bold mb-2">Reserve Your Experience</h1>
+                        <h1 class="text-4xl font-bold mb-2">Đặt bàn của bạn</h1>
                     </div>
 
                     <div class="bg-slate-800 rounded-2xl overflow-hidden border border-slate-700">
@@ -166,29 +151,29 @@
                         </div>
 
                         <div class="p-8 bg-slate-800">
-                            <h2 class="text-2xl font-bold mb-2">{{ $table?->name ?? 'The Obsidian Alcove' }}</h2>
-                            <p class="text-slate-400 text-sm mb-6">{{ $table?->location ?? 'North-West Wing' }}, Table {{ $table?->id ?? '12' }}</p>
+                            <h2 class="text-2xl font-bold mb-2">{{ $table?->name ?? 'Bàn Cao Cấp' }}</h2>
+                            <p class="text-slate-400 text-sm mb-6">{{ $table?->location ?? 'Sảnh Chính' }}, Bàn {{ $table?->id ?? '12' }}</p>
 
                             <div class="flex items-center gap-4 mb-6 text-sm">
                                 <div class="flex items-center gap-2">
                                     <svg class="w-5 h-5 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
                                     </svg>
-                                    <span>{{ $table?->capacity ?? '4' }} - {{ ($table?->capacity ?? 4) + 2 }} PERSONS</span>
+                                    <span>{{ $table?->capacity ?? '4' }} - {{ ($table?->capacity ?? 4) + 2 }} NGƯỜI</span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <svg class="w-5 h-5 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path>
                                     </svg>
-                                    <span>OPENS AT 21:00</span>
+                                    <span>MỞ CỬA LÚC 21:00</span>
                                 </div>
                             </div>
 
                             <p class="text-slate-300 text-sm leading-relaxed mb-6">
                                 @if($table)
-                                Experience your evening at {{ $table->name }}. This perfect setting offers an intimate ambiance combined with cutting-edge amenities for the ultimate dining pleasure.
+                                Trải nghiệm buổi tối của bạn tại {{ $table->name }}. Không gian hoàn hảo này mang đến bầu không khí ấm cúng kết hợp với các tiện nghi hiện đại cho trải nghiệm ẩm thực tối ưu.
                                 @else
-                                Experience your evening in one of our most sophisticated settings. The Obsidian Alcove offers an intimate ambiance combined with cutting-edge amenities for the ultimate dining pleasure.
+                                Trải nghiệm buổi tối của bạn trong một trong những không gian tinh tế nhất của chúng tôi. Bàn Cao Cấp mang đến bầu không khí ấm cúng kết hợp với các tiện nghi hiện đại cho trải nghiệm ẩm thực tối ưu.
                                 @endif
                             </p>
 
@@ -197,45 +182,59 @@
                                     <svg class="w-8 h-8 mx-auto mb-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                     </svg>
-                                    <p class="text-xs font-semibold">Climate Control</p>
-                                    <p class="text-xs text-slate-500 mt-1">Personalized settings</p>
+                                    <p class="text-xs font-semibold">Không gian</p>
+                                    <p class="text-xs text-slate-500 mt-1">Sang trọng & riêng tư</p>
                                 </div>
                                 <div class="table-feature bg-slate-700/50 border border-slate-600 rounded-lg p-4 text-center hover:border-violet-500 hover:bg-slate-700">
                                     <svg class="w-8 h-8 mx-auto mb-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 15.464a5 5 0 010-7.072m2.828 2.828a7 7 0 010 9.9M5 12a7 7 0 009.9 0m-2.828-2.828a5 5 0 010 7.072M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                     </svg>
-                                    <p class="text-xs font-semibold">Acoustic Shield</p>
-                                    <p class="text-xs text-slate-500 mt-1">Privacy noise cancellation</p>
+                                    <p class="text-xs font-semibold">Trải nghiệm</p>
+                                    <p class="text-xs text-slate-500 mt-1">Ẩm thực cao cấp</p>
                                 </div>
                                 <div class="table-feature bg-slate-700/50 border border-slate-600 rounded-lg p-4 text-center hover:border-violet-500 hover:bg-slate-700">
                                     <svg class="w-8 h-8 mx-auto mb-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
-                                    <p class="text-xs font-semibold">Sommelier Table</p>
-                                    <p class="text-xs text-slate-500 mt-1">Built-in wine services</p>
+                                    <p class="text-xs font-semibold">Phục vụ</p>
+                                    <p class="text-xs text-slate-500 mt-1">Chuyên nghiệp & tận tâm</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700">
-                        <h3 class="text-lg font-bold mb-6">Guest Information</h3>
+                        <h3 class="text-lg font-bold mb-6">Thông tin khách hàng</h3>
 
                         <div class="space-y-4 mb-6">
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-300 mb-2">FULL NAME</label>
-                                    <input type="text" placeholder="Alexander Starling" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500" value="{{ auth()->user()->name ?? '' }}">
+                                    <label class="block text-xs font-semibold text-slate-300 mb-2">HỌ VÀ TÊN</label>
+                                    <input  type="text"
+                                            placeholder="Trịnh Trần Phương Tuấn"
+                                            class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500" 
+                                            value="{{ auth()->user()->name ?? '' }}">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-300 mb-2">CONTACT SIGNAL</label>
-                                    <input type="email" placeholder="alex@sterling.corp" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500" value="{{ auth()->user()->email ?? '' }}">
+                                    <label class="block text-xs font-semibold text-slate-300 mb-2">EMAIL</label>
+                                    <input  type="email"
+                                            placeholder="alex@sterling.corp"
+                                            class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500"
+                                            value="{{ auth()->user()->email ?? '' }}">
                                 </div>
                             </div>
 
                             <div>
-                                <label class="block text-xs font-semibold text-slate-300 mb-2">DIETARY LOGIC / SPECIAL REQUESTS</label>
-                                <textarea placeholder="Molecular gastronomy allergies, preferences for exclusive sourcing" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500 h-24 resize-none"></textarea>
+                                <label class="block text-xs font-semibold text-slate-300 mb-2">SỐ ĐIỆN THOẠI</label>
+                                <input type="text"
+                                    placeholder="0123456789"
+                                    class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500"
+                                    value="{{ auth()->user()->phone ?? '' }}">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-2">YÊU CẦU ĐẶC BIỆT</label>
+                                <textarea placeholder="You have money. You are father" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500 h-24 resize-none"></textarea>
                             </div>
                         </div>
                     </div>
@@ -243,9 +242,9 @@
 
                 <div class="space-y-6">
                     <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 sticky top-24">
-                        <h3 class="text-lg font-bold mb-6">Scheduling</h3>
+                        <h3 class="text-lg font-bold mb-6">Chọn thời gian</h3>
 
-                        <form action="{{ route('customer.dashboard') }}" method="GET" class="space-y-6">
+                        <form action="" method="GET" class="space-y-6">
                             @csrf
 
                             @if($table)
@@ -253,7 +252,7 @@
                             @endif
 
                             <div class="mb-6">
-                                <label class="block text-xs font-semibold text-slate-300 mb-3">SELECT PHASE (DATE)</label>
+                                <label class="block text-xs font-semibold text-slate-300 mb-3">CHỌN NGÀY</label>
                                 <div class="grid grid-cols-5 gap-2">
                                     <button type="button" class="date-btn active bg-violet-600 text-white text-center py-2 rounded text-xs font-semibold" data-date="2025-04-14">
                                         MON<br>14
@@ -275,7 +274,7 @@
                             </div>
 
                             <div class="mb-6">
-                                <label class="block text-xs font-semibold text-slate-300 mb-3">ARRIVAL SEQUENCE (TIME)</label>
+                                <label class="block text-xs font-semibold text-slate-300 mb-3">CHỌN GIỜ</label>
                                 <div class="grid grid-cols-3 gap-2">
                                     <button type="button" class="time-slot active bg-violet-600 text-white py-2 rounded text-xs font-semibold" data-time="19:00">19:00</button>
                                     <button type="button" class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold" data-time="19:30">19:30</button>
@@ -289,60 +288,23 @@
 
                             <div class="bg-slate-900 rounded-lg p-4 mb-6 space-y-2 border border-slate-600">
                                 <div class="flex justify-between text-sm">
-                                    <span class="text-slate-400">Experience Deposit</span>
+                                    <span class="text-slate-400">Đặt cọc</span>
                                     <span class="text-white font-semibold">$48.50</span>
                                 </div>
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-slate-400">Table Service Fee</span>
-                                    <span class="text-white font-semibold">$12.50</span>
-                                </div>
                                 <div class="border-t border-slate-700 pt-2 mt-2 flex justify-between">
-                                    <span class="text-sm font-semibold text-slate-300">TOTAL EST.</span>
+                                    <span class="text-sm font-semibold text-slate-300">TỔNG CỘNG</span>
                                     <span class="text-lg font-bold text-violet-400">$52.50</span>
                                 </div>
                             </div>
 
                             <button type="submit" class="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-bold py-3 rounded-lg transition transform hover:scale-105 mb-4 text-sm">
-                                CONFIRM BOOKING
+                                XÁC NHẬN ĐẶT CHỖ
                             </button>
 
                             <p class="text-xs text-slate-500 text-center">
-                                Secured by Gold Summit Encryption. Cancellation within 24h.
+                                Bảo mật thông tin. Có thể hủy trong vòng 24h.
                             </p>
                         </form>
-                    </div>
-
-                    <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4">
-                        <div class="flex items-start gap-3">
-                            <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="text-sm font-semibold text-emerald-400">Reservation Synchronized</p>
-                                <p class="text-xs text-slate-400 mt-1">Table 12 successfully held for 15 minutes.</p>
-                            </div>
-                            <button class="text-slate-500 hover:text-slate-300 ml-auto">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="bg-purple-500/10 border border-purple-500/30 rounded-lg p-4">
-                        <div class="flex items-start gap-3">
-                            <div class="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center flex-shrink-0">
-                                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="text-sm font-semibold text-purple-400">Elite Status Recognized</p>
-                                <p class="text-xs text-slate-400 mt-1">Complimentary amontillado vintage unlocked</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

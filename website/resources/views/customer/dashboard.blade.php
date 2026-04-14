@@ -76,13 +76,13 @@
                         Khám phá
                     </a>
 
-                    <a href="{{ route('customer.bookings') }}"
+                    <a href="{{ route('customer.booking.index') }}"
                         class="text-slate-300 hover:text-white transition">
                         Đặt bàn
                     </a>
 
                     <a href="#" class="text-slate-300 hover:text-white transition">
-                        Yêu thích
+                        Lịch sử
                     </a>
 
                     <div class="relative group">
@@ -95,11 +95,11 @@
                                 class="block px-4 py-2 hover:bg-slate-700 rounded-t-lg">
                                 Tài khoản
                             </a>
-                            <a href="{{ route('customer.search') }}"
+                            <a href=""
                                 class="block px-4 py-2 hover:bg-slate-700">
                                 Tìm kiếm
                             </a>
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="">
                                 @csrf
                                 <button type="submit"
                                     class="w-full text-left px-4 py-2 hover:bg-slate-700 rounded-b-lg text-red-400">
@@ -132,7 +132,7 @@
                 </div>
 
                 <div class="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 border border-slate-700 z-10">
-                    <form action="{{ route('customer.booking') }}" method="GET" class="space-y-6">
+                    <form action="{{ route('customer.tables.index') }}" method="GET" class="space-y-6">
 
                         <div>
                             <label class="text-sm font-semibold text-slate-300 mb-2 block">NGÀY</label>
@@ -185,7 +185,7 @@
                 <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 sticky top-24">
                     <h3 class="text-lg font-bold mb-6">BỘ LỌC</h3>
 
-                    <form method="GET" action="{{ route('customer.dashboard') }}">
+                    <form method="GET" action="{{ route('customer.tables.index') }}" class="space-y-6">
                         <div class="mb-8">
                             <h4 class="text-sm font-semibold text-slate-300 mb-4">Khu vực</h4>
                             <div class="space-y-3">
@@ -252,7 +252,7 @@
                                 </p>
 
                                 @if($table->status === 'available')
-                                <a href="{{ route('customer.booking', $table->id) }}"
+                                <a href="{{ route('customer.booking.create', ['id' => $table->id]) }}"
                                     class="block text-center bg-green-600 hover:bg-green-700 py-2 rounded transition font-medium">
                                     Đặt ngay
                                 </a>
@@ -286,9 +286,9 @@
                 <div>
                     <h4 class="font-semibold text-slate-300 mb-4">Quick Links</h4>
                     <ul class="space-y-2 text-sm text-slate-400">
-                        <li><a href="{{ route('customer.dashboard') }}" class="hover:text-violet-400 transition">Make Reservation</a></li>
-                        <li><a href="{{ route('customer.search') }}" class="hover:text-violet-400 transition">Search Tables</a></li>
-                        <li><a href="{{ route('customer.bookings') }}" class="hover:text-violet-400 transition">My Bookings</a></li>
+                        <li><a href="" class="hover:text-violet-400 transition">Make Reservation</a></li>
+                        <li><a href="" class="hover:text-violet-400 transition">Search Tables</a></li>
+                        <li><a href="" class="hover:text-violet-400 transition">My Bookings</a></li>
                     </ul>
                 </div>
                 <div>
