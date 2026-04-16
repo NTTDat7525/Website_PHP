@@ -21,19 +21,19 @@
                 <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition font-medium">
                     Bảng điều khiển
                 </a>
-                <a href="{{ route('admin.bookings') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
+                <a href="#" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
                     Quản lý đặt bàn
                 </a>
-                <a href="{{ route('admin.tables') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
+                <a href="#" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
                     Quản lý bàn
                 </a>
-                <a href="{{ route('admin.users') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
+                <a href="#" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
                     Quản lý người dùng
                 </a>
-                <a href="{{ route('admin.revenue') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
+                <a href="#" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
                     Doanh thu
                 </a>
-                <a href="{{ route('admin.reports') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
+                <a href="#" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
                     Báo cáo
                 </a>
             </nav>

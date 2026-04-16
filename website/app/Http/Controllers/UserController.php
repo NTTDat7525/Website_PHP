@@ -12,7 +12,7 @@ class UserController extends Controller
     public function index()
     {
         return response()->json([
-            'data' => User::all(), 
+            'data' => User::all(),
             'message' => 'API người dùng hoạt động'
             ], 200);
     }
@@ -76,5 +76,31 @@ class UserController extends Controller
         User::destroy($id);
 
         return response()->json(['message' => 'Xóa người dùng thành công'], 200);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string|max:255|unique:users,username,' . $user->id,
+            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'sometimes|nullable|string|max:15',
+            'bio' => 'sometimes|nullable|string|max:1000',
+            'password' => 'sometimes|required|string|min:6|confirmed',
+        ]);
+
+        if (!empty($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+
+        $user->update($validated);
+
+        return response()->json([
+            'message' => 'Cập nhật người dùng thành công',
+            'data' => $user
+        ], 200);
     }
 }

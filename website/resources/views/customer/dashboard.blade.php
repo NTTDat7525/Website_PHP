@@ -81,7 +81,7 @@
                         Đặt bàn
                     </a>
 
-                    <a href="#" class="text-slate-300 hover:text-white transition">
+                    <a href="{{ route('customer.history') }}" class="text-slate-300 hover:text-white transition">
                         Lịch sử
                     </a>
 
@@ -99,9 +99,9 @@
                                 class="block px-4 py-2 hover:bg-slate-700">
                                 Tìm kiếm
                             </a>
-                            <form method="POST" action="">
+                            <form method="POST">
                                 @csrf
-                                <button type="submit"
+                                <button type="submit" action="{{ route('auth.logout') }}"
                                     class="w-full text-left px-4 py-2 hover:bg-slate-700 rounded-b-lg text-red-400">
                                     Đăng xuất
                                 </button>
@@ -253,7 +253,7 @@
 
                                 @if($table->status === 'available')
                                 <a href="{{ route('customer.booking.create', ['id' => $table->id]) }}"
-                                    class="block text-center bg-green-600 hover:bg-green-700 py-2 rounded transition font-medium">
+                                    class="block text-center bg-green-600 hover:bg-violet-600 py-2 rounded transition font-medium">
                                     Đặt ngay
                                 </a>
                                 @elseif($table->status === 'reserved')

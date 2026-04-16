@@ -23,7 +23,7 @@
         </div>
         @endif
 
-        <form method="POST" action="{{ route('login.post') }}" class="space-y-4">
+        <form method="POST" action="{{ route('auth.login.post') }}" class="space-y-4">
             @csrf
             <div>
                 <label class="block text-gray-700 font-medium mb-2">Tên đăng nhập</label>
@@ -39,7 +39,7 @@
         </form>
         <p class="text-center mt-4 text-gray-600">
             Chưa có tài khoản?
-            <a href="{{ route('register') }}" class="text-blue-600 hover:underline font-medium">Đăng ký</a>
+            <a href="{{ route('auth.register') }}" class="text-blue-600 hover:underline font-medium">Đăng ký</a>
         </p>
     </div>
 </body>

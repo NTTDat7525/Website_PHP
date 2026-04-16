@@ -4,84 +4,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lịch Sử Đặt Bàn - Golden Spoons</title>
+    <title>Lịch Sử Đặt Bàn - Luminous Epicure</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-slate-100 text-slate-800">
 
-    <nav class="fixed top-0 left-0 right-0 bg-white shadow-lg z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="{{ route('customer.dashboard') }}" class="text-2xl font-bold text-amber-700">Golden Spoons</a>
-                <div class="flex items-center gap-6">
-                    <a href="{{ route('customer.dashboard') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Đặt bàn</a>
-                    <a href="{{ route('customer.search') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Tìm kiếm</a>
-                    <a href="{{ route('customer.bookings') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Đặt bàn của tôi</a>
-                    <a href="{{ route('customer.profile') }}" class="text-gray-700 hover:text-amber-700 transition font-medium">Tài khoản</a>
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium">
-                            Đăng xuất
+    <nav class="fixed top-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md z-50 border-b border-slate-800">
+        <div class="w-full px-4">
+            <div class="flex justify-between items-center h-24">
+
+                <div class="flex items-center gap-6 ml-4">
+                    <a href="{{ route('customer.dashboard') }}"
+                        class="text-4xl font-bold bg-gradient-to-r from-[#4647D3] to-[#8126CF] text-transparent bg-clip-text">
+                        Golden Spoons
+                    </a>
+
+                    <div class="hidden md:block w-96 ml-10">
+                        <div class="relative">
+                            <input type="text" placeholder="Tìm kiếm bàn..."
+                                class="w-full px-4 py-2 bg-slate-800 text-slate-100 rounded-lg border border-slate-700 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6 mr-4">
+
+                    <a href="#" class="text-slate-300 hover:text-white transition">
+                        Khám phá
+                    </a>
+
+                    <a href="{{ route('customer.booking.index') }}"
+                        class="text-slate-300 hover:text-white transition">
+                        Đặt bàn
+                    </a>
+
+                    <a href="{{ route('customer.history') }}" class="text-slate-300 hover:text-white transition">
+                        Lịch sử
+                    </a>
+
+                    <div class="relative group">
+                        <button class="p-2 hover:bg-slate-800 rounded-lg transition text-slate-400 hover:text-slate-200">
+                            <i class="fas fa-user-circle text-3xl"></i>
                         </button>
-                    </form>
+
+                        <div class="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-lg hidden group-hover:block z-50 border border-slate-700">
+                            <a href="{{ route('customer.profile') }}"
+                                class="block px-4 py-2 hover:bg-slate-700 rounded-t-lg">
+                                Tài khoản
+                            </a>
+                            <a href=""
+                                class="block px-4 py-2 hover:bg-slate-700">
+                                Tìm kiếm
+                            </a>
+                            <form method="POST">
+                                @csrf
+                                <button type="submit" action="{{ route('auth.logout') }}"
+                                    class="w-full text-left px-4 py-2 hover:bg-slate-700 rounded-b-lg text-red-400">
+                                    Đăng xuất
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 class="text-4xl font-bold text-gray-900 mb-8">Lịch Sử Đặt Bàn</h1>
+    <main class="pt-20 max-w-7xl mx-auto px-4 py-10 mt-8">
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">Lịch sử đặt bàn</h1>
+            <p class="text-gray-600">Quản lý các hình trình ẩm thực của bạn. Xem chi tiết, thay đổi hoặc đặt lại những trải nghiệm yêu thích.</p>
+        </div>
 
-        <div class="space-y-4">
-            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition border-l-4 border-green-500">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900">Bàn A1 - 4 người</h3>
-                        <p class="text-gray-600 mt-2">08/04/2026 - 19:00</p>
-                        <p class="text-sm text-gray-500 mt-1">Mã đặt: #12345</p>
+        <div class="flex gap-3 mb-8 pb-4 border-b border-gray-200">
+            <button class="px-4 py-2 bg-indigo-100 text-indigo-600 rounded-lg font-medium hover:bg-indigo-200 transition" onclick="filterBookings('all')">
+                Tất cả
+            </button>
+            <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition" onclick="filterBookings('upcoming')">
+                Sắp tới
+            </button>
+            <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition" onclick="filterBookings('completed')">
+                Đã hoàn thành
+            </button>
+            <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition" onclick="filterBookings('cancelled')">
+                Đã hủy
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="flex flex-col md:flex-row gap-6 p-6">
+                        <div class="md:w-48 flex-shrink-0">
+                            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=300&fit=crop"
+                                alt="Restaurant" class="w-full h-48 object-cover rounded-xl">
+                        </div>
+
+                        <div class="flex-1">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <span class="inline-block bg-indigo-100 text-indigo-600 text-xs font-bold px-3 py-1 rounded-full mb-2">
+                                        SẮP TỚI
+                                    </span>
+                                    <h2 class="text-2xl font-bold text-gray-900">L'Arpège - Tinh hoa Pháp</h2>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2 mb-6">
+                                <div class="flex items-center gap-2 text-gray-600">
+                                    <i class="fas fa-calendar text-indigo-600"></i>
+                                    <span>20:00, Thứ bảy, 24 Tháng 12</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-gray-600">
+                                    <i class="fas fa-users text-indigo-600"></i>
+                                    <span>4 người (Bàn VIP)</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-gray-600">
+                                    <i class="fas fa-map-marker-alt text-indigo-600"></i>
+                                    <span>Quận 1, T.P. Hồ Chí Minh</span>
+                                </div>
+                            </div>
+
+                            <button class="w-full md:w-auto px-8 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">
+                                Xem chi tiết
+                            </button>
+                        </div>
                     </div>
-                    <span class="inline-block bg-green-100 text-green-800 px-4 py-2 rounded font-semibold text-sm">Đã xác nhận</span>
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition border-l-4 border-yellow-500">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900">Bàn B2 - 6 người</h3>
-                        <p class="text-gray-600 mt-2">10/04/2026 - 12:00</p>
-                        <p class="text-sm text-gray-500 mt-1">Mã đặt: #12346</p>
+            <div class="space-y-6">
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border border-gray-200">
+                    <p class="text-sm text-gray-600 font-semibold mb-4">TỔNG QUẢN 2024</p>
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <p class="text-3xl font-bold text-indigo-600">12</p>
+                            <p class="text-xs text-gray-600 mt-1">Lượt đặt bàn</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold text-purple-600">4.8</p>
+                            <p class="text-xs text-gray-600 mt-1">Đánh giá trung bình</p>
+                        </div>
                     </div>
-                    <span class="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded font-semibold text-sm">Chờ xác nhận</span>
+                </div>
+
+                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 border-2 border-indigo-200">
+                    <p class="text-sm text-gray-700 font-semibold mb-2">Ưu đãi độc quyền</p>
+                    <p class="text-sm text-gray-600 mb-4">Bạn có 1 mã giảm giá 15% cho bữa ăn tiếp theo tại các nhà hàng độc quyền.</p>
+                    <a href="#" class="text-indigo-600 text-sm font-semibold hover:text-indigo-700 flex items-center gap-2">
+                        Khám phá ngay <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Lịch sử gần đây</h2>
+
+            <div class="space-y-4">
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=80&h=80&fit=crop"
+                            alt="Restaurant" class="w-20 h-20 rounded-lg object-cover">
+                        <div>
+                            <h3 class="font-bold text-gray-900">The Log - Gem Center</h3>
+                            <p class="text-sm text-gray-600">Từ Tháng 11, 2024 • 19:30 • 2 Người</p>
+                            <span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-2 py-1 mt-2 rounded">
+                                ĐÃ HOÀN THÀNH
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-green-600 text-xs font-bold">CÓ NHẬN "THANK</span>
+                        <button class="px-4 py-2 text-indigo-600 border border-indigo-300 rounded-lg hover:bg-indigo-50 transition text-sm font-medium">
+                            Đặt lại
+                        </button>
+                        <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition text-sm">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <img src="https://images.unsplash.com/photo-1563109556-06b3fe565c0b?w=80&h=80&fit=crop"
+                            alt="Restaurant" class="w-20 h-20 rounded-lg object-cover">
+                        <div>
+                            <h3 class="font-bold text-gray-900">Maison Marou Saigon</h3>
+                            <p class="text-sm text-gray-600">02 Tháng 11, 2024 • 14:00 • 3 Người</p>
+                            <span class="inline-block bg-red-100 text-red-700 text-xs font-bold px-2 py-1 mt-2 rounded">
+                                ĐÃ HỦY
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-red-600 text-xs font-bold">CÓ HỦY</span>
+                        <button class="px-4 py-2 text-indigo-600 border border-indigo-300 rounded-lg hover:bg-indigo-50 transition text-sm font-medium">
+                            Đặt lại
+                        </button>
+                        <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition text-sm">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <img src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=80&h=80&fit=crop"
+                            alt="Restaurant" class="w-20 h-20 rounded-lg object-cover">
+                        <div>
+                            <h3 class="font-bold text-gray-900">Sushi Rei</h3>
+                            <p class="text-sm text-gray-600">28 Tháng 10, 2024 • 21:00 • 2 Người</p>
+                            <span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-2 py-1 mt-2 rounded">
+                                ĐÃ HOÀN THÀNH
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-green-600 text-xs font-bold">ĐÃ HOÀN THÀNH</span>
+                        <button class="px-4 py-2 text-indigo-600 border border-indigo-300 rounded-lg hover:bg-indigo-50 transition text-sm font-medium">
+                            Đặt lại
+                        </button>
+                        <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition text-sm">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="bg-amber-900 text-amber-50 mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+    <footer class="bg-slate-900 text-slate-300 mt-20 py-8 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div>
-                    <h4 class="font-bold mb-2">Liên hệ</h4>
-                    <p class="text-sm">0123 456 789</p>
-                    <p class="text-sm">info@restaurant.com</p>
+                    <h3 class="font-bold text-white mb-3">VỀ CHÚNG TÔI</h3>
+                    <p class="text-sm text-slate-400">Nền tảng đặt bàn nhà hàng hàng đầu tại Việt Nam</p>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-2">Giờ mở cửa</h4>
-                    <p class="text-sm">11:00 - 23:00 hàng ngày</p>
-                    <p class="text-sm">Hỗ trợ 24/7 qua chat</p>
+                    <h3 class="font-bold text-white mb-3">ĐIỀU KHOẢN</h3>
+                    <p class="text-sm text-slate-400">Chính sách & Điều kiện</p>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-2">Địa chỉ</h4>
-                    <p class="text-sm">123 Đường Lê Lợi, Quận 1</p>
-                    <p class="text-sm">TP. Hồ Chí Minh</p>
+                    <h3 class="font-bold text-white mb-3">LIÊN HỆ</h3>
+                    <p class="text-sm text-slate-400">Hỗ trợ khách hàng</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-white mb-3">CẢU HỎI THƯỜNG GẶP</h3>
+                    <p class="text-sm text-slate-400">Giải đáp thắc mắc</p>
                 </div>
             </div>
-            <div class="border-t border-amber-800 mt-6 pt-6 text-center text-sm">
-                <p>&copy; 2026 Golden Spoons Restaurant. Tất cả quyền được bảo lưu.</p>
+            <div class="border-t border-slate-800 pt-6 text-center text-sm text-slate-400">
+                <p>&copy; 2024 Luminous Epicure. Tính hóa ẩm thực Việt.</p>
             </div>
         </div>
     </footer>
+
+    <script>
+        function filterBookings(type) {
+            console.log('Filter bookings by:', type);
+        }
+    </script>
 
 </body>
 

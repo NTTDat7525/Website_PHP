@@ -6,9 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hồ Sơ Tài Khoản - Golden Spoons</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
-<body class="bg-slate-100 text-slate-800">
+<body class="bg-slate-100 text-slate-800 ">
 
     <nav class="fixed top-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md z-50 border-b border-slate-800">
         <div class="w-full px-4">
@@ -40,7 +41,7 @@
                     </a>
 
                     <a href="#" class="text-slate-300 hover:text-white transition">
-                        Yêu thích
+                        Lịch sử
                     </a>
 
                     <div class="relative group">
@@ -49,7 +50,7 @@
                         </button>
 
                         <div class="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-lg hidden group-hover:block z-50 border border-slate-700">
-                            <a href=""
+                            <a href="{{ route('customer.profile') }}"
                                 class="block px-4 py-2 hover:bg-slate-700 rounded-t-lg">
                                 Tài khoản
                             </a>
@@ -72,89 +73,140 @@
         </div>
     </nav>
 
-    <div class="pt-20 max-w-4xl h-screen mx-auto py-10 px-4 mt-8">
-        <h1 class="text-2xl font-bold mb-8 italic">Quản lý tài khoản</h1>
-
+    <div class="pt-20 max-w-6xl mx-auto py-10 px-4 mt-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-            <div class="md:col-span-1">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
-                    <div class="relative w-32 h-32 mx-auto mb-4">
-                        <img src="https://ui-avatars.com/api/?name=User&background=random" alt="Avatar" class="rounded-full w-full h-full object-cover border-4 border-indigo-50">
-                        <button class="absolute bottom-1 right-1 bg-white p-2 rounded-full shadow-md hover:bg-gray-50 transition">
-                            <i class="fas fa-camera text-indigo-600"></i>
-                        </button>
+            <div class="md:col-span-2 space-y-6">
+
+                <div class="bg-white rounded-2xl shadow-lg p-6 flex items-center gap-6">
+                    <img src="https://ui-avatars.com/api/?name={{ auth()->user()->username ?? 'User' }}&background=random"
+                        class="w-20 h-20 rounded-full border-4 border-indigo-100">
+
+                    <div>
+                        <h2 class="text-xl font-bold">
+                            {{ auth()->user()->username ?? 'Người dùng' }}
+                        </h2>
+                        <p class="text-sm text-gray-500">
+                            Thành viên từ {{ auth()->user()->created_at->format('M Y') }}
+                        </p>
                     </div>
-                    <h2 class="font-semibold text-lg">Người dùng</h2>
-                    <p class="text-sm text-gray-500 mb-4">Thành viên từ tháng 4, 2026</p>
+
+                    <button onclick="openModal()"
+                        class="ml-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        Chỉnh sửa
+                    </button>
                 </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div class="bg-white rounded-2xl shadow-lg p-4 flex items-center gap-4">
+                        <i class="fas fa-envelope text-indigo-600"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Email</p>
+                            <p class="font-medium">{{ auth()->user()->email }}</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-lg p-4 flex items-center gap-4">
+                        <i class="fas fa-phone text-indigo-600"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Số điện thoại</p>
+                            <p class="font-medium">
+                                {{ auth()->user()->phone ?? 'Chưa cập nhật' }}
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg p-6 ">
+                    <p class="text-sm text-gray-500 mb-2">Tiểu sử</p>
+                    <p class="text-gray-700 italic">
+                        {{ auth()->user()->bio ?? 'Chưa có thông tin' }}
+                    </p>
+                </div>
+
             </div>
 
-            <div class="md:col-span-2 space-y-8">
+            <div class="space-y-6">
 
-                <section class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <div class="flex items-center mb-6">
-                        <i class="fas fa-user-circle text-indigo-500 mr-3 text-xl"></i>
-                        <h3 class="text-lg font-semibold">Thông tin cá nhân</h3>
-                    </div>
+                <div class="bg-white rounded-2xl shadow-lg p-6 text-center border-2">
+                    <i class="fas fa-check-circle text-600 text-3xl mb-3"></i>
+                    <p class="text-sm text-gray-600">ĐƠN HOÀN THÀNH</p>
+                    <p class="text-3xl font-bold text-600">LẤY DB</p>
+                </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-700">Họ và tên</label>
-                            <input type="text" placeholder="Nhập họ tên" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" value="user@example.com" disabled class="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-500 cursor-not-allowed">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-700">Số điện thoại</label>
-                            <input type="text" placeholder="0123 456 789" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-700">Địa chỉ</label>
-                            <input type="text" placeholder="Thành phố, Quốc gia" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        </div>
-                    </div>
+                <div class="bg-white rounded-2xl shadow-lg p-6 text-center border-2">
+                    <i class="fas fa-calendar-check text-500 text-3xl mb-3"></i>
+                    <p class="text-sm text-gray-600">SẮP ĐẾN HẸN</p>
+                    <p class="text-3xl font-bold text-500">LẤY DB</p>
+                </div>
 
-                    <div class="mt-6">
-                        <button class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 transition duration-200">
-                            Lưu thay đổi
-                        </button>
-                    </div>
-                </section>
-
-                <section class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <div class="flex items-center mb-6">
-                        <i class="fas fa-shield-alt text-red-500 mr-3 text-xl"></i>
-                        <h3 class="text-lg font-semibold">Đổi mật khẩu</h3>
-                    </div>
-
-                    <div class="space-y-4 max-w-md">
-                        <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-700">Mật khẩu hiện tại</label>
-                            <input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-700">Mật khẩu mới</label>
-                            <input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-sm font-medium text-gray-700">Xác nhận mật khẩu mới</label>
-                            <input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                        </div>
-                    </div>
-
-                    <div class="mt-6">
-                        <button class="bg-gray-800 text-white px-6 py-2 rounded-lg font-medium hover:bg-black transition duration-200">
-                            Cập nhật mật khẩu
-                        </button>
-                    </div>
-                </section>
+                <div class="bg-white rounded-2xl shadow-lg p-6 text-center border-2">
+                    <i class="fas fa-wallet text-600 text-3xl mb-3"></i>
+                    <p class="text-sm text-gray-600">CHI TIÊU</p>
+                    <p class="text-3xl font-bold text-600">LẤY DB</p>
+                </div>
 
             </div>
+
         </div>
     </div>
+
+    <div id="profileModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl w-full max-w-2xl p-6 relative">
+
+            <h2 class="text-xl font-bold mb-4">Cập nhật thông tin</h2>
+
+            <form id="updateForm">
+                @csrf
+
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" name="username" value="{{ auth()->user()->name ?? '' }}"
+                        class="border p-2 rounded" placeholder="Họ và tên">
+
+                    <input type="text" name="phone" value="{{ auth()->user()->phone ?? '' }}"
+                        class="border p-2 rounded" placeholder="Số điện thoại">
+                </div>
+
+                <textarea name="bio" class="border p-2 rounded w-full mt-4 h-32"
+                    placeholder="Bio">{{ auth()->user()->bio ?? '' }}</textarea>
+
+                <div class="flex justify-end gap-3 mt-4">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded">
+                        Hủy
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded">
+                        Lưu
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('profileModal').classList.remove('hidden');
+            document.getElementById('profileModal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('profileModal').classList.add('hidden');
+            document.getElementById('profileModal').classList.remove('flex');
+        }
+
+        document.getElementById('profileModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.getElementById('updateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Form submitted');
+        });
+    </script>
 
 </body>
 

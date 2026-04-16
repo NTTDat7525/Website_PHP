@@ -37,15 +37,19 @@ Route::middleware('auth')->prefix('customer')->name('customer.')->group(function
     Route::get("/profile", [AuthController::class, 'profile'])
         ->name('profile');
 
-    Route::get('/history', function() {
-        return view('customer.history');
-    })->name('history');
+    Route::put("/profile/update", [AuthController::class, 'updateProfile'])
+        ->name('profile.update');
+
+    Route::get('/history', [BookingController::class, 'history'])
+        ->name('history');
 
     Route::get('/search', function() {
         return view('customer.search');
     })->name('search');
+});
 
-    Route::get('/admin/dashboard', function () {
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', function () {
         return view('admin.dashboard');
-    })->name('admin.dashboard');
+    })->name('dashboard');
 });

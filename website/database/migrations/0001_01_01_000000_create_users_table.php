@@ -17,10 +17,16 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone')->default('');
+            $table->text('bio')->nullable();
             $table->enum('role', ['customer', 'admin'])->default('customer');
             $table->timestamps();
         });
 
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
     }
 
 };

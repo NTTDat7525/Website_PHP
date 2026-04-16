@@ -52,4 +52,10 @@ class BookingController extends Controller
         return redirect()->route('customer.dashboard')
             ->with('success', 'Đặt bàn thành công');
     }
+
+    public function history()
+    {
+        $bookings = Booking::where('user_id', Auth::id())->with('table')->get();
+        return view('customer.history', compact('bookings'));
+    }
 }
