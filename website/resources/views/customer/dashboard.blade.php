@@ -132,7 +132,7 @@
                 </div>
 
                 <div class="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 border border-slate-700 z-10">
-                    <form action="{{ route('customer.tables.index') }}" method="GET" class="space-y-6">
+                    <form action="" method="GET" class="space-y-6">
 
                         <div>
                             <label class="text-sm font-semibold text-slate-300 mb-2 block">NGÀY</label>
@@ -178,105 +178,50 @@
         </div>
     </section>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-
-            <aside class="lg:col-span-1">
-                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 sticky top-24">
-                    <h3 class="text-lg font-bold mb-6">BỘ LỌC</h3>
-
-                    <form method="GET" action="{{ route('customer.tables.index') }}" class="space-y-6">
-                        <div class="mb-8">
-                            <h4 class="text-sm font-semibold text-slate-300 mb-4">Khu vực</h4>
-                            <div class="space-y-3">
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="location" value="main" class="w-4 h-4">
-                                    <span class="ml-3 text-sm">Sảnh chính</span>
-                                </label>
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="location" value="terrace" class="w-4 h-4">
-                                    <span class="ml-3 text-sm">Sân thượng</span>
-                                </label>
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="location" value="vip" class="w-4 h-4">
-                                    <span class="ml-3 text-sm">Khu VIP</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <button type="submit"
-                            class="w-full bg-violet-600 hover:bg-violet-700 text-white py-2 rounded-lg transition">
-                            Áp dụng bộ lọc
-                        </button>
-                    </form>
+    <main class="pt-20 bg-white h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="flex justify-center mr-10 gap-8 items-start -ml-32">
+                    <div class="w-56 h-96 bg-violet-500 rounded-2xl shadow-2xl mt-32"></div>
+                    <div class="w-72 h-[560px] bg-red-500 rounded-2xl shadow-2xl mt-0"></div>
+                    <div class="w-56 h-80 bg-blue-500 rounded-2xl shadow-2xl mt-40"></div>
                 </div>
-            </aside>
 
-            <main class="lg:col-span-3">
-                <section>
-                    <div class="mb-8">
-                        <h2 class="text-3xl font-bold mb-2">Sơ đồ bàn trực tiếp</h2>
-                        <p class="text-slate-400">Trạng thái bàn được cập nhật theo thời gian thực.</p>
+                <div>
+                    <div class="mb-6">
+                        <span class="text-sm font-bold text-violet-600 tracking-widest">CÂU CHUYỆN CỦA CHÚNG TÔI</span>
                     </div>
 
-                    <div class="flex gap-6 mb-8">
-                        <div class="flex items-center gap-2">
-                            <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
-                            <span class="text-sm text-slate-300">CÒN TRỐNG</span>
+                    <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                        Tinh Hoa Hội Tụ Trong <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-purple-600">Từng Khoảnh Khắc</span>
+                    </h2>
+
+                    <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                        Tại Golden Spoons, việc đặt bàn không chỉ đơn thuần là lựa chọn chỗ ngồi, mà là bước khởi đầu cho một trải nghiệm tinh tế. Chúng tôi mang đến hệ thống đặt bàn thông minh, giúp bạn dễ dàng chọn lựa không gian phù hợp với từng khoảnh khắc – từ riêng tư đến sang trọng.
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-8 mb-8">
+                        <div>
+                            <p class="text-4xl font-bold text-gray-900">100%</p>
+                            <p class="text-sm text-gray-600 font-semibold mt-2">TRẠNG THÁI BÀN CẬP NHẬT LIÊN TỤC</p>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                            <span class="text-sm text-slate-300">ĐÃ ĐẶT</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                            <span class="text-sm text-slate-300">ĐANG SỬ DỤNG</span>
+                        <div>
+                            <p class="text-4xl font-bold text-gray-900">24/7</p>
+                            <p class="text-sm text-gray-600 font-semibold mt-2">ĐẶT BÀN NHANH CHÓNG MỌI LÚC</p>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        @foreach($tables as $table)
-                        <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
-                            <div class="h-48 flex items-center justify-center">
-                                <i class="fas fa-chair text-5xl text-slate-500"></i>
-                            </div>
-
-                            <div class="p-4">
-                                <h3 class="text-lg font-bold">{{ $table->name }}</h3>
-                                <p class="text-sm text-slate-400 mb-2">
-                                    {{ $table->capacity }} người
-                                </p>
-
-                                <p class="text-sm mb-4">
-                                    Khu vực: {{ $table->location ?? 'Sảnh chính' }}
-                                </p>
-
-                                @if($table->status === 'available')
-                                <a href="{{ route('customer.booking.create', ['id' => $table->id]) }}"
-                                    class="block text-center bg-green-600 hover:bg-violet-600 py-2 rounded transition font-medium">
-                                    Đặt ngay
-                                </a>
-                                @elseif($table->status === 'reserved')
-                                <button disabled class="w-full bg-yellow-600 py-2 rounded cursor-not-allowed text-slate-300">
-                                    Đã đặt
-                                </button>
-                                @else
-                                <button disabled class="w-full bg-red-600 py-2 rounded cursor-not-allowed text-slate-300">
-                                    Đang sử dụng
-                                </button>
-                                @endif
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                    <!-- Thêm nút chuyển trang nếu có nhiều hơn 9 bàn (thêm sau) -->
-                </section>
-            </main>
+                    <a href="#" class="inline-flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                        Đi đến trang đặt bàn
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
+    </main>
 
-
-    <footer class="bg-slate-900 border-t border-slate-800 mt-20">
+    <footer class="bg-slate-900 border-t border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div>

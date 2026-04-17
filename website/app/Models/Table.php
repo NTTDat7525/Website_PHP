@@ -9,7 +9,7 @@ class Table extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'capacity', 'status'];
+    protected $fillable = ['name', 'capacity', 'location', 'status'];
 
     public function bookings()
     {

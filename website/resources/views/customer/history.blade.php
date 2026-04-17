@@ -113,50 +113,33 @@
                                 </div>
                             </div>
 
-                            <div class="space-y-2 mb-6">
+                            <div class="space-y-2 mb-2">
                                 <div class="flex items-center gap-2 text-gray-600">
                                     <i class="fas fa-calendar text-indigo-600"></i>
                                     <span>20:00, Thứ bảy, 24 Tháng 12</span>
                                 </div>
                                 <div class="flex items-center gap-2 text-gray-600">
                                     <i class="fas fa-users text-indigo-600"></i>
-                                    <span>4 người (Bàn VIP)</span>
-                                </div>
-                                <div class="flex items-center gap-2 text-gray-600">
-                                    <i class="fas fa-map-marker-alt text-indigo-600"></i>
-                                    <span>Quận 1, T.P. Hồ Chí Minh</span>
+                                    <span>4 người</span>
                                 </div>
                             </div>
-
-                            <button class="w-full md:w-auto px-8 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">
+                            <a href="#" class="w-full md:w-auto px-8 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition inline-block text-center">
                                 Xem chi tiết
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="space-y-6">
-                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border border-gray-200">
-                    <p class="text-sm text-gray-600 font-semibold mb-4">TỔNG QUẢN 2024</p>
-                    <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border border-gray-200 text-center">
+                    <p class="text-sm text-gray-600 font-semibold mb-4">TỔNG QUAN</p>
+                    <div class="flex justify-center gap-4 mb-6">
                         <div>
                             <p class="text-3xl font-bold text-indigo-600">12</p>
-                            <p class="text-xs text-gray-600 mt-1">Lượt đặt bàn</p>
-                        </div>
-                        <div>
-                            <p class="text-3xl font-bold text-purple-600">4.8</p>
-                            <p class="text-xs text-gray-600 mt-1">Đánh giá trung bình</p>
+                            <p class="text-xs text-gray-600 mt-1">Lượt đặt</p>
                         </div>
                     </div>
-                </div>
-
-                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 border-2 border-indigo-200">
-                    <p class="text-sm text-gray-700 font-semibold mb-2">Ưu đãi độc quyền</p>
-                    <p class="text-sm text-gray-600 mb-4">Bạn có 1 mã giảm giá 15% cho bữa ăn tiếp theo tại các nhà hàng độc quyền.</p>
-                    <a href="#" class="text-indigo-600 text-sm font-semibold hover:text-indigo-700 flex items-center gap-2">
-                        Khám phá ngay <i class="fas fa-arrow-right text-xs"></i>
-                    </a>
                 </div>
             </div>
         </div>
@@ -165,20 +148,25 @@
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Lịch sử gần đây</h2>
 
             <div class="space-y-4">
+                @foreach ($bookings as $booking)
                 <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition flex items-center justify-between">
                     <div class="flex items-center gap-4">
                         <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=80&h=80&fit=crop"
                             alt="Restaurant" class="w-20 h-20 rounded-lg object-cover">
                         <div>
-                            <h3 class="font-bold text-gray-900">The Log - Gem Center</h3>
-                            <p class="text-sm text-gray-600">Từ Tháng 11, 2024 • 19:30 • 2 Người</p>
+                            <h3 class="font-bold text-gray-900">
+                                {{ $booking->table->name ?? 'Bàn '}}
+                            </h3>
+                            <p class="text-sm text-gray-600">
+                                {{}}
+                            </p>
                             <span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-2 py-1 mt-2 rounded">
                                 ĐÃ HOÀN THÀNH
                             </span>
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <span class="text-green-600 text-xs font-bold">CÓ NHẬN "THANK</span>
+                        <span class="text-green-600 text-xs font-bold">ĐÃ HOÀN THÀNH</span>
                         <button class="px-4 py-2 text-indigo-600 border border-indigo-300 rounded-lg hover:bg-indigo-50 transition text-sm font-medium">
                             Đặt lại
                         </button>
@@ -201,7 +189,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <span class="text-red-600 text-xs font-bold">CÓ HỦY</span>
+                        <span class="text-red-600 text-xs font-bold">ĐÃ HỦY</span>
                         <button class="px-4 py-2 text-indigo-600 border border-indigo-300 rounded-lg hover:bg-indigo-50 transition text-sm font-medium">
                             Đặt lại
                         </button>

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
@@ -9,20 +10,19 @@ use Illuminate\Support\Facades\Auth;
 class BookingController extends Controller
 {
     // Danh sách booking
-    public function index(Request $request)
+    public function index()
     {
-        $date = $request->booking_date;
-        $time = $request->booking_time;
 
-        $tables = \App\Models\Table::all(); // sau này filter
+        $tables = Table::all(); // sau này filter
 
-        return view('customer.booking-list', compact('tables', 'date', 'time'));
+        return view('customer.listTable', compact('tables'));
     }
 
     //hiển thị form đặt bàn
-    public function create($id) {
+    public function create($id)
+    {
         $table = Table::findOrFail($id);
-        if($table->status !== 'available') {
+        if ($table->status !== 'available') {
             return response()->json(['error' => 'Bàn đã được đặt trước'], 400);
         }
         return view('customer.booking', compact('table'));
@@ -40,8 +40,14 @@ class BookingController extends Controller
         Booking::create([
             'user_id' => Auth::id(),
             'table_id' => $table->id,
-            'booking_time' => $request->booking_time,
-            'status' => 'reserved',
+            'time' => $request->time,
+            'guest_count' => $request->guest_count,
+            'email' => Auth::user()->email,
+            'phone' => $request->phone,
+            'special_requests' => $request->special_requests,
+            'total_price' => $request->total_price ?? 0,
+            'status' => 'pending',
+            'payment_method' => $request->payment_method ?? 'cash',
         ]);
 
         // cập nhật trạng thái bàn
@@ -57,5 +63,15 @@ class BookingController extends Controller
     {
         $bookings = Booking::where('user_id', Auth::id())->with('table')->get();
         return view('customer.history', compact('bookings'));
+    }
+
+    // Hiển thị chi tiết booking
+    public function show($id)
+    {
+        $booking = Booking::with('table')
+            ->where('user_id', Auth::id())
+            ->findOrFail($id);
+
+        return view('customer.detailBooking', compact('booking'));
     }
 }
