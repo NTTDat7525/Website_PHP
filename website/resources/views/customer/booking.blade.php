@@ -238,7 +238,7 @@
                     <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 sticky top-24">
                         <h3 class="text-lg font-bold mb-6">Chọn thời gian</h3>
 
-                        <form action="" method="GET" class="space-y-6">
+                        <form action="{{ route('customer.booking.store', $table->id ?? 0) }}" method="POST" class="space-y-6">
                             @csrf
 
                             @if($table)
@@ -278,16 +278,35 @@
                                     <button type="button" class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold opacity-50 cursor-not-allowed" disabled>--:--</button>
                                 </div>
                                 <input type="hidden" name="booking_time" id="booking_time" value="19:00">
+                                <input type="hidden" name="time" id="time" value="2025-04-14 19:00:00">
                             </div>
+
+                            <div class="mb-6">
+                                <label class="block text-xs font-semibold text-slate-300 mb-2">SỐ KHÁCH</label>
+                                <select name="guest_count" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:border-violet-500">
+                                    <option value="1">1 người</option>
+                                    <option value="2">2 người</option>
+                                    <option value="3">3 người</option>
+                                    <option value="4" selected>4 người</option>
+                                    <option value="5">5 người</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-6">
+                                <label class="block text-xs font-semibold text-slate-300 mb-2">YÊU CẦU ĐẶC BIỆT</label>
+                                <textarea name="special_requests" placeholder="Nhập yêu cầu đặc biệt của bạn..." class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500 h-20 resize-none"></textarea>
+                            </div>
+
+                            <input type="hidden" name="total_price" id="total_price">
 
                             <div class="bg-slate-900 rounded-lg p-4 mb-6 space-y-2 border border-slate-600">
                                 <div class="flex justify-between text-sm">
                                     <span class="text-slate-400">Đặt cọc</span>
-                                    <span class="text-white font-semibold">$48.50</span>
+                                    <span class="text-white font-semibold" id="deposit_amount">49,000đ</span>
                                 </div>
                                 <div class="border-t border-slate-700 pt-2 mt-2 flex justify-between">
                                     <span class="text-sm font-semibold text-slate-300">TỔNG CỘNG</span>
-                                    <span class="text-lg font-bold text-violet-400">$52.50</span>
+                                    <span class="text-lg font-bold text-violet-400" id="total_amount">245,000đ</span>
                                 </div>
                             </div>
 
@@ -306,6 +325,13 @@
     </div>
 
     <script>
+        function updateDateTimeField() {
+            const date = document.getElementById('booking_date').value;
+            const time = document.getElementById('booking_time').value;
+            const dateTime = `${date} ${time}:00`;
+            document.getElementById('time').value = dateTime;
+        }
+
         document.querySelectorAll('.date-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -316,6 +342,7 @@
                 this.classList.add('active', 'bg-violet-600', 'text-white');
                 this.classList.remove('bg-slate-700', 'text-slate-400');
                 document.getElementById('booking_date').value = this.getAttribute('data-date');
+                updateDateTimeField();
             });
         });
 
@@ -329,8 +356,11 @@
                 this.classList.add('active', 'bg-violet-600', 'text-white');
                 this.classList.remove('bg-slate-700', 'text-slate-400');
                 document.getElementById('booking_time').value = this.getAttribute('data-time');
+                updateDateTimeField();
             });
         });
+
+        document.addEventListener('DOMContentLoaded', updateDateTimeField);
     </script>
 
 </body>

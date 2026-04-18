@@ -32,10 +32,7 @@ class AuthController extends Controller
         $validated['password'] = bcrypt($validated['password']);
         $user = User::create($validated);
 
-        return response()->json([
-            'message' => 'Đăng ký thành công',
-            'user' => $user
-        ], 201);
+        return redirect()->route('auth.login')->with('success', 'Đăng ký thành công, vui lòng đăng nhập');
     }
 
     public function login(Request $request)

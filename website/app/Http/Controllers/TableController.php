@@ -23,6 +23,12 @@ class TableController extends Controller
         return view('pages.home', compact('tables'));
     }
 
+    public function adminIndex()
+    {
+        $tables = Table::all();
+        return view('admin.tables', compact('tables'));
+    }
+
     // Lấy chi tiết một bàn theo ID
     public function show($id)
     {

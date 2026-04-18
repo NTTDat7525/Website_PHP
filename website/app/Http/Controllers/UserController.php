@@ -16,6 +16,12 @@ class UserController extends Controller
             'message' => 'API người dùng hoạt động'
             ], 200);
     }
+
+    public function adminIndex()
+    {
+        $users = User::all();
+        return view('admin.users', compact('users'));
+    }
 //lấy thông tin cá nhân 1 user
     public function show($id)
     {

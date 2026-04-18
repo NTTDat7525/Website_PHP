@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('phone')->nullable();
             $table->text('special_requests')->nullable();
-            $table->decimal('total_price', 8, 2)->default(0);
+            $table->bigInteger('total_price')->default(0);
             $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->enum('payment_method', ['vnpay', 'cash'])->default('vnpay');
             $table->enum('payment_status', ['unpaid', 'paid'])->default('unpaid');

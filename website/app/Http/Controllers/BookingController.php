@@ -18,8 +18,26 @@ class BookingController extends Controller
         return view('customer.listTable', compact('tables'));
     }
 
+    public function adminIndex()
+    {
+        $bookings = Booking::with('table', 'user')->get();
+        return view('admin.bookings', compact('bookings'));
+    }
+
+    public function revenue()
+    {
+        $revenue = Booking::where('status', 'confirmed')->sum('total_price');
+        return view('admin.revenue', compact('revenue'));
+    }
+
+    public function reports()
+    {
+        $bookings = Booking::with('table', 'user')->get();
+        return view('admin.reports', compact('bookings'));
+    }
+
     //hiển thị form đặt bàn
-    public function create($id)
+    public function create($id)//user
     {
         $table = Table::findOrFail($id);
         if ($table->status !== 'available') {
@@ -28,7 +46,7 @@ class BookingController extends Controller
         return view('customer.booking', compact('table'));
     }
 
-    public function store(Request $request, $id)
+    public function store(Request $request, $id)//user
     {
         $table = Table::findOrFail($id);
 
@@ -36,8 +54,7 @@ class BookingController extends Controller
             return redirect()->back()->with('error', 'Bàn đã được đặt');
         }
 
-        // tạo booking
-        Booking::create([
+        $booking = Booking::create([
             'user_id' => Auth::id(),
             'table_id' => $table->id,
             'time' => $request->time,
@@ -55,18 +72,54 @@ class BookingController extends Controller
             'status' => 'reserved'
         ]);
 
-        return redirect()->route('customer.dashboard')
-            ->with('success', 'Đặt bàn thành công');
+        return redirect()->route('customer.booking.confirm', $booking->id);
     }
 
-    public function history()
+    // Hiển thị trang xác nhận booking
+    public function confirm($id)
+    {
+        $booking = Booking::with('table')->findOrFail($id);
+
+        // Kiểm tra xem booking này có thuộc về user hiện tại không
+        if ($booking->user_id !== Auth::id()) {
+            return abort(403, 'Unauthorized');
+        }
+
+        return view('customer.confirmBooking', compact('booking'));
+    }
+
+    // Cập nhật trạng thái thanh toán
+    public function confirmPayment(Request $request, $id)
+    {
+        $booking = Booking::findOrFail($id);
+
+        // Kiểm tra xem booking này có thuộc về user hiện tại không
+        if ($booking->user_id !== Auth::id()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        // Cập nhật trạng thái booking
+        $booking->update([
+            'status' => 'confirmed',
+            'payment_status' => 'paid'
+        ]);
+
+        // Update table status to in_use
+        $booking->table->update([
+            'status' => 'occupied'
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Thanh toán thành công', 'booking_id' => $booking->id]);
+    }
+
+    public function history()//user
     {
         $bookings = Booking::where('user_id', Auth::id())->with('table')->get();
         return view('customer.history', compact('bookings'));
     }
 
     // Hiển thị chi tiết booking
-    public function show($id)
+    public function show($id)//user
     {
         $booking = Booking::with('table')
             ->where('user_id', Auth::id())

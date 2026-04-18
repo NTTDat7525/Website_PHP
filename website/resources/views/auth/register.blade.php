@@ -8,7 +8,7 @@
 <body class="bg-gray-100 flex items-center justify-center h-screen">
     <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
         <h2 class="text-2xl font-bold text-center mb-6">Đăng ký</h2>
-        <form method="POST" action="{{ route('register.post') }}" class="space-y-4">
+        <form method="POST" action="{{ route('auth.register.post') }}" class="space-y-4">
             @csrf
             <div>
                 <label class="block text-gray-700">Tên đăng nhập</label>
@@ -30,7 +30,7 @@
         </form>
         <p class="text-center mt-4 text-gray-600">
             Đã có tài khoản?
-            <a href="{{ route('login') }}" class="text-green-600 hover:underline">Đăng nhập</a>
+            <a href="{{ route('auth.login') }}" class="text-green-600 hover:underline">Đăng nhập</a>
         </p>
     </div>
 </body>

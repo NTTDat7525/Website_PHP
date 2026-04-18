@@ -29,11 +29,24 @@ Route::middleware('auth')->prefix('customer')->name('customer.')->group(function
         ->name('booking.index');
 
     //chuyển đến form đặt bàn
-    Route::get('/booking/{id}', [BookingController::class, 'create']) //done
+    Route::get('/booking/create/{id}', [BookingController::class, 'create']) //done
         ->name('booking.create');
 
-    // Route::post('/booking/{id}', [BookingController::class, 'store'])
-    //     ->name('booking.store');
+    // Lưu booking và chuyển đến trang xác nhận
+    Route::post('/booking/store/{id}', [BookingController::class, 'store'])
+        ->name('booking.store');
+
+    // Trang xác nhận thanh toán
+    Route::get('/booking/confirm/{id}', [BookingController::class, 'confirm'])
+        ->name('booking.confirm');
+
+    // API xác nhận thanh toán
+    Route::post('/booking/confirm-payment/{id}', [BookingController::class, 'confirmPayment'])
+        ->name('booking.confirm-payment');
+
+    // Xem chi tiết booking
+    Route::get('/booking/detail/{id}', [BookingController::class, 'show'])
+        ->name('booking.show');
 
     //chuyển đến trang profile
     Route::get("/profile", [AuthController::class, 'profile']) //done
@@ -46,18 +59,17 @@ Route::middleware('auth')->prefix('customer')->name('customer.')->group(function
     //chuyển đến trang lịch sử đặt bàn
     Route::get('/history', [BookingController::class, 'history']) //done
         ->name('history');
-
-    // Xem chi tiết booking
-    Route::get('/booking/{id}', [BookingController::class, 'show'])
-        ->name('booking.detail');
-
-    // Route::get('/search', function() {
-    //     return view('customer.search');
-    // })->name('search');
 });
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () { //done
         return view('admin.dashboard');
     })->name('dashboard');
+
+    Route::get('/bookings', [BookingController::class, 'adminIndex'])->name('bookings');
+    Route::get('/tables', [TableController::class, 'adminIndex'])->name('tables');
+    Route::get('/users', [AuthController::class, 'adminIndex'])->name('users');
+    Route::get('/revenue', [BookingController::class, 'revenue'])->name('revenue');
+    Route::get('/reports', [BookingController::class, 'reports'])->name('reports');
+
 });

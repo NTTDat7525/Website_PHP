@@ -148,17 +148,15 @@
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Lịch sử gần đây</h2>
 
             <div class="space-y-4">
-                @foreach ($bookings as $booking)
                 <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition flex items-center justify-between">
                     <div class="flex items-center gap-4">
                         <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=80&h=80&fit=crop"
                             alt="Restaurant" class="w-20 h-20 rounded-lg object-cover">
                         <div>
                             <h3 class="font-bold text-gray-900">
-                                {{ $booking->table->name ?? 'Bàn '}}
                             </h3>
                             <p class="text-sm text-gray-600">
-                                {{}}
+                                
                             </p>
                             <span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-2 py-1 mt-2 rounded">
                                 ĐÃ HOÀN THÀNH
