@@ -61,13 +61,6 @@
                         class="text-4xl font-bold bg-gradient-to-r from-[#4647D3] to-[#8126CF] text-transparent bg-clip-text">
                         Golden Spoons
                     </a>
-
-                    <div class="hidden md:block w-96 ml-10">
-                        <div class="relative">
-                            <input type="text" placeholder="Tìm kiếm bàn..."
-                                class="w-full px-4 py-2 bg-slate-800 text-slate-100 rounded-lg border border-slate-700 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
-                        </div>
-                    </div>
                 </div>
 
                 <div class="flex items-center gap-6 mr-4">
@@ -95,13 +88,9 @@
                                 class="block px-4 py-2 hover:bg-slate-700 rounded-t-lg">
                                 Tài khoản
                             </a>
-                            <a href=""
-                                class="block px-4 py-2 hover:bg-slate-700">
-                                Tìm kiếm
-                            </a>
-                            <form method="POST">
+                            <form method="POST" action="{{ route('auth.logout') }}">
                                 @csrf
-                                <button type="submit" action="{{ route('auth.logout') }}"
+                                <button type="submit"
                                     class="w-full text-left px-4 py-2 hover:bg-slate-700 rounded-b-lg text-red-400">
                                     Đăng xuất
                                 </button>
@@ -132,24 +121,29 @@
                 </div>
 
                 <div class="bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 border border-slate-700 z-10">
-                    <form action="" method="GET" class="space-y-6">
+                    @if(session('error'))
+                    <div class="bg-red-500/20 border border-red-500 text-red-400 px-4 py-3 rounded-lg">
+                        {{ session('error') }}
+                    </div>
+                    @endif
+                    <form action="{{ route('customer.search') }}" method="GET" class="space-y-6">
 
                         <div>
                             <label class="text-sm font-semibold text-slate-300 mb-2 block">NGÀY</label>
-                            <input type="date"
+                            <input type="date" name="date"
                                 class="w-full px-4 py-3 bg-slate-900 text-slate-100 rounded-lg border border-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
                         </div>
 
                         <div>
                             <label class="text-sm font-semibold text-slate-300 mb-2 block">GIỜ</label>
-                            <input type="time"
+                            <input type="time" name="time"
                                 class="w-full px-4 py-3 bg-slate-900 text-slate-100 rounded-lg border border-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="text-sm font-semibold text-slate-300 mb-2 block">SỐ KHÁCH</label>
-                                <select class="w-full px-4 py-3 bg-slate-900 text-slate-100 rounded-lg border border-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
+                                <select name="guest_count" class="w-full px-4 py-3 bg-slate-900 text-slate-100 rounded-lg border border-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
                                     <option value="1">1 người</option>
                                     <option value="2">2 người</option>
                                     <option value="3">3 người</option>
@@ -160,10 +154,10 @@
 
                             <div>
                                 <label class="text-sm font-semibold text-slate-300 mb-2 block">KHU VỰC</label>
-                                <select class="w-full px-4 py-3 bg-slate-900 text-slate-100 rounded-lg border border-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
-                                    <option value="">Sảnh chính</option>
-                                    <option value="">Sân thượng</option>
-                                    <option value="">Khu VIP</option>
+                                <select name="location" class="w-full px-4 py-3 bg-slate-900 text-slate-100 rounded-lg border border-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
+                                    <option value="Sảnh chính">Sảnh chính</option>
+                                    <option value="Sân thượng">Sân thượng</option>
+                                    <option value="Khu VIP">Khu VIP</option>
                                 </select>
                             </div>
                         </div>
@@ -212,7 +206,7 @@
                         </div>
                     </div>
 
-                    <a href="#" class="inline-flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
+                    <a href="{{ route('customer.booking.index') }}" class="inline-flex items-center gap-2 text-violet-600 hover:text-violet-700 font-semibold transition">
                         Đi đến trang đặt bàn
                         <i class="fas fa-arrow-right"></i>
                     </a>

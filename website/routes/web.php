@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\TableController;
+use App\Http\Controllers\RevenueController;
+use App\Http\Controllers\ReportController;
 use App\Models\Table;
 
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('auth.login'); //done
@@ -25,7 +28,7 @@ Route::middleware('auth')->prefix('customer')->name('customer.')->group(function
     // Route::get('/tables', [TableController::class, 'index'])->name('tables.index');
     // Route::get('/tables/{table}', [TableController::class, 'show'])->name('tables.show');
 
-    Route::get('/booking', [BookingController::class, 'index'])
+    Route::get('/booking', [BookingController::class, 'index'])//done
         ->name('booking.index');
 
     //chuyển đến form đặt bàn
@@ -59,17 +62,25 @@ Route::middleware('auth')->prefix('customer')->name('customer.')->group(function
     //chuyển đến trang lịch sử đặt bàn
     Route::get('/history', [BookingController::class, 'history']) //done
         ->name('history');
+
+    Route::get('/search', [BookingController::class, 'search']) //done
+        ->name('search');
 });
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () { //done
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');//done
 
-    Route::get('/bookings', [BookingController::class, 'adminIndex'])->name('bookings');
-    Route::get('/tables', [TableController::class, 'adminIndex'])->name('tables');
-    Route::get('/users', [AuthController::class, 'adminIndex'])->name('users');
-    Route::get('/revenue', [BookingController::class, 'revenue'])->name('revenue');
-    Route::get('/reports', [BookingController::class, 'reports'])->name('reports');
+    Route::get('/bookings', [BookingController::class, 'adminIndex'])->name('bookings');//done
+    Route::get('/tables', [TableController::class, 'adminIndex'])->name('tables');//done
+    Route::get('/tables/create', [TableController::class, 'create'])->name('tables.create');
+    Route::post('/tables/store', [TableController::class, 'store'])->name('tables.store');
+    Route::get('/tables/{id}/edit', [TableController::class, 'edit'])->name('tables.edit');
+    Route::put('/tables/{id}', [TableController::class, 'update'])->name('tables.update');
+    Route::delete('/tables/{id}', [TableController::class, 'destroy'])->name('tables.destroy');
+
+    Route::get('/revenue', [RevenueController::class, 'index'])->name('revenue');//done
+
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports');
+    Route::get('/export', [ReportController::class, 'export'])->name('reports.export');
 
 });

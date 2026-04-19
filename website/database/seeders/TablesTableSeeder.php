@@ -13,42 +13,21 @@ class TablesTableSeeder extends Seeder
     public function run(): void
     {
         DB::table('tables')->insert([
-            [
-                'name' => 'Bàn 2 người - A1',
-                'capacity' => 2,
-                'location' => 'Tầng 1',
-                'status' => 'available',
-                'price' => 100000,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Bàn 4 người - A2',
-                'capacity' => 4,
-                'location' => 'Tầng 1',
-                'status' => 'available',
-                'price' => 200000,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Bàn 6 người - B1',
-                'capacity' => 6,
-                'location' => 'Tầng 2',
-                'status' => 'available',
-                'price' => 300000,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Bàn VIP - V1',
-                'capacity' => 10,
-                'location' => 'Phòng VIP',
-                'status' => 'available',
-                'price' => 800000,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+            //SẢNH CHÍNH (4 bàn)
+            ['name' => 'Bàn S1', 'capacity' => 2, 'location' => 'Sảnh chính', 'status' => 'available', 'price' => 0],
+            ['name' => 'Bàn S2', 'capacity' => 4, 'location' => 'Sảnh chính', 'status' => 'available', 'price' => 0],
+            ['name' => 'Bàn S3', 'capacity' => 6, 'location' => 'Sảnh chính', 'status' => 'available', 'price' => 0],
+            ['name' => 'Bàn S4', 'capacity' => 8, 'location' => 'Sảnh chính', 'status' => 'available', 'price' => 0],
+
+            //SÂN THƯỢNG (3 bàn)
+            ['name' => 'Bàn T1', 'capacity' => 2, 'location' => 'Sân thượng', 'status' => 'available', 'price' => 50000],
+            ['name' => 'Bàn T2', 'capacity' => 4, 'location' => 'Sân thượng', 'status' => 'available', 'price' => 70000],
+            ['name' => 'Bàn T3', 'capacity' => 6, 'location' => 'Sân thượng', 'status' => 'available', 'price' => 100000],
+
+            //KHU VIP (3 bàn)
+            ['name' => 'Bàn VIP1', 'capacity' => 6, 'location' => 'Khu VIP', 'status' => 'available', 'price' => 150000],
+            ['name' => 'Bàn VIP2', 'capacity' => 8, 'location' => 'Khu VIP', 'status' => 'available', 'price' => 200000],
+            ['name' => 'Bàn VIP3', 'capacity' => 10, 'location' => 'Khu VIP', 'status' => 'available', 'price' => 300000]
         ]);
     }
 }

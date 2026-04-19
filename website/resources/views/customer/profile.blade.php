@@ -20,13 +20,6 @@
                         class="text-4xl font-bold bg-gradient-to-r from-[#4647D3] to-[#8126CF] text-transparent bg-clip-text">
                         Golden Spoons
                     </a>
-
-                    <div class="hidden md:block w-96 ml-10">
-                        <div class="relative">
-                            <input type="text" placeholder="Tìm kiếm bàn..."
-                                class="w-full px-4 py-2 bg-slate-800 text-slate-100 rounded-lg border border-slate-700 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
-                        </div>
-                    </div>
                 </div>
 
                 <div class="flex items-center gap-6 mr-4">
@@ -40,7 +33,7 @@
                         Đặt bàn
                     </a>
 
-                    <a href="#" class="text-slate-300 hover:text-white transition">
+                    <a href="{{ route('customer.history') }}" class="text-slate-300 hover:text-white transition">
                         Lịch sử
                     </a>
 
@@ -54,11 +47,7 @@
                                 class="block px-4 py-2 hover:bg-slate-700 rounded-t-lg">
                                 Tài khoản
                             </a>
-                            <a href=""
-                                class="block px-4 py-2 hover:bg-slate-700">
-                                Tìm kiếm
-                            </a>
-                            <form method="POST" action="">
+                            <form method="POST" action="{{ route('auth.logout') }}">
                                 @csrf
                                 <button type="submit"
                                     class="w-full text-left px-4 py-2 hover:bg-slate-700 rounded-b-lg text-red-400">

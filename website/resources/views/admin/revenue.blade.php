@@ -11,13 +11,13 @@
 <body class="bg-gray-50">
 
     <div class="flex min-h-screen">
-        <aside class="w-64 bg-gray-900 text-white p-6">
+        <aside class="w-64 bg-gray-900 text-white min-h-screen p-6">
             <div class="mb-8">
                 <h2 class="text-xl font-bold">Quản Lý</h2>
             </div>
 
             <nav class="space-y-3">
-                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
+                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition font-medium">
                     Bảng điều khiển
                 </a>
                 <a href="{{ route('admin.bookings') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
@@ -26,10 +26,7 @@
                 <a href="{{ route('admin.tables') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
                     Quản lý bàn
                 </a>
-                <a href="{{ route('admin.users') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
-                    Quản lý người dùng
-                </a>
-                <a href="{{ route('admin.revenue') }}" class="block px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition font-medium">
+                <a href="{{ route('admin.revenue') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
                     Doanh thu
                 </a>
                 <a href="{{ route('admin.reports') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
@@ -43,16 +40,10 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <p class="text-gray-600 text-sm font-medium">Doanh Thu Tháng Này</p>
-                    <p class="text-3xl font-bold text-gray-900 mt-2">50,000,000 VND</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <p class="text-gray-600 text-sm font-medium">Doanh Thu Tháng Trước</p>
-                    <p class="text-3xl font-bold text-gray-900 mt-2">48,000,000 VND</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <p class="text-gray-600 text-sm font-medium">Doanh Thu Năm Nay</p>
-                    <p class="text-3xl font-bold text-gray-900 mt-2">500,000,000 VND</p>
+                    <p class="text-gray-600 text-sm font-medium">Tổng doanh thu</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2">
+                        {{ number_format($monthlyRevenue) }} VND
+                    </p>
                 </div>
             </div>
 
@@ -66,14 +57,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="py-3">08/04/2026</td>
-                            <td class="py-3">2,500,000 VND</td>
-                        </tr>
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="py-3">07/04/2026</td>
-                            <td class="py-3">2,300,000 VND</td>
-                        </tr>
+                        @forelse ($revenuesByDate as $item)
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3">{{ \Carbon\Carbon::parse($item->date)->format('d/m/Y') }}</td>
+                                <td class="py-3">{{ number_format($item->total) }} VND</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="2" class="py-3 text-center">Không có dữ liệu</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

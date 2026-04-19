@@ -7,21 +7,6 @@ use Illuminate\Http\Request;
 
 class TableController extends Controller
 {
-    // Lấy danh sách tất cả bàn
-    public function index(Request $request)
-    {
-        $query = Table::query();
-
-        // Lọc theo khu vực
-        if ($request->location) {
-            $query->where('location', $request->location);
-        }
-
-        // Phân trang 9 bàn / trang
-        $tables = $query->paginate(9);
-
-        return view('pages.home', compact('tables'));
-    }
 
     public function adminIndex()
     {
@@ -37,19 +22,41 @@ class TableController extends Controller
     }
 
     // Thêm bàn mới
+    public function create()
+    {
+        return view('admin.tables.create');
+    }
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|unique:tables',
             'capacity' => 'required|integer|min:1',
-            'status' => 'in:available,reserved,occupied'
+            'price' => 'required|numeric|min:1000',
+            'location' => 'required|in:Sảnh chính,Sân thượng,Khu VIP',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('table', 'public');
+        }
 
-        $table = Table::create($validated);
-        return response()->json($table, 201);
+        Table::create([
+            'name' => $request->name,
+            'capacity' => $request->capacity,
+            'location' => $request->location,
+            'price' => (int) $request->price,
+            'image' => $imagePath,
+        ]);
+        return redirect()->route('admin.tables')->with('success', 'Thêm bàn mới thành công');
     }
 
     // Cập nhật thông tin bàn
+    public function edit($id)
+    {
+        $table = Table::findOrFail($id);
+        return view('admin.tables.edit', compact('table'));
+    }
+
     public function update(Request $request, $id)
     {
         $table = Table::findOrFail($id);
@@ -57,11 +64,20 @@ class TableController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|string|unique:tables,name,' . $id,
             'capacity' => 'sometimes|integer|min:1',
-            'status' => 'sometimes|in:available,reserved,occupied'
+            'status' => 'sometimes|in:available,reserved,occupied',
+            'price' => 'sometimes|numeric|min:1',
+            'location' => 'sometimes|in:Sảnh chính,Sân thượng,Khu VIP',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('table', 'public');
+            $validated['image'] = $imagePath;
+        }
+
         $table->update($validated);
-        return response()->json($table, 200);
+        return redirect()->route('admin.tables')->with('success', 'Cập nhật bàn thành công');
     }
 
     // Xóa bàn
@@ -71,12 +87,15 @@ class TableController extends Controller
 
         // Chỉ cho phép xóa nếu bàn đang trống
         if ($table->status !== 'available') {
-            return response()->json(['error' => 'Bàn đang được sử dụng, không thể xóa'], 400);
+            return redirect()->route('admin.tables')->with('error', 'Bàn đang được sử dụng, không thể xóa');
         }
 
         $table->delete();
-        return response()->json(['message' => 'Xóa bàn thành công'], 200);
+        return redirect()->route('admin.tables')->with('success', 'Xóa bàn thành công');
     }
+
+
+
 
     // Đặt trạng thái bàn thành "occupied"
     public function occupy($id)
@@ -84,11 +103,11 @@ class TableController extends Controller
         $table = Table::findOrFail($id);
 
         if ($table->status !== 'reserved') {
-            return response()->json(['error' => 'Bàn phải được đặt trước khi chuyển sang trạng thái đang sử dụng'], 400);
+            return redirect()->route('admin.tables')->with('error', 'Bàn phải được đặt trước khi chuyển sang trạng thái đang sử dụng');
         }
 
         $table->update(['status' => 'occupied']);
-        return response()->json(['message' => 'Bàn đang được sử dụng'], 200);
+        return redirect()->route('admin.tables')->with('success', 'Bàn đang được sử dụng');
     }
 
     // Set trạng thái bàn thành "available"
@@ -96,6 +115,6 @@ class TableController extends Controller
     {
         $table = Table::findOrFail($id);
         $table->update(['status' => 'available']);
-        return response()->json(['message' => 'Bàn đã trống'], 200);
+        return redirect()->route('admin.tables')->with('success', 'Bàn đã trống');
     }
 }

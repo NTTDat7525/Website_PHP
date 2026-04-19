@@ -6,21 +6,24 @@ use App\Models\Booking;
 use App\Models\Table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use  Carbon\Carbon;
 
 class BookingController extends Controller
 {
     // Danh sách booking
-    public function index()
+    public function index()//done
     {
 
-        $tables = Table::all(); // sau này filter
+        $tables = Table::paginate(9);
 
         return view('customer.listTable', compact('tables'));
     }
 
     public function adminIndex()
     {
-        $bookings = Booking::with('table', 'user')->get();
+        $bookings = Booking::with('user', 'table')
+        ->latest()
+        ->get();
         return view('admin.bookings', compact('bookings'));
     }
 
@@ -32,7 +35,9 @@ class BookingController extends Controller
 
     public function reports()
     {
-        $bookings = Booking::with('table', 'user')->get();
+        $bookings = Booking::with('user', 'table')
+        ->latest()
+        ->get();
         return view('admin.reports', compact('bookings'));
     }
 
@@ -50,8 +55,12 @@ class BookingController extends Controller
     {
         $table = Table::findOrFail($id);
 
-        if ($table->status !== 'available') {
-            return redirect()->back()->with('error', 'Bàn đã được đặt');
+        $exists = Booking::where('table_id', $table->id)
+            ->where('time', $request->time)
+            ->exists();
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'Khung giờ đã được đặt');
         }
 
         $booking = Booking::create([
@@ -60,16 +69,11 @@ class BookingController extends Controller
             'time' => $request->time,
             'guest_count' => $request->guest_count,
             'email' => Auth::user()->email,
-            'phone' => $request->phone,
+            'phone' => Auth::user()->phone,
             'special_requests' => $request->special_requests,
-            'total_price' => $request->total_price ?? 0,
+            'total_price' => $table->price,
             'status' => 'pending',
             'payment_method' => $request->payment_method ?? 'cash',
-        ]);
-
-        // cập nhật trạng thái bàn
-        $table->update([
-            'status' => 'reserved'
         ]);
 
         return redirect()->route('customer.booking.confirm', $booking->id);
@@ -126,5 +130,38 @@ class BookingController extends Controller
             ->findOrFail($id);
 
         return view('customer.detailBooking', compact('booking'));
+    }
+
+    public function search(Request $request)//done
+    {
+        $request->validate([
+            'date' => 'nullable|date',
+            'time' => 'nullable',
+            'guest_count' => 'nullable|integer',
+        ]);
+
+        if ($request->date && Carbon::parse($request->date)->lt(Carbon::today())) {
+            return view('customer.listTable', [
+                'tables' => collect(),
+                'noResult' => true,
+                'error' => 'Không được chọn ngày trong quá khứ'
+            ]);
+        }
+
+        $query = Table::query();
+        
+        $query->where('capacity', '>=', $request->guest_count);
+
+        if ($request->location) {
+            $query->where('location', $request->location);
+        }
+
+        $tables = $query->get();
+
+        return view('customer.listTable',[
+            'tables' => $tables,
+            'noResult' => $tables->isEmpty(),
+            'error' => $tables->isEmpty() ? 'Không tìm thấy bàn phù hợp với yêu cầu của bạn' : null
+        ]);
     }
 }

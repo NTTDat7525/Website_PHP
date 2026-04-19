@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('capacity');
             $table->string('location')->nullable();
+            $table->string('image')->nullable();
             $table->enum('status', ['available', 'reserved', 'occupied'])->default('available');
             $table->bigInteger('price')->default(0);
             $table->timestamps();

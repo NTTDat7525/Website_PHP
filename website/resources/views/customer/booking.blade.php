@@ -66,13 +66,6 @@
                         class="text-4xl font-bold bg-gradient-to-r from-[#4647D3] to-[#8126CF] text-transparent bg-clip-text">
                         Golden Spoons
                     </a>
-
-                    <div class="hidden md:block w-96 ml-10">
-                        <div class="relative">
-                            <input type="text" placeholder="Tìm kiếm bàn..."
-                                class="w-full px-4 py-2 bg-slate-800 text-slate-100 rounded-lg border border-slate-700 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
-                        </div>
-                    </div>
                 </div>
 
                 <div class="flex items-center gap-6 mr-4">
@@ -86,8 +79,8 @@
                         Đặt bàn
                     </a>
 
-                    <a href="#" class="text-slate-300 hover:text-white transition">
-                        Yêu thích
+                    <a href="{{ route('customer.history') }}" class="text-slate-300 hover:text-white transition">
+                        Lịch sử
                     </a>
 
                     <div class="relative group">
@@ -96,15 +89,11 @@
                         </button>
 
                         <div class="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-lg hidden group-hover:block z-50 border border-slate-700">
-                            <a href=""
+                            <a href="{{ route('customer.profile') }}"
                                 class="block px-4 py-2 hover:bg-slate-700 rounded-t-lg">
                                 Tài khoản
                             </a>
-                            <a href=""
-                                class="block px-4 py-2 hover:bg-slate-700">
-                                Tìm kiếm
-                            </a>
-                            <form method="POST" action="">
+                            <form method="POST" action="{{ route('auth.logout') }}">
                                 @csrf
                                 <button type="submit"
                                     class="w-full text-left px-4 py-2 hover:bg-slate-700 rounded-b-lg text-red-400">
@@ -132,22 +121,13 @@
 
                     <div class="bg-slate-800 rounded-2xl overflow-hidden border border-slate-700">
                         <div class="relative h-96 bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center overflow-hidden">
-                            <svg class="absolute w-full h-full opacity-20" viewBox="0 0 100 100" preserveAspectRatio="none">
-                                <defs>
-                                    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgb(139, 92, 246)" stroke-width="0.5" />
-                                    </pattern>
-                                </defs>
-                                <rect width="100" height="100" fill="url(#grid)" />
-                            </svg>
-
-                            <div class="relative text-center">
-                                <div class="inline-block">
-                                    <svg class="w-32 h-32 text-violet-500 opacity-80" fill="currentColor" viewBox="0 0 24 24">
-                                        <circle cx="12" cy="12" r="8" />
-                                    </svg>
-                                </div>
-                            </div>
+                            @if($table->image)
+                                <img src="{{ asset('storage/' . $table->image) }}" 
+                                    class="w-full h-full object-cover" alt="">
+                            @else
+                                <img src="{{ asset('images/default.png') }}"
+                                    class="w-full h-full object-cover" alt="">
+                            @endif
                         </div>
 
                         <div class="p-8 bg-slate-800">
@@ -204,14 +184,14 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-300 mb-2">HỌ VÀ TÊN</label>
-                                    <input  type="text"
+                                    <input  type="text" name="username"
                                             placeholder="Trịnh Trần Phương Tuấn"
-                                            class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500" 
-                                            value="{{ auth()->user()->name ?? '' }}">
+                                            class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500"
+                                            value="{{ auth()->user()->username ?? '' }}">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-300 mb-2">EMAIL</label>
-                                    <input  type="email"
+                                    <input  type="email" name="email"
                                             placeholder="alex@sterling.corp"
                                             class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500"
                                             value="{{ auth()->user()->email ?? '' }}">
@@ -220,15 +200,10 @@
 
                             <div>
                                 <label class="block text-xs font-semibold text-slate-300 mb-2">SỐ ĐIỆN THOẠI</label>
-                                <input type="text"
+                                <input type="text"  name="phone"
                                     placeholder="0123456789"
                                     class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500"
                                     value="{{ auth()->user()->phone ?? '' }}">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-300 mb-2">YÊU CẦU ĐẶC BIỆT</label>
-                                <textarea placeholder="You have money. You are father" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500 h-24 resize-none"></textarea>
                             </div>
                         </div>
                     </div>
@@ -238,7 +213,7 @@
                     <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 sticky top-24">
                         <h3 class="text-lg font-bold mb-6">Chọn thời gian</h3>
 
-                        <form action="{{ route('customer.booking.store', $table->id ?? 0) }}" method="POST" class="space-y-6">
+                        <form action="{{ route('customer.booking.store', $table->id ?? 0) }}" method="POST" class="space-y-6" id="booking-form">
                             @csrf
 
                             @if($table)
@@ -248,47 +223,44 @@
                             <div class="mb-6">
                                 <label class="block text-xs font-semibold text-slate-300 mb-3">CHỌN NGÀY</label>
                                 <div class="grid grid-cols-5 gap-2">
-                                    <button type="button" class="date-btn active bg-violet-600 text-white text-center py-2 rounded text-xs font-semibold" data-date="2025-04-14">
-                                        MON<br>14
+                                @for($i = 0; $i < 5; $i++)
+                                    @php
+                                        $date = \Carbon\Carbon::today()->addDays($i);
+                                    @endphp
+                                    <button type="button"
+                                        class="date-btn bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold"
+                                        data-date="{{ $date->format('Y-m-d') }}">
+                                        
+                                        {{ $date->format('d/m') }}<br>
+                                        {{ $date->format('D') }}
                                     </button>
-                                    <button type="button" class="date-btn bg-slate-700 text-slate-400 hover:text-white text-center py-2 rounded text-xs font-semibold" data-date="2025-04-15">
-                                        TUE<br>15
-                                    </button>
-                                    <button type="button" class="date-btn bg-slate-700 text-slate-400 hover:text-white text-center py-2 rounded text-xs font-semibold" data-date="2025-04-16">
-                                        WED<br>16
-                                    </button>
-                                    <button type="button" class="date-btn bg-slate-700 text-slate-400 hover:text-white text-center py-2 rounded text-xs font-semibold" data-date="2025-04-17">
-                                        THU<br>17
-                                    </button>
-                                    <button type="button" class="date-btn bg-slate-700 text-slate-400 hover:text-white text-center py-2 rounded text-xs font-semibold" data-date="2025-04-18">
-                                        FRI<br>18
-                                    </button>
+                                @endfor
                                 </div>
-                                <input type="hidden" name="booking_date" id="booking_date" value="2025-04-14">
+                                <input type="hidden" name="booking_date" id="booking_date">
                             </div>
 
                             <div class="mb-6">
                                 <label class="block text-xs font-semibold text-slate-300 mb-3">CHỌN GIỜ</label>
                                 <div class="grid grid-cols-3 gap-2">
-                                    <button type="button" class="time-slot active bg-violet-600 text-white py-2 rounded text-xs font-semibold" data-time="19:00">19:00</button>
+                                    <button type="button" class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold" data-time="19:00">19:00</button>
                                     <button type="button" class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold" data-time="19:30">19:30</button>
-                                    <button type="button" class="time-slot bg-violet-600 text-white py-2 rounded text-xs font-semibold" data-time="20:00">20:00</button>
+                                    <button type="button" class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold" data-time="20:00">20:00</button>
                                     <button type="button" class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold" data-time="20:30">20:30</button>
                                     <button type="button" class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold" data-time="21:00">21:00</button>
                                     <button type="button" class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold opacity-50 cursor-not-allowed" disabled>--:--</button>
                                 </div>
-                                <input type="hidden" name="booking_time" id="booking_time" value="19:00">
-                                <input type="hidden" name="time" id="time" value="2025-04-14 19:00:00">
+
+                                <input type="hidden" name="booking_time" id="booking_time">
+                                <input type="hidden" name="time" id="time">
                             </div>
 
                             <div class="mb-6">
                                 <label class="block text-xs font-semibold text-slate-300 mb-2">SỐ KHÁCH</label>
                                 <select name="guest_count" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:border-violet-500">
-                                    <option value="1">1 người</option>
-                                    <option value="2">2 người</option>
-                                    <option value="3">3 người</option>
-                                    <option value="4" selected>4 người</option>
-                                    <option value="5">5 người</option>
+                                    <option value="" disabled selected>Chọn số khách</option>
+                                    @for($i = 1; $i <= $table->capacity + 2; $i++)
+                                        <option value="{{ $i }}">{{ $i }} người</option>
+                                    @endfor
                                 </select>
                             </div>
 
@@ -302,11 +274,11 @@
                             <div class="bg-slate-900 rounded-lg p-4 mb-6 space-y-2 border border-slate-600">
                                 <div class="flex justify-between text-sm">
                                     <span class="text-slate-400">Đặt cọc</span>
-                                    <span class="text-white font-semibold" id="deposit_amount">49,000đ</span>
+                                    <span class="text-white font-semibold">{{ number_format($table->price)}}đ</span>
                                 </div>
                                 <div class="border-t border-slate-700 pt-2 mt-2 flex justify-between">
                                     <span class="text-sm font-semibold text-slate-300">TỔNG CỘNG</span>
-                                    <span class="text-lg font-bold text-violet-400" id="total_amount">245,000đ</span>
+                                    <span class="text-lg font-bold text-violet-400">{{ number_format($table->price)}}đ</span>
                                 </div>
                             </div>
 
@@ -328,20 +300,38 @@
         function updateDateTimeField() {
             const date = document.getElementById('booking_date').value;
             const time = document.getElementById('booking_time').value;
-            const dateTime = `${date} ${time}:00`;
-            document.getElementById('time').value = dateTime;
+            document.getElementById('time').value = `${date} ${time}:00`;
         }
+
+        document.getElementById('booking-form').addEventListener('submit', function(e) {
+            const date = document.getElementById('booking_date').value;
+            const time = document.getElementById('booking_time').value;
+            const guestCount = document.querySelector('select[name="guest_count"]').value;
+            if (!date || !time || !guestCount) {
+                e.preventDefault();
+                alert('Vui lòng chọn đầy đủ thông tin.');
+            }
+        });
 
         document.querySelectorAll('.date-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
+
                 document.querySelectorAll('.date-btn').forEach(b => {
                     b.classList.remove('active', 'bg-violet-600', 'text-white');
                     b.classList.add('bg-slate-700', 'text-slate-400');
                 });
+
                 this.classList.add('active', 'bg-violet-600', 'text-white');
-                this.classList.remove('bg-slate-700', 'text-slate-400');
-                document.getElementById('booking_date').value = this.getAttribute('data-date');
+
+                document.getElementById('booking_date').value = this.dataset.date;
+
+                document.getElementById('booking_time').value = '';
+                document.querySelectorAll('.time-slot').forEach(b => {
+                    b.classList.remove('active', 'bg-violet-600', 'text-white');
+                    b.classList.add('bg-slate-700', 'text-slate-400');
+                });
+
                 updateDateTimeField();
             });
         });

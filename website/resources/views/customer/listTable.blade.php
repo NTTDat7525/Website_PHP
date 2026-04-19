@@ -19,13 +19,6 @@
                         class="text-4xl font-bold bg-gradient-to-r from-[#4647D3] to-[#8126CF] text-transparent bg-clip-text">
                         Golden Spoons
                     </a>
-
-                    <div class="hidden md:block w-96 ml-10">
-                        <div class="relative">
-                            <input type="text" placeholder="Tìm kiếm bàn..."
-                                class="w-full px-4 py-2 bg-slate-800 text-slate-100 rounded-lg border border-slate-700 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
-                        </div>
-                    </div>
                 </div>
 
                 <div class="flex items-center gap-6 mr-4">
@@ -34,7 +27,7 @@
                         Khám phá
                     </a>
 
-                    <a href="#"
+                    <a href="{{ route('customer.booking.index') }}"
                         class="text-slate-300 hover:text-white transition">
                         Đặt bàn
                     </a>
@@ -53,13 +46,9 @@
                                 class="block px-4 py-2 hover:bg-slate-700 rounded-t-lg">
                                 Tài khoản
                             </a>
-                            <a href=""
-                                class="block px-4 py-2 hover:bg-slate-700">
-                                Tìm kiếm
-                            </a>
-                            <form method="POST">
+                            <form method="POST" action="{{ route('auth.logout') }}">
                                 @csrf
-                                <button type="submit" action="{{ route('auth.logout') }}"
+                                <button type="submit"
                                     class="w-full text-left px-4 py-2 hover:bg-slate-700 rounded-b-lg text-red-400">
                                     Đăng xuất
                                 </button>
@@ -78,21 +67,25 @@
             <aside class="lg:col-span-1">
                 <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 sticky top-24">
                     <h3 class="text-lg font-bold mb-6">BỘ LỌC</h3>
-
-                    <form method="GET" action="" class="space-y-6">
+                    @if(isset($error) && $error)
+                        <div class="bg-red-500/20 border border-red-500 text-red-400 px-4 py-3 rounded-lg mb-6">
+                            {{ $error }}
+                        </div>
+                    @endif
+                    <form method="GET" action="{{ route('customer.search') }}" class="space-y-6">
                         <div class="mb-8">
                             <h4 class="text-sm font-semibold text-slate-300 mb-4">Khu vực</h4>
                             <div class="space-y-3">
                                 <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="location" value="main" class="w-4 h-4">
+                                    <input type="radio" name="location" value="Sảnh chính" class="w-4 h-4" {{ request('location') === 'Sảnh chính' ? 'checked' : '' }}>
                                     <span class="ml-3 text-sm">Sảnh chính</span>
                                 </label>
                                 <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="location" value="terrace" class="w-4 h-4">
+                                    <input type="radio" name="location" value="Sân thượng" class="w-4 h-4" {{ request('location') === 'Sân thượng' ? 'checked' : '' }}>
                                     <span class="ml-3 text-sm">Sân thượng</span>
                                 </label>
                                 <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="location" value="vip" class="w-4 h-4">
+                                    <input type="radio" name="location" value="Khu VIP" class="w-4 h-4" {{ request('location') === 'Khu VIP' ? 'checked' : '' }}>
                                     <span class="ml-3 text-sm">Khu VIP</span>
                                 </label>
                             </div>
@@ -102,23 +95,23 @@
                             <h4 class="text-sm font-semibold text-slate-300 mb-4">Số khách</h4>
                             <div class="space-y-3">
                                 <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="guests" value="1" class="w-4 h-4">
+                                    <input type="radio" name="guest_count" value="1" class="w-4 h-4" {{ request('guest_count') === '1' ? 'checked' : '' }}>
                                     <span class="ml-3 text-sm">1 người</span>
                                 </label>
                                 <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="guests" value="2" class="w-4 h-4">
+                                    <input type="radio" name="guest_count" value="2" class="w-4 h-4" {{ request('guest_count') === '2' ? 'checked' : '' }}>
                                     <span class="ml-3 text-sm">2 người</span>
                                 </label>
                                 <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="guests" value="3" class="w-4 h-4">
+                                    <input type="radio" name="guest_count" value="3" class="w-4 h-4" {{ request('guest_count') === '3' ? 'checked' : '' }}>
                                     <span class="ml-3 text-sm">3 người</span>
                                 </label>
                                 <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="guests" value="4" class="w-4 h-4">
+                                    <input type="radio" name="guest_count" value="4" class="w-4 h-4" {{ request('guest_count') === '4' ? 'checked' : '' }}>
                                     <span class="ml-3 text-sm">4 người</span>
                                 </label>
                                 <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="guests" value="5" class="w-4 h-4">
+                                    <input type="radio" name="guest_count" value="5" class="w-4 h-4" {{ request('guest_count') === '5' ? 'checked' : '' }}>
                                     <span class="ml-3 text-sm">5+ người</span>
                                 </label>
                             </div>
@@ -128,6 +121,10 @@
                             class="w-full bg-violet-600 hover:bg-violet-700 text-white py-2 rounded-lg transition">
                             Áp dụng bộ lọc
                         </button>
+                        <a href="{{ route('customer.booking.index') }}"
+                            class="block text-center bg-slate-700 hover:bg-slate-600 text-white py-2 rounded-lg transition mt-3">
+                            Hiển thị tất cả bàn
+                        </a>
                     </form>
                 </div>
             </aside>
@@ -138,6 +135,13 @@
                         <h2 class="text-3xl font-bold mb-2">Sơ đồ bàn trực tiếp</h2>
                         <p class="text-slate-400">Trạng thái bàn được cập nhật theo thời gian thực.</p>
                     </div>
+
+                    <!-- Hiển thị thông báo nếu không có bàn nào phù hợp với bộ lọc -->
+                    @if(isset($noResult) && $noResult)
+                        <div class="bg-red-500/20 border border-red-500 text-red-400 px-4 py-4 rounded-lg mb-6 text-center">
+                            Không có bàn phù hợp với lựa chọn của bạn!
+                        </div>
+                    @endif
 
                     <div class="flex gap-6 mb-8">
                         <div class="flex items-center gap-2">
@@ -154,11 +158,18 @@
                         </div>
                     </div>
 
+                @if($tables->count() > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($tables as $table)
                         <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
                             <div class="h-48 flex items-center justify-center">
-                                <i class="fas fa-chair text-5xl text-slate-500"></i>
+                                @if($table->image)
+                                    <img src="{{ asset('storage/' . $table->image) }}" 
+                                        class="w-full h-full object-cover" alt="">
+                                @else
+                                    <img src="{{ asset('images/default.png') }}"
+                                        class="w-full h-full object-cover" alt="">
+                                @endif
                             </div>
 
                             <div class="p-4">
@@ -189,17 +200,16 @@
                         </div>
                         @endforeach
                     </div>
-                    <!-- Thêm nút chuyển trang nếu có nhiều hơn 9 bàn (thêm sau) -->
+                @endif
+                @if($tables instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                    <div class="mt-8 flex justify-center">
+                        {{ $tables->links() }}
+                    </div>
+                @endif
                 </section>
             </main>
         </div>
     </div>
-
-    <script>
-        function selectTable(tableId, tableName) {
-            console.log('Selected table:', tableName);
-        }
-    </script>
 </body>
 
 </html>
