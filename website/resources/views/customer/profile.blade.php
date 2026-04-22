@@ -127,19 +127,24 @@
                 <div class="bg-white rounded-2xl shadow-lg p-6 text-center border-2">
                     <i class="fas fa-check-circle text-600 text-3xl mb-3"></i>
                     <p class="text-sm text-gray-600">ĐƠN HOÀN THÀNH</p>
-                    <p class="text-3xl font-bold text-600">LẤY DB</p>
+                    <p class="text-3xl font-bold text-600">
+                        {{ $completedBookings }}
+                    </p>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-lg p-6 text-center border-2">
                     <i class="fas fa-calendar-check text-500 text-3xl mb-3"></i>
                     <p class="text-sm text-gray-600">SẮP ĐẾN HẸN</p>
-                    <p class="text-3xl font-bold text-500">LẤY DB</p>
+                    <p class="text-3xl font-bold text-600">
+                        {{ $upcomingBookings }}</p>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-lg p-6 text-center border-2">
                     <i class="fas fa-wallet text-600 text-3xl mb-3"></i>
                     <p class="text-sm text-gray-600">CHI TIÊU</p>
-                    <p class="text-3xl font-bold text-600">LẤY DB</p>
+                    <p class="text-3xl font-bold text-600">
+                        {{ number_format($totalSpent) }} VNĐ
+                    </p>
                 </div>
 
             </div>
@@ -147,37 +152,45 @@
         </div>
     </div>
 
-    <div id="profileModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-2xl w-full max-w-2xl p-6 relative">
+<div id="profileModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-2xl w-full max-w-2xl p-6 relative">
 
-            <h2 class="text-xl font-bold mb-4">Cập nhật thông tin</h2>
+        <h2 class="text-xl font-bold mb-4">Cập nhật thông tin</h2>
 
-            <form id="updateForm">
-                @csrf
+        <form method="POST" action="{{ route('profile.update') }}">
+            @csrf
+            @method('PUT')
 
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="text" name="username" value="{{ auth()->user()->name ?? '' }}"
-                        class="border p-2 rounded" placeholder="Họ và tên">
+            <div class="grid grid-cols-2 gap-4">
+                <input type="text" name="name"
+                       value="{{ auth()->user()->name }}"
+                       class="border p-2 rounded"
+                       placeholder="Họ và tên">
 
-                    <input type="text" name="phone" value="{{ auth()->user()->phone ?? '' }}"
-                        class="border p-2 rounded" placeholder="Số điện thoại">
-                </div>
+                <input type="text" name="phone"
+                       value="{{ auth()->user()->phone }}"
+                       class="border p-2 rounded"
+                       placeholder="Số điện thoại">
+            </div>
 
-                <textarea name="bio" class="border p-2 rounded w-full mt-4 h-32"
-                    placeholder="Bio">{{ auth()->user()->bio ?? '' }}</textarea>
+            <textarea name="bio"
+                      class="border p-2 rounded w-full mt-4 h-32"
+                      placeholder="Tiểu sử">{{ auth()->user()->bio }}</textarea>
 
-                <div class="flex justify-end gap-3 mt-4">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded">
-                        Hủy
-                    </button>
-                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded">
-                        Lưu
-                    </button>
-                </div>
-            </form>
+            <div class="flex justify-end gap-3 mt-4">
+                <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded">
+                    Hủy
+                </button>
 
-        </div>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded">
+                    Lưu
+                </button>
+            </div>
+
+        </form>
+
     </div>
+</div>
 
     <script>
         function openModal() {
@@ -196,10 +209,6 @@
             }
         });
 
-        document.getElementById('updateForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            console.log('Form submitted');
-        });
     </script>
             <script>
             document.addEventListener("DOMContentLoaded", function () {

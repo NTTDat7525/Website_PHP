@@ -75,8 +75,20 @@
                     <span class="text-xs font-bold text-gray-500 tracking-wider">
                         <i class="fas fa-bookmark text-blue-600 mr-2"></i>GRIF-2024-X91
                     </span>
-                    <span class="text-xs font-bold text-green-600 tracking-wider">
-                        <i class="fas fa-check-circle mr-2"></i>SẮP TỚI
+                    <span class="text-xs font-bold tracking-wider
+                        {{ $booking->status == 'pending' ? 'text-yellow-600' : '' }}
+                        {{ $booking->status == 'confirmed' ? 'text-green-600' : '' }}
+                        {{ $booking->status == 'cancelled' ? 'text-red-600' : '' }}">
+                        
+                        <i class="fas fa-check-circle mr-2"></i>
+
+                        @if($booking->status == 'pending')
+                            SẮP TỚI
+                        @elseif($booking->status == 'confirmed')
+                            HOÀN THÀNH
+                        @else
+                            ĐÃ HỦY
+                        @endif
                     </span>
                 </div>
                 <div class="flex gap-3">
@@ -108,11 +120,12 @@
                                 <i class="fas fa-map-marker-alt text-red-600"></i>
                                 {{ $booking->table->location ?? '123 Lê Lợi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh' }}
                             <p class="text-xs text-gray-500 font-semibold mb-1">NGÀY</p>
-                            <p class="text-lg font-bold text-gray-900">{{ $booking->time->format('d \Th\á\n\g m, Y') ?? '24 Tháng 12, 2024' }}</p>
+                            <p class="text-lg font-bold text-gray-900">{{ \Carbon\Carbon::parse($booking->time)->format('d/m/Y') }}</p>
                         </div>
                         <div>
                             <p class="text-xs text-gray-500 font-semibold mb-1">GIỜ</p>
-                            <p class="text-lg font-bold text-gray-900">{{ $booking->time->format('H:i') ?? '19:30' }} - {{ $booking->time->clone()->addHour()->format('H:i') ?? '21:30' }}</p>
+                            <p class="text-lg font-bold text-gray-900">
+                                {{ \Carbon\Carbon::parse($booking->time)->format('H:i') }}-{{ \Carbon\Carbon::parse($booking->time)->addHour()->format('H:i') }}</p>
                         </div>
                     </div>
                 </div>

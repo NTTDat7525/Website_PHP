@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Booking;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -66,9 +68,48 @@ class AuthController extends Controller
         return redirect()->route('auth.login');
     }
 
-    public function profile()
+    public function updateProfile(Request $request)
     {
-        $user = Auth::user();
-        return view('customer.profile', compact('user'));
+        $user = auth()->user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'bio' => 'nullable|string',
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'bio' => $request->bio,
+        ]);
+
+        return back()->with('success', 'Cập nhật thành công');
     }
+    public function profile()
+{
+    $user = auth()->user();
+
+    $completedBookings = Booking::where('user_id', $user->id)
+        ->where('status', 'confirmed')
+        ->where('time', '<', Carbon::now())
+        ->count();
+
+    $upcomingBookings = Booking::where('user_id', $user->id)
+        ->where('status', 'confirmed')
+        ->where('time', '>=', Carbon::now())
+        ->count();
+
+    $totalSpent = Booking::where('user_id', $user->id)
+        ->where('payment_status', 'paid')
+        ->sum('total_price');
+
+    return view('customer.profile', compact(
+        'user',
+        'completedBookings',
+        'upcomingBookings',
+        'totalSpent'
+    ));
+}
+
 }

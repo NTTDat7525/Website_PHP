@@ -90,39 +90,76 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
             <div class="lg:col-span-2">
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                @foreach($bookings as $booking)
+                <div class="booking-item bg-white rounded-2xl shadow-lg overflow-hidden mb-4"
+                    data-status="{{ $booking->status }}"
+                    data-time="{{ $booking->time }}">
+
                     <div class="flex flex-col md:flex-row gap-6 p-6">
+
                         <div class="md:w-48 flex-shrink-0">
-                            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=300&fit=crop"
-                                alt="Restaurant" class="w-full h-48 object-cover rounded-xl">
+                            <img src="{{ $booking->table->image 
+                                        ? asset('storage/'.$booking->table->image) 
+                                        : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c' }}"
+                                class="w-full h-48 object-cover rounded-xl">
                         </div>
 
                         <div class="flex-1">
+
                             <div class="flex items-start justify-between mb-4">
                                 <div>
-                                    <span class="inline-block bg-indigo-100 text-indigo-600 text-xs font-bold px-3 py-1 rounded-full mb-2">
-                                        SẮP TỚI
+                                    <span class="inline-block text-xs font-bold px-3 py-1 rounded-full mb-2
+                                        {{ $booking->status == 'confirmed' ? 'bg-green-100 text-green-700' : '' }}
+                                        {{ $booking->status == 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
+                                        {{ $booking->status == 'cancelled' ? 'bg-red-100 text-red-700' : '' }}">
+                                        {{ strtoupper($booking->status) }}
                                     </span>
-                                    <h2 class="text-2xl font-bold text-gray-900">L'Arpège - Tinh hoa Pháp</h2>
+
+                                    <h2 class="text-2xl font-bold text-gray-900">
+                                        {{ $booking->table->name ?? 'Không có tên bàn' }}
+                                    </h2>
                                 </div>
                             </div>
 
                             <div class="space-y-2 mb-2">
                                 <div class="flex items-center gap-2 text-gray-600">
                                     <i class="fas fa-calendar text-indigo-600"></i>
-                                    <span>20:00, Thứ bảy, 24 Tháng 12</span>
+                                    <span>{{ \Carbon\Carbon::parse($booking->time)->format('H:i, d/m/Y') }}</span>
                                 </div>
+
                                 <div class="flex items-center gap-2 text-gray-600">
                                     <i class="fas fa-users text-indigo-600"></i>
-                                    <span>4 người</span>
+                                    <span>{{ $booking->guest_count }} người</span>
                                 </div>
                             </div>
-                            <a href="#" class="w-full md:w-auto px-8 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition inline-block text-center">
+
+                             <div class="flex gap-3 mt-4">
+
+                            <a href="{{ route('customer.booking.show', $booking->id) }}"
+                            class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition inline-block text-center">
                                 Xem chi tiết
                             </a>
+
+                            @if($booking->status == 'pending' && \Carbon\Carbon::parse($booking->time)->gt(now()))
+                            <form method="POST"
+                                action="{{ route('customer.booking.cancel', $booking->id) }}"
+                                onsubmit="return confirm('Bạn chắc chắn muốn hủy booking này?')">
+
+                                @csrf
+                                <button type="submit"
+                                    class="px-6 py-3 text-red-600 border border-red-300 rounded-lg hover:bg-red-50 transition font-semibold">
+                                    Hủy đặt bàn
+                                </button>
+                            </form>
+                            @endif
+
+                        </div>
+
                         </div>
                     </div>
+
                 </div>
+                @endforeach
             </div>
 
             <div class="space-y-6">
@@ -130,7 +167,7 @@
                     <p class="text-sm text-gray-600 font-semibold mb-4">TỔNG QUAN</p>
                     <div class="flex justify-center gap-4 mb-6">
                         <div>
-                            <p class="text-3xl font-bold text-indigo-600">12</p>
+                            <p class="text-3xl font-bold text-indigo-600">{{ $bookings->count() }}</p>
                             <p class="text-xs text-gray-600 mt-1">Lượt đặt</p>
                         </div>
                     </div>
@@ -142,77 +179,55 @@
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Lịch sử gần đây</h2>
 
             <div class="space-y-4">
+                @foreach($bookings as $booking)
                 <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition flex items-center justify-between">
+
                     <div class="flex items-center gap-4">
-                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=80&h=80&fit=crop"
-                            alt="Restaurant" class="w-20 h-20 rounded-lg object-cover">
+
+                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=80&h=80&fit=crop"
+                            class="w-20 h-20 rounded-lg object-cover">
+
                         <div>
                             <h3 class="font-bold text-gray-900">
+                                {{ $booking->table->name ?? 'Bàn' }}
                             </h3>
+
                             <p class="text-sm text-gray-600">
-                                
+                                {{ \Carbon\Carbon::parse($booking->time)->format('d/m/Y H:i') }}
+                                • {{ $booking->guest_count }} người
                             </p>
-                            <span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-2 py-1 mt-2 rounded">
-                                ĐÃ HOÀN THÀNH
-                            </span>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <span class="text-green-600 text-xs font-bold">ĐÃ HOÀN THÀNH</span>
-                        <button class="px-4 py-2 text-indigo-600 border border-indigo-300 rounded-lg hover:bg-indigo-50 transition text-sm font-medium">
-                            Đặt lại
-                        </button>
-                        <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition text-sm">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                    </div>
-                </div>
 
-                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <img src="https://images.unsplash.com/photo-1563109556-06b3fe565c0b?w=80&h=80&fit=crop"
-                            alt="Restaurant" class="w-20 h-20 rounded-lg object-cover">
-                        <div>
-                            <h3 class="font-bold text-gray-900">Maison Marou Saigon</h3>
-                            <p class="text-sm text-gray-600">02 Tháng 11, 2024 • 14:00 • 3 Người</p>
-                            <span class="inline-block bg-red-100 text-red-700 text-xs font-bold px-2 py-1 mt-2 rounded">
-                                ĐÃ HỦY
-                            </span>
+                            @if($booking->status == 'confirmed' && \Carbon\Carbon::parse($booking->time)->lt(now()))
+                                <span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-2 py-1 mt-2 rounded">
+                                    ĐÃ HOÀN THÀNH
+                                </span>
+                            @elseif($booking->status == 'cancelled')
+                                <span class="inline-block bg-red-100 text-red-700 text-xs font-bold px-2 py-1 mt-2 rounded">
+                                    ĐÃ HỦY
+                                </span>
+                            @elseif($booking->status == 'pending' || ($booking->status == 'confirmed' && \Carbon\Carbon::parse($booking->time)->gt(now())))
+                                <span class="inline-block bg-yellow-100 text-yellow-700 text-xs font-bold px-2 py-1 mt-2 rounded">
+                                    SẮP TỚI
+                                </span>
+                            @endif
                         </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <span class="text-red-600 text-xs font-bold">ĐÃ HỦY</span>
-                        <button class="px-4 py-2 text-indigo-600 border border-indigo-300 rounded-lg hover:bg-indigo-50 transition text-sm font-medium">
-                            Đặt lại
-                        </button>
-                        <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition text-sm">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                    </div>
-                </div>
 
-                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <img src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=80&h=80&fit=crop"
-                            alt="Restaurant" class="w-20 h-20 rounded-lg object-cover">
-                        <div>
-                            <h3 class="font-bold text-gray-900">Sushi Rei</h3>
-                            <p class="text-sm text-gray-600">28 Tháng 10, 2024 • 21:00 • 2 Người</p>
-                            <span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-2 py-1 mt-2 rounded">
-                                ĐÃ HOÀN THÀNH
-                            </span>
-                        </div>
-                    </div>
                     <div class="flex items-center gap-3">
-                        <span class="text-green-600 text-xs font-bold">ĐÃ HOÀN THÀNH</span>
+
+                        <span class="text-xs font-bold">
+                            {{ strtoupper($booking->status) }}
+                        </span>
+
                         <button class="px-4 py-2 text-indigo-600 border border-indigo-300 rounded-lg hover:bg-indigo-50 transition text-sm font-medium">
                             Đặt lại
                         </button>
-                        <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition text-sm">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
+
                     </div>
+
                 </div>
+                @endforeach
+
             </div>
         </div>
     </main>
@@ -244,11 +259,6 @@
     </footer>
 
     <script>
-        function filterBookings(type) {
-            console.log('Filter bookings by:', type);
-        }
-    </script>
-    <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const container = document.getElementById("userMenuContainer");
                 const dropdown = document.getElementById("userDropdown");
@@ -272,6 +282,35 @@
                 });
             });
         </script>
+        <script>
+            function filterBookings(type) {
+                const items = document.querySelectorAll('.booking-item');
+                const now = new Date();
+
+                items.forEach(item => {
+                    const status = item.dataset.status;
+                    const time = new Date(item.dataset.time);
+
+                    let show = false;
+
+                    if (type === 'all') {
+                        show = true;
+                    } 
+                    else if (type === 'upcoming') {
+                        show = (status === 'pending') || (status === 'confirmed' && time > now);
+                    } 
+                    else if (type === 'completed') {
+                        show = (status === 'confirmed' && time < now);
+                    } 
+                    else if (type === 'cancelled') {
+                        show = (status === 'cancelled');
+                    }
+
+                    item.style.display = show ? 'block' : 'none';
+                });
+            }
+        </script>
+
 </body>
 
 </html>

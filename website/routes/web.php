@@ -55,18 +55,20 @@ Route::middleware('auth')->prefix('customer')->name('customer.')->group(function
     Route::get("/profile", [AuthController::class, 'profile']) //done
         ->name('profile');
 
-    //mở popup cập nhật thông tin cá nhân
-    Route::put("/profile/update", [AuthController::class, 'updateProfile']) //done
-        ->name('profile.update');
-
     //chuyển đến trang lịch sử đặt bàn
     Route::get('/history', [BookingController::class, 'history']) //done
         ->name('history');
 
     Route::get('/search', [BookingController::class, 'search']) //done
         ->name('search');
+    
+    Route::post('/booking/cancel/{id}', [BookingController::class, 'cancel'])
+        ->name('booking.cancel');
 });
-
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
+    Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
+});
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');//done
 

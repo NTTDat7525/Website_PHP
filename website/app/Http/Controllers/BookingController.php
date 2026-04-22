@@ -116,11 +116,17 @@ class BookingController extends Controller
         return response()->json(['success' => true, 'message' => 'Thanh toán thành công', 'booking_id' => $booking->id]);
     }
 
-    public function history()//user
-    {
-        $bookings = Booking::where('user_id', Auth::id())->with('table')->get();
-        return view('customer.history', compact('bookings'));
-    }
+        public function history()
+        {
+            $user = Auth::user();
+
+            $bookings = Booking::with('table')
+                ->where('user_id', $user->id)
+                ->orderByDesc('time')
+                ->get();
+
+            return view('customer.history', compact('bookings'));
+        }
 
     // Hiển thị chi tiết booking
     public function show($id)//user
@@ -165,5 +171,26 @@ class BookingController extends Controller
             'noResult' => $tables->isEmpty(),
             'error' => $tables->isEmpty() ? 'Không tìm thấy bàn phù hợp với yêu cầu của bạn' : null
         ]);
+    }
+    public function cancel($id)
+    {
+        $booking = Booking::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        // chỉ cho hủy booking chưa diễn ra
+        if ($booking->status == 'cancelled') {
+            return back()->with('error', 'Booking đã bị hủy rồi');
+        }
+
+        if ($booking->time < now()) {
+            return back()->with('error', 'Không thể hủy booking đã diễn ra');
+        }
+
+        $booking->update([
+            'status' => 'cancelled'
+        ]);
+
+        return back()->with('success', 'Hủy booking thành công');
     }
 }
