@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Booking;
 use Carbon\Carbon;
+use Laravel\Socialite\Facades\Socialite;
+
 
 class AuthController extends Controller
 {
@@ -87,29 +89,55 @@ class AuthController extends Controller
         return back()->with('success', 'Cập nhật thành công');
     }
     public function profile()
-{
-    $user = auth()->user();
+    {
+        $user = auth()->user();
 
-    $completedBookings = Booking::where('user_id', $user->id)
-        ->where('status', 'confirmed')
-        ->where('time', '<', Carbon::now())
-        ->count();
+        $completedBookings = Booking::where('user_id', $user->id)
+            ->where('status', 'confirmed')
+            ->where('time', '<', Carbon::now())
+            ->count();
 
-    $upcomingBookings = Booking::where('user_id', $user->id)
-        ->where('status', 'confirmed')
-        ->where('time', '>=', Carbon::now())
-        ->count();
+        $upcomingBookings = Booking::where('user_id', $user->id)
+            ->where('status', 'confirmed')
+            ->where('time', '>=', Carbon::now())
+            ->count();
 
-    $totalSpent = Booking::where('user_id', $user->id)
-        ->where('payment_status', 'paid')
-        ->sum('total_price');
+        $totalSpent = Booking::where('user_id', $user->id)
+            ->where('payment_status', 'paid')
+            ->sum('total_price');
 
-    return view('customer.profile', compact(
-        'user',
-        'completedBookings',
-        'upcomingBookings',
-        'totalSpent'
-    ));
-}
+        return view('customer.profile', compact(
+            'user',
+            'completedBookings',
+            'upcomingBookings',
+            'totalSpent'
+        ));
+    }
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
 
+    public function handleGoogleCallback()
+    {
+        $googleUser = Socialite::driver('google')->user();
+
+        $user = User::where('email', $googleUser->email)->first();
+
+        if (!$user) {
+            $user = User::create([
+                'username' => $googleUser->name,
+                'email' => $googleUser->email,
+                'password' => bcrypt('123456dummy'),
+            ]);
+        }
+
+        Auth::login($user);
+
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return redirect()->route('customer.dashboard');
+    }
 }

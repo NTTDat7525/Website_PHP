@@ -11,29 +11,7 @@
 <body class="bg-gray-50">
 
     <div class="flex min-h-screen">
-        <aside class="w-64 bg-gray-900 text-white min-h-screen p-6">
-            <div class="mb-8">
-                <h2 class="text-xl font-bold">Quản Lý</h2>
-            </div>
-
-            <nav class="space-y-3">
-                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition font-medium">
-                    Bảng điều khiển
-                </a>
-                <a href="{{ route('admin.bookings') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
-                    Quản lý đặt bàn
-                </a>
-                <a href="{{ route('admin.tables') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
-                    Quản lý bàn
-                </a>
-                <a href="{{ route('admin.revenue') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
-                    Doanh thu
-                </a>
-                <a href="{{ route('admin.reports') }}" class="block px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition">
-                    Báo cáo
-                </a>
-            </nav>
-        </aside>
+        @include('admin.sidebar')
 
         <main class="flex-1 p-8">
             <h1 class="text-3xl font-bold text-gray-900 mb-8">Quản Lý Bàn</h1>
@@ -77,8 +55,13 @@
                             @endif
                         </td>
                         <td class="py-3">
-                            <a href="{{ route('admin.tables.edit', $table->id) }}"
-                                class="text-blue-600 hover:underline">Sửa</a>
+                            <button onclick="openEditModal(
+                                {{ $table->id }},
+                                '{{ $table->name }}',
+                                '{{ $table->location }}',
+                                {{ $table->capacity }},
+                                {{ $table->price }})"
+                            class="text-blue-600 hover:underline">Sửa</button>
                             <form action="{{ route('admin.tables.destroy', $table->id) }}"
                                     method="POST"
                                     onsubmit="return confirm('Bạn có chắc muốn xóa bàn này?');"
@@ -179,6 +162,62 @@
         </div>
     </div>
 
+    <div id="editModal"
+        class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+
+        <div class="bg-white w-[520px] p-6 rounded-xl shadow-lg">
+
+            <h2 class="text-xl font-bold mb-6 text-gray-800">
+                Chỉnh sửa bàn
+            </h2>
+
+            <form id="editTableForm" method="POST">
+                @csrf
+                @method('PUT')
+
+                <div class="mb-4">
+                    <label class="block mb-1 font-medium text-gray-700">Tên bàn</label>
+                    <input name="name" id="edit_name"
+                        class="w-full border rounded-lg p-3">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block mb-1 font-medium text-gray-700">Khu vực</label>
+                    <select name="location" id="edit_location"
+                        class="w-full border rounded-lg p-3">
+                        <option value="Sảnh chính">Sảnh chính</option>
+                        <option value="Sân thượng">Sân thượng</option>
+                        <option value="Khu VIP">Khu VIP</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block mb-1 font-medium text-gray-700">Số người</label>
+                    <input type="number" name="capacity" id="edit_capacity"
+                        class="w-full border rounded-lg p-3">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block mb-1 font-medium text-gray-700">Giá bàn</label>
+                    <input type="number" name="price" id="edit_price"
+                        class="w-full border rounded-lg p-3">
+                </div>
+
+                <div class="flex justify-end gap-3">
+                    <button type="button"
+                        onclick="closeEditModal()"
+                        class="px-4 py-2 bg-gray-400 text-white rounded-lg">
+                        Hủy
+                    </button>
+
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg">
+                        Cập nhật
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
         function openModal() {
@@ -221,6 +260,22 @@
         errorMsg.classList.add("hidden");
     });
 
+        function openEditModal(id, name, location, capacity, price) {
+        document.getElementById('edit_name').value = name;
+        document.getElementById('edit_location').value = location;
+        document.getElementById('edit_capacity').value = capacity;
+        document.getElementById('edit_price').value = price;
+
+        document.getElementById('editTableForm').action = `/admin/tables/${id}`;
+
+        document.getElementById('editModal').classList.remove('hidden');
+        document.getElementById('editModal').classList.add('flex');
+        }
+
+        function closeEditModal() {
+        document.getElementById('editModal').classList.add('hidden');
+        document.getElementById('editModal').classList.remove('flex');
+        }
     </script>
 </body>
 

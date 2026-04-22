@@ -7,6 +7,8 @@ use App\Models\Booking;
 use App\Models\Table;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Exports\ReportsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
@@ -39,8 +41,21 @@ class ReportController extends Controller
 
     // Export báo cáo (nếu cần sau này)
     public function export()
-    {
-        // logic export excel/pdf sau
-        return response()->json(['message' => 'Export thành công']);
-    }
+{
+    $data = [
+        ['Loại báo cáo', 'Giá trị'],
+
+        ['Số bàn trống', $emptyTables = \App\Models\Table::where('status', 'available')->count()],
+        ['Số bàn đã đặt', $bookedTables = \App\Models\Table::where('status', 'reserved')->count()],
+        ['Số bàn đang sử dụng', $usingTables = \App\Models\Table::where('status', 'occupied')->count()],
+
+        ['Tổng đặt bàn', $totalBookings = \App\Models\Booking::count()],
+        ['Tổng doanh thu', $totalRevenue = \App\Models\Booking::sum('total_price')],
+
+        ['Tổng khách hàng', $totalUsers = \App\Models\User::count()],
+        ['Khách hàng mới hôm nay', $newUsersToday = \App\Models\User::whereDate('created_at', today())->count()],
+    ];
+
+    return Excel::download(new ReportsExport($data), 'bao_cao.xlsx');
+}
 }
