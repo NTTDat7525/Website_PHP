@@ -149,7 +149,9 @@ class BookingController extends Controller
         }
 
         $query = Table::query();
-        
+
+        $query->where('status', 'available');
+
         $query->where('capacity', '>=', $request->guest_count);
 
         if ($request->location) {

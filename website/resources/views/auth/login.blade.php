@@ -11,9 +11,9 @@
     <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
         <h2 class="text-2xl font-bold text-center mb-6">Đăng nhập</h2>
 
-        @if (session('errors'))
+        @if ($errors->has('login'))
         <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-            {{ session('errors')->first('error') }}
+            {{ $errors->first('login') }}
         </div>
         @endif
 
@@ -31,7 +31,25 @@
             </div>
             <div>
                 <label class="block text-gray-700 font-medium mb-2">Mật khẩu</label>
-                <input type="password" name="password" class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300 focus:border-blue-500" required value="{{ old('password') }}">
+
+                <div class="relative">
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        class="w-full px-4 py-2 pr-12 border rounded-lg focus:ring focus:ring-blue-300 focus:border-blue-500"
+                        required
+                        value="{{ old('password') }}"
+                    >
+
+                    <button
+                        type="button"
+                        onclick="togglePassword()"
+                        class="absolute inset-y-0 right-0 px-4 flex items-center text-gray-500"
+                    >
+                        👁
+                    </button>
+                </div>
             </div>
             <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition font-medium">
                 Đăng nhập
@@ -42,6 +60,20 @@
             <a href="{{ route('auth.register') }}" class="text-blue-600 hover:underline font-medium">Đăng ký</a>
         </p>
     </div>
+    <script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const button = event.currentTarget;
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            button.textContent = '🙈';
+        } else {
+            passwordInput.type = 'password';
+            button.textContent = '👁';
+        }
+    }
+</script>
 </body>
 
 </html>

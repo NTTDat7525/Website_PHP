@@ -53,11 +53,29 @@
             background-color: rgb(139, 92, 246);
             color: white;
         }
+
+        #userMenuContainer {
+            position: relative;
+        }
+
+        #userDropdown {
+            padding-top: 8px;
+        }
+
+        #userDropdown::before {
+        content: "";
+        position: absolute;
+        top: -8px;
+        left: 0;
+        right: 0;
+        height: 8px;
+        background: transparent;
+        }
     </style>
 </head>
 
 <body class="bg-slate-950 text-slate-100">
-    <nav class="fixed top-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md z-50 border-b border-slate-800">
+     <nav class="fixed top-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md z-50 border-b border-slate-800">
         <div class="w-full px-4">
             <div class="flex justify-between items-center h-24">
 
@@ -83,26 +101,31 @@
                         Lịch sử
                     </a>
 
-                    <div class="relative group">
-                        <button class="p-2 hover:bg-slate-800 rounded-lg transition text-slate-400 hover:text-slate-200">
+                    <div class="relative group" id="userMenuContainer">
+                        <button id="userMenuButton" type="button"
+                            class="p-2 hover:bg-slate-800 rounded-lg transition text-slate-400 hover:text-slate-200">
                             <i class="fas fa-user-circle text-3xl"></i>
                         </button>
 
-                        <div class="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-lg hidden group-hover:block z-50 border border-slate-700">
-                            <a href="{{ route('customer.profile') }}"
-                                class="block px-4 py-2 hover:bg-slate-700 rounded-t-lg">
-                                Tài khoản
-                            </a>
-                            <form method="POST" action="{{ route('auth.logout') }}">
-                                @csrf
-                                <button type="submit"
-                                    class="w-full text-left px-4 py-2 hover:bg-slate-700 rounded-b-lg text-red-400">
-                                    Đăng xuất
-                                </button>
-                            </form>
+                        <div id="userDropdown"
+                            class="hidden absolute right-0 top-full mt-2 pt-0 w-48 bg-slate-800 rounded-lg shadow-lg border border-slate-700 z-[9999]">
+                            
+                            <div class="py-1 bg-slate-800 rounded-lg">
+                                <a href="{{ route('customer.profile') }}"
+                                    class="block px-4 py-2 hover:bg-slate-700 transition">
+                                    Tài khoản
+                                </a>
+
+                                <form method="POST" action="{{ route('auth.logout') }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="w-full text-left px-4 py-2 hover:bg-slate-700 text-red-400 transition">
+                                        Đăng xuất
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -352,7 +375,52 @@
 
         document.addEventListener('DOMContentLoaded', updateDateTimeField);
     </script>
+    <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const container = document.getElementById("userMenuContainer");
+                const dropdown = document.getElementById("userDropdown");
+                const button = document.getElementById("userMenuButton");
+                let hideTimeout;
 
+                // Hiện dropdown khi di chuột vào container hoặc button
+                container.addEventListener("mouseenter", function () {
+                    clearTimeout(hideTimeout);
+                    dropdown.classList.remove("hidden");
+                });
+
+                // Giữ dropdown khi di chuột vào dropdown
+                dropdown.addEventListener("mouseenter", function () {
+                    clearTimeout(hideTimeout);
+                });
+
+                // Ẩn dropdown khi di chuột ra ngoài container
+                container.addEventListener("mouseleave", function () {
+                    hideTimeout = setTimeout(() => {
+                        dropdown.classList.add("hidden");
+                    }, 100);
+                });
+
+                // Ẩn dropdown khi di chuột ra khỏi dropdown
+                dropdown.addEventListener("mouseleave", function () {
+                    hideTimeout = setTimeout(() => {
+                        dropdown.classList.add("hidden");
+                    }, 100);
+                });
+
+                // Click button để toggle dropdown
+                button.addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    dropdown.classList.toggle("hidden");
+                });
+
+                // Ẩn dropdown khi click bất cứ đâu khác
+                document.addEventListener("click", function (e) {
+                    if (!container.contains(e.target)) {
+                        dropdown.classList.add("hidden");
+                    }
+                });
+            });
+        </script>
 </body>
 
 </html>

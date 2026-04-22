@@ -5,6 +5,7 @@
     <title>Đăng ký</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 flex items-center justify-center h-screen">
     <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
         <h2 class="text-2xl font-bold text-center mb-6">Đăng ký</h2>
@@ -20,11 +21,45 @@
             </div>
             <div>
                 <label class="block text-gray-700">Mật khẩu</label>
-                <input type="password" name="password" class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-green-300" required>
+                <div class="relative">
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        class="w-full px-4 py-2 pr-12 border rounded-lg focus:ring focus:ring-green-300"
+                        required
+                    >
+                    <button
+                        type="button"
+                        onclick="togglePassword('password', 'eyeIcon1')"
+                        class="absolute inset-y-0 right-0 px-4 flex items-center text-gray-500"
+                    >
+                        <span id="eyeIcon1">👁</span>
+                    </button>
+                </div>
+                @error('password')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
             </div>
+
             <div>
                 <label class="block text-gray-700">Xác nhận mật khẩu</label>
-                <input type="password" name="password_confirmation" class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-green-300" required>
+                <div class="relative">
+                    <input
+                        type="password"
+                        name="password_confirmation"
+                        id="password_confirmation"
+                        class="w-full px-4 py-2 pr-12 border rounded-lg focus:ring focus:ring-green-300"
+                        required
+                    >
+                    <button
+                        type="button"
+                        onclick="togglePassword('password_confirmation', 'eyeIcon2')"
+                        class="absolute inset-y-0 right-0 px-4 flex items-center text-gray-500"
+                    >
+                        <span id="eyeIcon2">👁</span>
+                    </button>
+                </div>
             </div>
             <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">Đăng ký</button>
         </form>
@@ -33,5 +68,19 @@
             <a href="{{ route('auth.login') }}" class="text-green-600 hover:underline">Đăng nhập</a>
         </p>
     </div>
+    <script>
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                icon.textContent = '👁';
+            }
+        }
+    </script>
 </body>
 </html>

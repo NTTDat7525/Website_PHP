@@ -47,8 +47,18 @@
             background-color: rgba(239, 68, 68, 0.2);
             color: #ef4444;
         }
+        #userDropdown::before {
+        content: "";
+        position: absolute;
+        top: -20px;
+        left: 0;
+        right: 0;
+        height: 20px;
+        background: transparent;
+}
     </style>
 </head>
+
 
 <body class="bg-slate-950 text-slate-100">
 
@@ -78,26 +88,31 @@
                         Lịch sử
                     </a>
 
-                    <div class="relative group">
-                        <button class="p-2 hover:bg-slate-800 rounded-lg transition text-slate-400 hover:text-slate-200">
+                    <div class="relative group" id="userMenuContainer">
+                        <button id="userMenuButton" type="button"
+                            class="p-2 hover:bg-slate-800 rounded-lg transition text-slate-400 hover:text-slate-200">
                             <i class="fas fa-user-circle text-3xl"></i>
                         </button>
 
-                        <div class="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-lg hidden group-hover:block z-50 border border-slate-700">
-                            <a href="{{ route('customer.profile') }}"
-                                class="block px-4 py-2 hover:bg-slate-700 rounded-t-lg">
-                                Tài khoản
-                            </a>
-                            <form method="POST" action="{{ route('auth.logout') }}">
-                                @csrf
-                                <button type="submit"
-                                    class="w-full text-left px-4 py-2 hover:bg-slate-700 rounded-b-lg text-red-400">
-                                    Đăng xuất
-                                </button>
-                            </form>
+                        <div id="userDropdown"
+                            class="hidden group-hover:block absolute right-0 top-full mt-0 pt-2 w-48 bg-slate-800 rounded-lg shadow-lg border border-slate-700 z-[9999]">
+                            
+                            <div class="py-1 bg-slate-800 rounded-lg">
+                                <a href="{{ route('customer.profile') }}"
+                                    class="block px-4 py-2 hover:bg-slate-700 transition">
+                                    Tài khoản
+                                </a>
+
+                                <form method="POST" action="{{ route('auth.logout') }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="w-full text-left px-4 py-2 hover:bg-slate-700 text-red-400 transition">
+                                        Đăng xuất
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -131,12 +146,17 @@
                         <div>
                             <label class="text-sm font-semibold text-slate-300 mb-2 block">NGÀY</label>
                             <input type="date" name="date"
+                                min="{{ date('Y-m-d') }}"
+                                onkeydown="return false"
+                                onpaste="return false"
                                 class="w-full px-4 py-3 bg-slate-900 text-slate-100 rounded-lg border border-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
                         </div>
 
                         <div>
                             <label class="text-sm font-semibold text-slate-300 mb-2 block">GIỜ</label>
-                            <input type="time" name="time"
+                            <input type="time" name="time" id="time"
+                                onkeydown="return false"
+                                onpaste="return false"
                                 class="w-full px-4 py-3 bg-slate-900 text-slate-100 rounded-lg border border-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
                         </div>
 
@@ -250,6 +270,30 @@
             </div>
         </div>
     </footer>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const container = document.getElementById("userMenuContainer");
+                const dropdown = document.getElementById("userDropdown");
+                let timeout;
+
+                container.addEventListener("mouseenter", function () {
+                    clearTimeout(timeout);
+                    dropdown.classList.remove("hidden");
+                });
+
+                container.addEventListener("mouseleave", function () {
+                    timeout = setTimeout(() => {
+                        dropdown.classList.add("hidden");
+                    }, 200);
+                });
+                
+                const button = document.getElementById("userMenuButton");
+                button.addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    dropdown.classList.toggle("hidden");
+                });
+            });
+        </script>
 
 </body>
 
