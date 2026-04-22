@@ -13,7 +13,8 @@ class RevenueController extends Controller
         $monthlyRevenue = Booking::whereMonth('time', Carbon::now()->month)
             ->sum('total_price');
 
-        $revenuesByDate = Booking::selectRaw('DATE(time) as date, SUM(total_price) as total')
+        $revenuesByDate = Booking::selectRaw('date, SUM(total_price) as total')
+            ->where('payment_status', 'paid')
             ->groupBy('date')
             ->orderBy('date', 'desc')
             ->take(10)

@@ -16,14 +16,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('table_id')->constrained('tables')->onDelete('cascade');
-            $table->dateTime('time');
+            $table->date('date');
+            $table->time('time');
             $table->integer('guest_count');
             $table->string('email');
             $table->string('phone')->nullable();
             $table->text('special_requests')->nullable();
             $table->bigInteger('total_price')->default(0);
             $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
-            $table->enum('payment_method', ['vnpay', 'cash'])->default('vnpay');
+            $table->enum('payment_method', ['Chuyển khoản', 'Tiền mặt'])->default('Chuyển khoản');
             $table->enum('payment_status', ['unpaid', 'paid'])->default('unpaid');
             $table->timestamps();
         });

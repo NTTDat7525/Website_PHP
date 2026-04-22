@@ -91,7 +91,8 @@
 
             <form id="tableForm"
                 action="{{ route('admin.tables.store') }}"
-                method="POST">
+                method="POST"
+                enctype="multipart/form-data">
 
                 @csrf
 

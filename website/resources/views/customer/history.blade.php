@@ -98,9 +98,13 @@
                     <div class="flex flex-col md:flex-row gap-6 p-6">
 
                         <div class="md:w-48 flex-shrink-0">
-                            <img src="{{ $booking->table->image 
-                                        ? asset('storage/'.$booking->table->image) 
-                                        : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c' }}"
+                            @php
+                                $image = $booking->table->image;
+                            @endphp
+
+                            <img src="{{ ($image && file_exists(public_path('storage/'.$image))) 
+                                    ? asset('storage/'.$image) 
+                                    : asset('images/default.png') }}"
                                 class="w-full h-48 object-cover rounded-xl">
                         </div>
 
@@ -133,7 +137,7 @@
                                 </div>
                             </div>
 
-                             <div class="flex gap-3 mt-4">
+                            <div class="flex gap-3 mt-4">
 
                             <a href="{{ route('customer.booking.show', $booking->id) }}"
                             class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition inline-block text-center">
@@ -184,8 +188,14 @@
 
                     <div class="flex items-center gap-4">
 
-                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=80&h=80&fit=crop"
-                            class="w-20 h-20 rounded-lg object-cover">
+                        @php
+                            $image = $booking->table->image;
+                        @endphp
+
+                        <img src="{{ ($image && file_exists(public_path('storage/'.$image))) 
+                                ? asset('storage/'.$image)
+                                : asset('images/default.png') }}"
+                            class="w-full h-48 object-cover rounded-xl">
 
                         <div>
                             <h3 class="font-bold text-gray-900">
@@ -218,10 +228,6 @@
                         <span class="text-xs font-bold">
                             {{ strtoupper($booking->status) }}
                         </span>
-
-                        <button class="px-4 py-2 text-indigo-600 border border-indigo-300 rounded-lg hover:bg-indigo-50 transition text-sm font-medium">
-                            Đặt lại
-                        </button>
 
                     </div>
 

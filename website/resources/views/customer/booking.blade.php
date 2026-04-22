@@ -274,7 +274,6 @@
                                 </div>
 
                                 <input type="hidden" name="booking_time" id="booking_time">
-                                <input type="hidden" name="time" id="time">
                             </div>
 
                             <div class="mb-6">
@@ -320,11 +319,6 @@
     </div>
 
     <script>
-        function updateDateTimeField() {
-            const date = document.getElementById('booking_date').value;
-            const time = document.getElementById('booking_time').value;
-            document.getElementById('time').value = `${date} ${time}:00`;
-        }
 
         document.getElementById('booking-form').addEventListener('submit', function(e) {
             const date = document.getElementById('booking_date').value;
@@ -354,8 +348,6 @@
                     b.classList.remove('active', 'bg-violet-600', 'text-white');
                     b.classList.add('bg-slate-700', 'text-slate-400');
                 });
-
-                updateDateTimeField();
             });
         });
 
@@ -369,20 +361,14 @@
                 this.classList.add('active', 'bg-violet-600', 'text-white');
                 this.classList.remove('bg-slate-700', 'text-slate-400');
                 document.getElementById('booking_time').value = this.getAttribute('data-time');
-                updateDateTimeField();
             });
         });
-
-        document.addEventListener('DOMContentLoaded', updateDateTimeField);
-    </script>
-    <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const container = document.getElementById("userMenuContainer");
                 const dropdown = document.getElementById("userDropdown");
                 const button = document.getElementById("userMenuButton");
                 let hideTimeout;
 
-                // Hiện dropdown khi di chuột vào container hoặc button
                 container.addEventListener("mouseenter", function () {
                     clearTimeout(hideTimeout);
                     dropdown.classList.remove("hidden");

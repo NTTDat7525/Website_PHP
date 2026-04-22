@@ -10,21 +10,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
-
 <body class="bg-gray-50">
 
     <div class="min-h-screen flex">
         <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-gray-800 to-black relative overflow-hidden">
             <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=1000&fit=crop"
-                alt="Restaurant" class="w-full h-full object-cover opacity-80">
-
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-8">
-                <h2 class="text-4xl font-bold text-white mb-4">Nghệ thuật ẩm thực trong từng chi tiết.</h2>
-                <p class="text-lg text-gray-200">Chào mừng bạn đến với trải nghiệm số đẳng cấp dành cho giới mộ điệu.</p>
-            </div>
+                alt="Restaurant" class="w-full h-screen object-cover opacity-80">
         </div>
 
-        <div class="w-full lg:w-1/2 flex items-center justify-center p-8">
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-8 ">
             <div class="w-full max-w-md">
                 <button onclick="window.history.back()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900">
                     <i class="fas fa-times text-2xl"></i>
@@ -81,11 +75,6 @@
                         Chỉnh sửa thông tin
                     </button>
                 </div>
-
-                <p class="text-xs text-gray-500 text-center mt-6">
-                    Bằng việc nhấn xác nhận, bạn đồng ý với <a href="#" class="text-violet-600 hover:underline">điều khoản dịch vụ</a> và <br>
-                    chính sách hủy bỏ bàn của Lumina.
-                </p>
             </div>
         </div>
     </div>
@@ -104,213 +93,142 @@
 
             <div class="p-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                    <!-- QR -->
                     <div class="flex flex-col items-center">
-                        <div class="bg-white border-4 border-gray-200 p-6 rounded-xl mb-4">
-                            <div id="qrCode"></div>
+                        <div class="bg-slate-800 border border-slate-700 p-6 rounded-xl mb-4 flex justify-center">
+                            <img 
+                                src="{{ $vietQrUrl }}"
+                                alt="QR thanh toán"
+                                class="w-64 h-64 rounded-lg"
+                            >
                         </div>
-                        <p class="text-sm text-gray-600 text-center">
+                        <p class="text-sm text-slate-400 text-center">
                             Quét mã QR bằng ứng dụng ngân hàng của bạn
                         </p>
                     </div>
 
+                    <!-- Bank Info -->
                     <div>
                         <div class="mb-8">
-                            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <i class="fas fa-university text-violet-600"></i>
+                            <h3 class="text-lg font-bold text-slate-100 mb-4 flex items-center gap-2">
+                                <i class="fas fa-university text-violet-400"></i>
                                 Thông Tin Ngân Hàng
                             </h3>
 
-                            <div class="bg-gray-50 rounded-xl p-6 space-y-4">
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 space-y-4">
                                 <div>
-                                    <p class="text-xs text-gray-500 font-semibold mb-1">NGÂN HÀNG</p>
-                                    <p class="text-lg font-bold text-gray-900">Vietcombank (VCB)</p>
+                                    <p class="text-xs text-slate-400 font-semibold mb-1">NGÂN HÀNG</p>
+                                    <p class="text-lg font-bold text-slate-100">MBBank</p>
                                 </div>
 
                                 <div>
-                                    <p class="text-xs text-gray-500 font-semibold mb-1">CHỦ TÀI KHOẢN</p>
-                                    <p class="text-lg font-bold text-gray-900">LUMINOUS EPICURE JSC</p>
+                                    <p class="text-xs text-slate-400 font-semibold mb-1">CHỦ TÀI KHOẢN</p>
+                                    <p class="text-lg font-bold text-slate-100">Nguyễn Trịnh Tiến Đạt</p>
                                 </div>
 
                                 <div>
-                                    <p class="text-xs text-gray-500 font-semibold mb-1">SỐ TÀI KHOẢN</p>
+                                    <p class="text-xs text-slate-400 font-semibold mb-1">SỐ TÀI KHOẢN</p>
                                     <div class="flex items-center gap-2">
-                                        <p class="text-lg font-bold text-gray-900 font-mono">1012345678</p>
-                                        <button onclick="copyToClipboard('1012345678')" class="text-violet-600 hover:text-violet-700">
+                                        <p class="text-lg font-bold text-slate-100 font-mono">0394782424</p>
+                                        <button onclick="copyToClipboard('0394782424')" 
+                                            class="text-violet-400 hover:text-violet-300">
                                             <i class="fas fa-copy"></i>
                                         </button>
                                     </div>
                                 </div>
-
-                                <div>
-                                    <p class="text-xs text-gray-500 font-semibold mb-1">CHI NHÁNH</p>
-                                    <p class="text-lg font-bold text-gray-900">Hồ Chí Minh</p>
-                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
+                <div class="mt-8 pt-8 border-t border-slate-700">
+                    <div class="bg-gradient-to-r from-violet-600/10 to-purple-600/10 border border-slate-700 rounded-xl p-6 flex justify-between">
                         <div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <i class="fas fa-pen-fancy text-violet-600"></i>
-                                Nội Dung Chuyển Khoản
-                            </h3>
-
-                            <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 mb-4">
-                                <p class="text-xs text-blue-600 font-semibold mb-2">COPY NỘI DUNG</p>
-                                <div class="flex items-center gap-3">
-                                    <div class="flex-1">
-                                        <p id="transferContent" class="font-mono text-sm text-gray-900 break-all">
-                                            LUMINOUS-{{ str_pad($booking->id, 6, '0', STR_PAD_LEFT) }}
-                                        </p>
-                                    </div>
-                                    <button onclick="copyTransferContent()" class="flex-shrink-0 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition">
-                                        <i class="fas fa-copy"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <p class="text-xs text-gray-500">
-                                ⚠️ Hãy chắc chắn rằng bạn sao chép đúng nội dung chuyển khoản. Nó sẽ giúp chúng tôi xác nhận thanh toán của bạn một cách nhanh chóng.
+                            <p class="text-sm text-slate-400 font-semibold mb-1">TỔNG TIỀN</p>
+                            <p class="text-3xl font-bold text-white">
+                                {{ number_format($booking->total_price, 0, ',', '.') }}đ
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-8 pt-8 border-t border-gray-200">
-                    <div class="bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl p-6 flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-600 font-semibold mb-1">TỔNG TIỀN CẦN THANH TOÁN</p>
-                            <p class="text-3xl font-bold text-gray-900">{{ number_format($booking->total_price ?? 0, 0, ',', '.') }}đ</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-sm text-gray-600 font-semibold mb-1">CỌCĐÃ THANH TOÁN</p>
-                            <p class="text-2xl font-bold text-green-600">{{ number_format(($booking->total_price ?? 0) * 0.2, 0, ',', '.') }}đ</p>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="mt-8 space-y-3">
-                    <button onclick="confirmPayment()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl transition duration-200">
+                    <button onclick="confirmPayment(event)" 
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl">
                         <i class="fas fa-check-circle mr-2"></i>
-                        Tôi Đã Chuyển Khoản
+                        Xác nhận
                     </button>
-
-                    <button onclick="closePaymentModal()" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-900 font-bold py-3 rounded-xl transition duration-200">
+                    <button onclick="closePaymentModal()" 
+                        class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl">
                         Hủy
                     </button>
-                </div>
-
-                <div class="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                    <p class="text-xs text-yellow-800">
-                        <i class="fas fa-info-circle mr-2"></i>
-                        <strong>Lưu ý:</strong> Thanh toán có thể mất từ 1-5 phút để được xử lý. Hệ thống sẽ tự động chuyển bạn đến trang chi tiết đặt bàn khi thanh toán được xác nhận.
-                    </p>
                 </div>
             </div>
         </div>
     </div>
+        <div id="toast-success" class="hidden fixed top-6 right-6 bg-green-600 text-white px-6 py-4 rounded-xl shadow-lg z-50">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="toast-message"></span>
+    </div>
 
     <script>
         const paymentModal = document.getElementById('paymentModal');
-        const bookingId = parseInt(paymentModal.getAttribute('data-booking-id'));
-        const transferContent = paymentModal.getAttribute('data-transfer-content');
-        const totalPrice = parseInt(paymentModal.getAttribute('data-total-price'));
-
-        document.addEventListener('DOMContentLoaded', function() {
-            generateQRCode();
-        });
-
-        function generateQRCode() {
-            const qrContainer = document.getElementById('qrCode');
-            qrContainer.innerHTML = '';
-
-            const qrData = `00020126360014com.vietqr.pay0710414060618520208LUMIMOUS${transferContent}5802VN62110819Luminous Epicure63041D6F`;
-
-            QRCode.toCanvas(document.getElementById('qrCode'), transferContent, {
-                errorCorrectionLevel: 'H',
-                type: 'image/png',
-                width: 250,
-                margin: 2,
-                color: {
-                    dark: '#000000',
-                    light: '#FFFFFF'
-                }
-            }, function(error) {
-                if (error) {
-                    console.error('QR Code generation failed:', error);
-                    document.getElementById('qrCode').innerHTML = '<div class="text-center text-gray-500">QR Code không thể tạo</div>';
-                }
-            });
-        }
+        const bookingId = paymentModal.dataset.bookingId;
 
         function openPaymentModal() {
-            document.getElementById('paymentModal').classList.remove('hidden');
+            paymentModal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
 
         function closePaymentModal() {
-            document.getElementById('paymentModal').classList.add('hidden');
+            paymentModal.classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
 
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Đã sao chép số tài khoản!');
-            }).catch(err => {
-                console.error('Lỗi sao chép:', err);
-            });
-        }
+        function confirmPayment(event) {
+            const btn = event.currentTarget;
 
-        function copyTransferContent() {
-            navigator.clipboard.writeText(transferContent).then(() => {
-                const btn = event.target.closest('button');
-                const originalHTML = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-check"></i>';
-                setTimeout(() => {
-                    btn.innerHTML = originalHTML;
-                }, 2000);
-            }).catch(err => {
-                console.error('Lỗi sao chép:', err);
-            });
-        }
-
-        function confirmPayment() {
-            const btn = event.target;
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Đang xác nhận...';
 
-            setTimeout(() => {
-                fetch(`/customer/booking/confirm-payment/${bookingId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        },
-                        body: JSON.stringify({
-                            payment_status: 'paid'
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            window.location.href = `/customer/booking/detail/${bookingId}`;
-                        } else {
-                            alert('Có lỗi xảy ra: ' + data.message);
-                            btn.disabled = false;
-                            btn.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Tôi Đã Chuyển Khoản';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Có lỗi xảy ra khi xác nhận thanh toán');
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Tôi Đã Chuyển Khoản';
-                    });
-            }, 1000);
+            fetch(`/customer/booking/confirm-payment/${bookingId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccessToast("Thanh toán thành công");
+
+                    setTimeout(() => {
+                        window.location.href = "/customer/booking/detail/" + bookingId;
+                    }, 1500);
+                }
+            })
+            .catch(() => {
+                alert("Có lỗi xảy ra!");
+                btn.disabled = false;
+            });
         }
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closePaymentModal();
-            }
+
+        function showSuccessToast(message) {
+            const toast = document.getElementById('toast-success');
+            const text = document.getElementById('toast-message');
+
+            text.innerText = message;
+            toast.classList.remove('hidden');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2000);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closePaymentModal();
         });
     </script>
 </body>

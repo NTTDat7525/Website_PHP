@@ -73,8 +73,9 @@
             <div class="md:col-span-2 space-y-6">
 
                 <div class="bg-white rounded-2xl shadow-lg p-6 flex items-center gap-6">
-                    <img src="https://ui-avatars.com/api/?name={{ auth()->user()->username ?? 'User' }}&background=random"
-                        class="w-20 h-20 rounded-full border-4 border-indigo-100">
+                    <div class="w-20 h-20 rounded-full border-4 border-indigo-100 bg-indigo-600 flex items-center justify-center text-white text-2xl font-bold uppercase">
+                        {{ strtoupper(substr(auth()->user()->name ?? auth()->user()->username, 0, 1)) }}
+                    </div>
 
                     <div>
                         <h2 class="text-xl font-bold">

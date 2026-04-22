@@ -7,6 +7,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\RevenueController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\PaymentController;
 use App\Models\Table;
 
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('auth.login'); //done
@@ -48,6 +49,12 @@ Route::middleware('auth')->prefix('customer')->name('customer.')->group(function
     // API xác nhận thanh toán
     Route::post('/booking/confirm-payment/{id}', [BookingController::class, 'confirmPayment'])
         ->name('booking.confirm-payment');
+    
+    Route::get('/booking/status/{id}', [BookingController::class, 'checkStatus'])
+        ->name('booking.status');
+
+    Route::get('/booking/confirm-test/{id}', [BookingController::class, 'confirm_test'])
+        ->name('booking.confirm_test');
 
     // Xem chi tiết booking
     Route::get('/booking/detail/{id}', [BookingController::class, 'show'])

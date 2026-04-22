@@ -141,7 +141,6 @@
                         <p class="text-slate-400">Trạng thái bàn được cập nhật theo thời gian thực.</p>
                     </div>
 
-                    <!-- Hiển thị thông báo nếu không có bàn nào phù hợp với bộ lọc -->
                     @if(isset($noResult) && $noResult)
                         <div class="bg-red-500/20 border border-red-500 text-red-400 px-4 py-4 rounded-lg mb-6 text-center">
                             Không có bàn phù hợp với lựa chọn của bạn!

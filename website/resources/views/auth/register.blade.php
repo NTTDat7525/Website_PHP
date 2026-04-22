@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Đăng ký</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
 
 <body class="bg-gray-100 flex items-center justify-center h-screen">
@@ -34,7 +36,7 @@
                         onclick="togglePassword('password', 'eyeIcon1')"
                         class="absolute inset-y-0 right-0 px-4 flex items-center text-gray-500"
                     >
-                        <span id="eyeIcon1">👁</span>
+                        <ion-icon name="eye-outline" id="eyeIcon1"></ion-icon>
                     </button>
                 </div>
                 @error('password')
@@ -57,7 +59,7 @@
                         onclick="togglePassword('password_confirmation', 'eyeIcon2')"
                         class="absolute inset-y-0 right-0 px-4 flex items-center text-gray-500"
                     >
-                        <span id="eyeIcon2">👁</span>
+                        <ion-icon name="eye-outline" id="eyeIcon2"></ion-icon>
                     </button>
                 </div>
             </div>
@@ -75,10 +77,10 @@
 
             if (input.type === 'password') {
                 input.type = 'text';
-                icon.textContent = '🙈';
+                icon.setAttribute('name', 'eye-off-outline');
             } else {
                 input.type = 'password';
-                icon.textContent = '👁';
+                icon.setAttribute('name', 'eye-outline');
             }
         }
     </script>

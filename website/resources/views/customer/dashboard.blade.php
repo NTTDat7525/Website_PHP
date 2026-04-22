@@ -24,8 +24,8 @@
 
         .status-badge {
             position: absolute;
-            top-4;
-            right-4;
+            top: 0.5rem;
+            right: 1rem;
             padding: 0.375rem 0.75rem;
             border-radius: 0.25rem;
             font-size: 0.75rem;
@@ -144,20 +144,22 @@
                     <form action="{{ route('customer.search') }}" method="GET" class="space-y-6">
 
                         <div>
-                            <label class="text-sm font-semibold text-slate-300 mb-2 block">NGÀY</label>
-                            <input type="date" name="date"
-                                min="{{ date('Y-m-d') }}"
-                                onkeydown="return false"
-                                onpaste="return false"
-                                class="w-full px-4 py-3 bg-slate-900 text-slate-100 rounded-lg border border-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
+                                <label class="text-sm font-semibold text-slate-300 mb-2 block">NGÀY</label>
+                                <select name="date" id="date"
+                                    class="w-full px-4 py-3 bg-slate-900 text-slate-100 rounded-lg border border-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
+
+                                    <option value="">-- Chọn ngày --</option>
+                                </select>
                         </div>
 
                         <div>
                             <label class="text-sm font-semibold text-slate-300 mb-2 block">GIỜ</label>
-                            <input type="time" name="time" id="time"
-                                onkeydown="return false"
-                                onpaste="return false"
+
+                            <select name="time" id="time"
                                 class="w-full px-4 py-3 bg-slate-900 text-slate-100 rounded-lg border border-slate-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500">
+
+                                <option value="">-- Chọn giờ --</option>
+                            </select>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
@@ -292,6 +294,65 @@
                     e.stopPropagation();
                     dropdown.classList.toggle("hidden");
                 });
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const timeSelect = document.getElementById("time");
+
+                const bookedTimes = @json($bookedTimes ?? []);
+
+                let start = 19 * 60;
+                let end = 21 * 60;
+
+                for (let minutes = start; minutes <= end; minutes += 30) {
+                    let h = String(Math.floor(minutes / 60)).padStart(2, '0');
+                    let m = String(minutes % 60).padStart(2, '0');
+
+                    let time = `${h}:${m}`;
+
+                    let option = document.createElement("option");
+                    option.value = time;
+                    option.textContent = time;
+
+                    if (bookedTimes.includes(time)) {
+                        option.disabled = true;
+                        option.textContent += " (Đã đặt)";
+                        option.style.color = "gray";
+                    }
+
+                    timeSelect.appendChild(option);
+                }
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+
+                const dateSelect = document.getElementById("date");
+
+                const today = new Date();
+
+                for (let i = 0; i < 5; i++) {
+                    let d = new Date();
+                    d.setDate(today.getDate() + i);
+
+                    let year = d.getFullYear();
+                    let month = String(d.getMonth() + 1).padStart(2, '0');
+                    let day = String(d.getDate()).padStart(2, '0');
+
+                    let value = `${year}-${month}-${day}`;
+
+                    let label = d.toLocaleDateString('vi-VN', {
+                        weekday: 'short',
+                        day: '2-digit',
+                        month: '2-digit'
+                    });
+
+                    let option = document.createElement("option");
+                    option.value = value;
+                    option.textContent = label;
+
+                    dateSelect.appendChild(option);
+                }
+
             });
         </script>
 
