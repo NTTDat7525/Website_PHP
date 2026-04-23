@@ -72,13 +72,7 @@
                         Golden Spoons
                     </a>
                 </div>
-
                 <div class="flex items-center gap-6 mr-4">
-
-                    <a href="#" class="text-slate-300 hover:text-white transition">
-                        Khám phá
-                    </a>
-
                     <a href="{{ route('customer.booking.index') }}"
                         class="text-slate-300 hover:text-white transition">
                         Đặt bàn

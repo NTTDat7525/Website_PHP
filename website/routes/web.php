@@ -8,6 +8,7 @@ use App\Http\Controllers\TableController;
 use App\Http\Controllers\RevenueController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PaymentController;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Table;
 
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('auth.login'); //done
@@ -56,6 +57,8 @@ Route::middleware('auth')->prefix('customer')->name('customer.')->group(function
     Route::get('/booking/confirm-test/{id}', [BookingController::class, 'confirm_test'])
         ->name('booking.confirm_test');
 
+    Route::get('/booking/booked-times', [BookingController::class, 'getBookedTimes']);
+    
     // Xem chi tiết booking
     Route::get('/booking/detail/{id}', [BookingController::class, 'show'])
         ->name('booking.show');
@@ -95,3 +98,4 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/export', [ReportController::class, 'export'])->name('reports.export');
 
 });
+

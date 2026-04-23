@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use  App\Http\Controllers\PaymentController;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PaymentSuccessMail;
+use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {
@@ -127,16 +130,13 @@ class BookingController extends Controller
     // Cập nhật trạng thái thanh toán
     public function confirmPayment($id)
     {
-        $booking = Booking::where('id', $id)
+        $booking = Booking::with(['user', 'table'])
+            ->where('id', $id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
 
-        // nếu đã thanh toán rồi thì bỏ qua
         if ($booking->payment_status === 'paid') {
-            return response()->json([
-                'success' => true,
-                'message' => 'Đã thanh toán trước đó'
-            ]);
+            return response()->json(['success' => true]);
         }
 
         $booking->update([
@@ -144,9 +144,16 @@ class BookingController extends Controller
             'status' => 'confirmed'
         ]);
 
-        return response()->json([
-            'success' => true
-        ]);
+        $booking->load('user');
+
+        try {
+            Mail::to($booking->user->email)
+                ->send(new PaymentSuccessMail($booking));
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+
+        return response()->json(['success' => true]);
     }
 
     public function checkStatus($id)
@@ -245,11 +252,25 @@ class BookingController extends Controller
             'status' => 'cancelled'
         ]);
 
-        // 👉 trả lại trạng thái bàn
         $booking->table->update([
             'status' => 'available'
         ]);
 
         return back()->with('success', 'Hủy booking thành công');
+    }
+
+    public function getBookedTimes(Request $request)
+    {
+        if (!$request->table_id || !$request->date) {
+            return response()->json([]);
+        }
+
+        $times = Booking::where('table_id', $request->table_id)
+            ->where('date', $request->date)
+            ->pluck('time')
+            ->map(fn($t) => Carbon::parse($t)->format('H:i'))
+            ->toArray();
+
+        return response()->json($times);
     }
 }

@@ -88,10 +88,6 @@
 
                 <div class="flex items-center gap-6 mr-4">
 
-                    <a href="#" class="text-slate-300 hover:text-white transition">
-                        Khám phá
-                    </a>
-
                     <a href="{{ route('customer.booking.index') }}"
                         class="text-slate-300 hover:text-white transition">
                         Đặt bàn
@@ -108,7 +104,7 @@
                         </button>
 
                         <div id="userDropdown"
-                            class="hidden absolute right-0 top-full mt-2 pt-0 w-48 bg-slate-800 rounded-lg shadow-lg border border-slate-700 z-[9999]">
+                            class="hidden group-hover:block absolute right-0 top-full mt-0 pt-2 w-48 bg-slate-800 rounded-lg shadow-lg border border-slate-700 z-[9999]">
                             
                             <div class="py-1 bg-slate-800 rounded-lg">
                                 <a href="{{ route('customer.profile') }}"
@@ -264,13 +260,20 @@
 
                             <div class="mb-6">
                                 <label class="block text-xs font-semibold text-slate-300 mb-3">CHỌN GIỜ</label>
+
                                 <div class="grid grid-cols-3 gap-2">
-                                    <button type="button" class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold" data-time="19:00">19:00</button>
-                                    <button type="button" class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold" data-time="19:30">19:30</button>
-                                    <button type="button" class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold" data-time="20:00">20:00</button>
-                                    <button type="button" class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold" data-time="20:30">20:30</button>
-                                    <button type="button" class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold" data-time="21:00">21:00</button>
-                                    <button type="button" class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold opacity-50 cursor-not-allowed" disabled>--:--</button>
+                                    @foreach(['19:00','19:30','20:00','20:30','21:00'] as $time)
+                                        <button type="button"
+                                            class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold relative"
+                                            data-time="{{ $time }}">
+
+                                            {{ $time }}
+
+                                            <span class="status hidden text-[10px] text-red-400 block">
+                                                Đã đặt
+                                            </span>
+                                        </button>
+                                    @endforeach
                                 </div>
 
                                 <input type="hidden" name="booking_time" id="booking_time">
@@ -341,26 +344,75 @@
 
                 this.classList.add('active', 'bg-violet-600', 'text-white');
 
-                document.getElementById('booking_date').value = this.dataset.date;
+                const date = this.dataset.date;
+                document.getElementById('booking_date').value = date;
 
                 document.getElementById('booking_time').value = '';
+
+                document.querySelectorAll('.time-slot').forEach(b => {
+                    b.classList.remove('active', 'bg-violet-600', 'text-white');
+                    b.classList.add('bg-slate-700', 'text-slate-400');
+                    b.disabled = false;
+                });
+
+                fetch(`/booking/booked-times?table_id={{ $table->id ?? 0 }}&date=${date}`)
+                    .then(res => res.json())
+                    .then(data => {
+
+                        console.log("BOOKED DATA:", data);
+
+                        const booked = data.map(item => {
+                            return (item.booking_time ?? item).substring(0, 5);
+                        });
+
+                        document.querySelectorAll('.time-slot').forEach(btn => {
+                            const time = btn.dataset.time;
+                            const status = btn.querySelector('.status');
+
+                            if (booked.includes(time)) {
+                                btn.dataset.booked = "1";
+
+                                btn.classList.add('opacity-60', 'cursor-not-allowed');
+                                btn.classList.remove('hover:bg-violet-600');
+
+                                if (status) status.classList.remove('hidden');
+                            } else {
+                                btn.dataset.booked = "0";
+
+                                btn.classList.remove('opacity-60', 'cursor-not-allowed');
+                                btn.classList.add('hover:bg-violet-600');
+
+                                if (status) status.classList.add('hidden');
+                            }
+                        });
+                    })
+                    .catch(err => {
+                        console.error("Fetch error:", err);
+                    });
+            });
+        });
+
+        document.querySelectorAll('.time-slot').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+
+                const selectedTime = this.dataset.time;
+
+                if (this.dataset.booked === "1") {
+                    alert('Khung giờ này đã có người đặt, vui lòng chọn giờ khác');
+                    return;
+                }
+
+                e.preventDefault();
+
                 document.querySelectorAll('.time-slot').forEach(b => {
                     b.classList.remove('active', 'bg-violet-600', 'text-white');
                     b.classList.add('bg-slate-700', 'text-slate-400');
                 });
-            });
-        });
 
-        document.querySelectorAll('.time-slot:not([disabled])').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelectorAll('.time-slot:not([disabled])').forEach(b => {
-                    b.classList.remove('active', 'bg-violet-600', 'text-white');
-                    b.classList.add('bg-slate-700', 'text-slate-400');
-                });
                 this.classList.add('active', 'bg-violet-600', 'text-white');
                 this.classList.remove('bg-slate-700', 'text-slate-400');
-                document.getElementById('booking_time').value = this.getAttribute('data-time');
+
+                document.getElementById('booking_time').value = selectedTime;
             });
         });
             document.addEventListener("DOMContentLoaded", function () {
@@ -374,32 +426,27 @@
                     dropdown.classList.remove("hidden");
                 });
 
-                // Giữ dropdown khi di chuột vào dropdown
                 dropdown.addEventListener("mouseenter", function () {
                     clearTimeout(hideTimeout);
                 });
 
-                // Ẩn dropdown khi di chuột ra ngoài container
                 container.addEventListener("mouseleave", function () {
                     hideTimeout = setTimeout(() => {
                         dropdown.classList.add("hidden");
                     }, 100);
                 });
 
-                // Ẩn dropdown khi di chuột ra khỏi dropdown
                 dropdown.addEventListener("mouseleave", function () {
                     hideTimeout = setTimeout(() => {
                         dropdown.classList.add("hidden");
                     }, 100);
                 });
 
-                // Click button để toggle dropdown
                 button.addEventListener("click", function (e) {
                     e.stopPropagation();
                     dropdown.classList.toggle("hidden");
                 });
 
-                // Ẩn dropdown khi click bất cứ đâu khác
                 document.addEventListener("click", function (e) {
                     if (!container.contains(e.target)) {
                         dropdown.classList.add("hidden");

@@ -1,6 +1,6 @@
 # Website Đặt Bàn Online - Golden Spoons
 
-Dự án xây dựng một hệ thống website đặt bàn online cho nhà hàng **Golden Spoons** sử dụng **Laravel 11** và **Tailwind CSS**. Hệ thống cung cấp đầy đủ chức năng cho **khách hàng** (đặt bàn, quản lý lịch sử) và **quản trị viên** (quản lý bàn, đặt bàn, khách hàng, doanh thu, báo cáo).
+Hệ thống website đặt bàn online cho nhà hàng **Golden Spoons** xây dựng trên **Laravel 13** và **Tailwind CSS**. Hệ thống hỗ trợ đầy đủ luồng nghiệp vụ cho **khách hàng** (tìm bàn, đặt bàn, thanh toán VietQR, xem lịch sử) và **quản trị viên** (quản lý bàn, đặt bàn, thống kê doanh thu, xuất báo cáo Excel).
 
 ---
 
@@ -16,24 +16,32 @@ Dự án xây dựng một hệ thống website đặt bàn online cho nhà hàn
 
 ## Mục lục
 
-- [Công nghệ sử dụng](#-công-nghệ-sử-dụng)
-- [Cấu trúc thư mục](#-cấu-trúc-thư-mục)
-- [Chức năng chính](#-chức-năng-chính)
-- [Hướng dẫn cài đặt](#-hướng-dẫn-cài-đặt)
-- [Hướng dẫn sử dụng](#-hướng-dẫn-sử-dụng)
-- [Tài liệu SRS](#-tài-liệu-srs)
+- [Công nghệ sử dụng](#công-nghệ-sử-dụng)
+- [Cấu trúc thư mục](#cấu-trúc-thư-mục)
+- [Cơ sở dữ liệu](#cơ-sở-dữ-liệu)
+- [Chức năng chính](#chức-năng-chính)
+- [Hướng dẫn cài đặt](#hướng-dẫn-cài-đặt)
+- [Hướng dẫn sử dụng](#hướng-dẫn-sử-dụng)
+- [Tài liệu SRS](#tài-liệu-srs)
 
 ---
 
 ## Công nghệ sử dụng
 
-| Thành phần            | Công nghệ                       | Lý do lựa chọn                                                            |
-| --------------------- | ------------------------------- | ------------------------------------------------------------------------- |
-| **Framework Backend** | Laravel 11                      | Framework PHP hiện đại, mạnh mẽ, hỗ trợ routing, ORM, migration tuyệt vời |
-| **Database**          | MySQL                           | Hệ quản trị cơ sở dữ liệu quan hệ mạnh mẽ, tối ưu, truy vấn SQL chuẩn     |
-| **Web Server**        | Apache (XAMPP)                  | Môi trường phát triển cục bộ trọn gói, dễ cài đặt và chạy ngay            |
-| **Frontend**          | HTML5, JavaScript, Tailwind CSS | Chuẩn web hiện đại, responsive design, loading nhanh                      |
-| **Templating**        | Blade Templates                 | Blade templating engine của Laravel, mạnh mẽ và linh hoạt                 |
+| Thành phần            | Công nghệ                         | Phiên bản |
+| --------------------- | --------------------------------- | --------- |
+| **Framework Backend** | Laravel                           | 13.x      |
+| **Ngôn ngữ**          | PHP                               | >= 8.3    |
+| **Database**          | MySQL                             | >= 5.7    |
+| **Frontend**          | HTML5, JavaScript, Tailwind CSS   | —         |
+| **Templating**        | Blade Templates                   | (Laravel) |
+| **Build Tool**        | Vite                              | —         |
+| **Web Server**        | Apache (XAMPP)                    | —         |
+| **OAuth**             | Laravel Socialite (Google OAuth2) | ^5.26     |
+| **Queue / Jobs**      | Laravel Queue (database driver)   | (Laravel) |
+| **Email**             | Laravel Mail (SMTP)               | (Laravel) |
+| **Export Excel**      | Maatwebsite Excel                 | ^3.1      |
+| **QR Thanh toán**     | VietQR API                        | —         |
 
 ---
 
@@ -42,66 +50,77 @@ Dự án xây dựng một hệ thống website đặt bàn online cho nhà hàn
 ```
 website/
 ├── app/
+│   ├── Exports/
+│   │   └── ReportsExport.php          # Export báo cáo ra file Excel
 │   ├── Http/
-│   │   ├── Controllers/          # Controllers cho các trang
-│   │   ├── Middleware/           # Middleware (Auth, Admin, ...)
+│   │   ├── Controllers/
+│   │   │   ├── AdminController.php    # Dashboard & thống kê admin
+│   │   │   ├── AuthController.php     # Đăng ký, đăng nhập, OAuth Google, profile
+│   │   │   ├── BookingController.php  # Toàn bộ luồng đặt bàn của khách hàng
+│   │   │   ├── PaymentController.php  # Tích hợp VietQR, xác nhận thanh toán
+│   │   │   ├── ReportController.php   # Báo cáo tổng hợp & xuất Excel
+│   │   │   ├── RevenueController.php  # Thống kê doanh thu theo ngày/tháng
+│   │   │   └── TableController.php    # CRUD quản lý bàn (admin)
+│   │   └── Middleware/
+│   │       ├── AdminMiddleware.php    # Chặn route admin nếu không phải admin
+│   │       └── UserMiddleware.php     # Chặn route customer nếu chưa đăng nhập
+│   ├── Jobs/
+│   │   └── SendPaymentSuccessEmailJob.php  # Job gửi email sau thanh toán (async)
+│   ├── Mail/
+│   │   └── PaymentSuccessMail.php     # Mailable gửi email xác nhận đặt bàn
 │   ├── Models/
-│   │   ├── User.php              # Model User
-│   │   ├── Table.php             # Model Bàn
-│   │   ├── Booking.php           # Model Đặt bàn
-│   │   └── Session.php           # Model Session
+│   │   ├── User.php                   # Model người dùng
+│   │   ├── Table.php                  # Model bàn nhà hàng
+│   │   ├── Booking.php                # Model đặt bàn
+│   │   └── Session.php                # Model phiên đăng nhập
 │   └── Providers/
-│
-├── bootstrap/
-│
-├── config/
+│       └── AppServiceProvider.php
 │
 ├── database/
-│   ├── factories/
-│   │   └── UserFactory.php
 │   ├── migrations/
 │   │   ├── *_create_users_table.php
 │   │   ├── *_create_tables_table.php
 │   │   ├── *_create_bookings_table.php
-│   │   └── *_create_sessions_table.php
+│   │   ├── *_create_sessions_table.php
+│   │   ├── *_create_jobs_table.php
+│   │   └── *_add_name_to_users_table.php
 │   └── seeders/
-│
-├── public/
+│       ├── UsersTableSeeder.php
+│       └── TablesTableSeeder.php
 │
 ├── resources/
-│   ├── css/
-│   ├── js/
 │   └── views/
 │       ├── auth/
-│       │   ├── login.blade.php   # Trang đăng nhập
-│       │   └── register.blade.php  # Trang đăng ký
+│       │   ├── login.blade.php         # Trang đăng nhập
+│       │   └── register.blade.php      # Trang đăng ký
 │       ├── customer/
-│       │   └── dashboard.blade.php # Dashboard khách hàng (Danh sách bàn)
-│       │   ├── search.blade.php  # Đặt bàn (tìm kiếm)
-|       |   ├── booking.blade.php # Chi tiết đặt bàn
-│       │   ├── history.blade.php # Lịch sử đặt bàn
-│       │   └── profile.blade.php # Quản lý hồ sơ cá nhân
-│       └── admin/
-│           ├── dashboard.blade.php    # Dashboard admin
-│           ├── bookings.blade.php     # Quản lý đặt bàn
-│           ├── tables.blade.php       # Quản lý bàn
-│           ├── users.blade.php        # Quản lý người dùng
-│           └── revenue.blade.php      # Thống kê doanh thu
+│       │   ├── dashboard.blade.php     # Trang chủ khách hàng
+│       │   ├── listTable.blade.php     # Danh sách bàn có thể đặt
+│       │   ├── booking.blade.php       # Form đặt bàn
+│       │   ├── confirmBooking.blade.php# Xác nhận & thanh toán VietQR
+│       │   ├── detailBooking.blade.php # Chi tiết một đơn đặt bàn
+│       │   ├── history.blade.php       # Lịch sử đặt bàn
+│       │   └── profile.blade.php       # Hồ sơ cá nhân
+│       ├── admin/
+│       │   ├── dashboard.blade.php     # Dashboard admin (thống kê, biểu đồ)
+│       │   ├── bookings.blade.php      # Quản lý đặt bàn
+│       │   ├── tables.blade.php        # Quản lý danh sách bàn
+│       │   ├── revenue.blade.php       # Thống kê doanh thu
+│       │   ├── reports.blade.php       # Báo cáo tổng hợp
+│       │   └── sidebar.blade.php       # Sidebar dùng chung cho admin
+│       └── emails/
+│           └── (template email)
 │
 ├── routes/
-│   ├── web.php                   # Routes chính cho web
-│   └── api.php                   # Routes API
+│   ├── web.php                        # Routes Web (auth, customer, admin)
+│   └── api.php                        # Routes API (xác nhận thanh toán)
 │
-├── storage/
-│
-├── tests/
-│
-├── .env                          # Biến môi trường
-├── composer.json                 # Dependencies PHP
-├── package.json                  # Dependencies Node.js
-├── tailwind.config.js            # Config Tailwind CSS
-├── vite.config.js                # Config Vite
-└── artisan                        # Laravel CLI tool
+├── .env                               # Biến môi trường
+├── composer.json
+├── package.json
+├── tailwind.config.js
+├── vite.config.js
+└── artisan
 ```
 
 ---
@@ -110,39 +129,111 @@ website/
 
 **Database**: `website` | **Engine**: InnoDB | **Charset**: UTF-8
 
-### Bảng chính:
+### Sơ đồ quan hệ (ERD)
 
-- **users** – Lưu thông tin người dùng (khách hàng, admin)
-- **tables** – Danh sách các bàn trong nhà hàng (tên, sức chứa, trạng thái)
-- **bookings** – Lịch sử đặt bàn (ngày, giờ, người dùng, bàn, trạng thái)
-- **sessions** – Lưu session người dùng
+```
+┌──────────────────────────────┐        ┌──────────────────────────────────────────┐
+│           users              │        │               bookings                   │
+├──────────────────────────────┤        ├──────────────────────────────────────────┤
+│ id            BIGINT (PK)    │◄──┐    │ id              BIGINT (PK)              │
+│ name          VARCHAR        │   └────│ user_id         BIGINT (FK → users.id)   │
+│ username      VARCHAR UNIQUE │        │ table_id        BIGINT (FK → tables.id)  │
+│ email         VARCHAR UNIQUE │        │ date            DATE                      │
+│ password      VARCHAR        │        │ time            TIME                      │
+│ phone         VARCHAR        │        │ guest_count     INT                       │
+│ bio           TEXT           │        │ email           VARCHAR                   │
+│ role          ENUM           │        │ phone           VARCHAR                   │
+│               (customer/     │        │ special_requests TEXT                     │
+│                admin)        │        │ total_price     BIGINT                    │
+│ created_at    TIMESTAMP      │        │ status          ENUM                      │
+│ updated_at    TIMESTAMP      │        │                 (pending/confirmed/       │
+└──────────────────────────────┘        │                  cancelled)              │
+          │                             │ payment_method  ENUM                      │
+          │ 1                           │                 (Chuyển khoản/Tiền mặt)  │
+          │                             │ payment_status  ENUM (unpaid/paid)        │
+          │ N                           │ created_at      TIMESTAMP                 │
+          ▼                             │ updated_at      TIMESTAMP                 │
+┌──────────────────────────────┐        └──────────────────────────────────────────┘
+│           sessions           │                   ▲
+├──────────────────────────────┤                   │ N
+│ id            BIGINT (PK)    │        ┌──────────┴───────────────────────────────┐
+│ user_id       BIGINT         │        │               tables                     │
+│               (FK→users.id)  │        ├──────────────────────────────────────────┤
+│ ip_address    VARCHAR(45)    │        │ id            BIGINT (PK)                │
+│ user_agent    TEXT           │        │ name          VARCHAR UNIQUE             │
+│ payload       TEXT           │        │ capacity      INT                        │
+│ last_activity INT            │        │ location      VARCHAR                    │
+└──────────────────────────────┘        │               (Sảnh chính/Sân thượng/    │
+                                        │                Khu VIP)                  │
+┌──────────────────────────────┐        │ image         VARCHAR                    │
+│             jobs             │        │ status        ENUM                       │
+├──────────────────────────────┤        │               (available/reserved/       │
+│ id            BIGINT (PK)    │        │                occupied)                 │
+│ queue         VARCHAR        │        │ price         BIGINT                     │
+│ payload       LONGTEXT       │        │ created_at    TIMESTAMP                  │
+│ attempts      TINYINT        │        │ updated_at    TIMESTAMP                  │
+│ reserved_at   INT            │        └──────────────────────────────────────────┘
+│ available_at  INT            │
+│ created_at    INT            │
+└──────────────────────────────┘
+  (Bảng hàng đợi gửi email async)
+```
+
+### Quan hệ giữa các bảng (Eloquent Relationships)
+
+| Model     | Quan hệ     | Model liên kết | Mô tả                                        |
+| --------- | ----------- | -------------- | -------------------------------------------- |
+| `User`    | `hasMany`   | `Booking`      | Một user có nhiều đơn đặt bàn                |
+| `User`    | `hasMany`   | `Session`      | Một user có nhiều phiên đăng nhập            |
+| `Table`   | `hasMany`   | `Booking`      | Một bàn có thể được đặt nhiều lần (khác giờ) |
+| `Booking` | `belongsTo` | `User`         | Đơn đặt bàn thuộc về một user                |
+| `Booking` | `belongsTo` | `Table`        | Đơn đặt bàn thuộc về một bàn cụ thể          |
+| `Session` | `belongsTo` | `User`         | Phiên đăng nhập thuộc về một user            |
+
+### Ràng buộc khoá ngoại
+
+- `bookings.user_id` → `users.id` (CASCADE DELETE)
+- `bookings.table_id` → `tables.id` (CASCADE DELETE)
+- `sessions.user_id` → `users.id` (CASCADE DELETE)
 
 ---
 
 ## Chức năng chính
 
+### Xác thực người dùng (Authentication)
+
+| Chức năng             | Mô tả                                                        |
+| --------------------- | ------------------------------------------------------------ |
+| **Đăng ký tài khoản** | Tạo tài khoản mới với username, email, mật khẩu              |
+| **Đăng nhập**         | Xác thực bằng username + password, phân quyền admin/customer |
+| **Đăng xuất**         | Hủy session, redirect về trang đăng nhập                     |
+| **Đăng nhập Google**  | OAuth2 qua Laravel Socialite, liên kết tài khoản Google      |
+
 ### Phía Khách Hàng (Customer)
 
-| Chức năng           | Mô tả                                                             |
-| ------------------- | ----------------------------------------------------------------- |
-| **Dashboard**       | Hiển thị danh sách bàn với trạng thái (Trống/Đã đặt/Đang sử dụng) |
-| **Đặt Bàn**         | Tìm kiếm và đặt bàn theo số lượng khách, ngày, giờ                |
-| **Lịch Sử Đặt Bàn** | Xem lịch sử các đặt bàn của khách hàng                            |
-| **Hồ Sơ Cá Nhân**   | Xem và chỉnh sửa thông tin tài khoản                              |
-| **Đăng Ký**         | Tạo tài khoản khách hàng mới                                      |
-| **Đăng Nhập**       | Xác thực người dùng                                               |
-| **Đăng Xuất**       | Thoát khỏi hệ thống                                               |
+| Chức năng                 | Mô tả                                                                 |
+| ------------------------- | --------------------------------------------------------------------- |
+| **Dashboard**             | Trang chủ sau đăng nhập, tổng quan hệ thống                           |
+| **Tìm kiếm bàn**          | Lọc bàn theo ngày, giờ, số lượng khách; ẩn bàn đã được đặt trùng lịch |
+| **Xem danh sách bàn**     | Xem tất cả bàn có trạng thái, sức chứa, vị trí, giá                   |
+| **Đặt bàn**               | Form đặt bàn: ngày, giờ, số khách, ghi chú, phương thức thanh toán    |
+| **Xác nhận & Thanh toán** | Hiển thị mã QR VietQR, tự động xác nhận khi thanh toán thành công     |
+| **Huỷ đặt bàn**           | Khách hàng có thể huỷ đơn đang ở trạng thái pending                   |
+| **Xem chi tiết đặt bàn**  | Xem đầy đủ thông tin một đơn đặt bàn cụ thể                           |
+| **Lịch sử đặt bàn**       | Danh sách toàn bộ đơn đặt bàn của khách hàng, sắp xếp mới nhất trước  |
+| **Hồ sơ cá nhân**         | Xem & cập nhật tên, số điện thoại, tiểu sử; thống kê đặt bàn          |
+| **Email xác nhận**        | Gửi email tự động sau khi thanh toán thành công (qua Queue Job)       |
 
 ### Phía Quản Trị Viên (Admin)
 
-| Chức năng              | Mô tả                                                   |
-| ---------------------- | ------------------------------------------------------- |
-| **Dashboard**          | Tổng quan thống kê, các chỉ số hoạt động                |
-| **Quản Lý Đặt Bàn**    | Xem danh sách, cập nhật trạng thái đặt bàn              |
-| **Quản Lý Bàn**        | CRUD bàn (thêm, sửa, xóa), quản lý sức chứa, trạng thái |
-| **Quản Lý Người Dùng** | Xem danh sách khách hàng, quản lý tài khoản             |
-| **Thống Kê Doanh Thu** | Xem doanh thu theo ngày, tháng, năm                     |
-| **Báo Cáo**            | Báo cáo tồn kho, hoạt động, khách hàng                  |
+| Chức năng              | Mô tả                                                                            |
+| ---------------------- | -------------------------------------------------------------------------------- |
+| **Dashboard**          | Thống kê: đặt bàn hôm nay, bàn trống, doanh thu tháng, tổng user, biểu đồ 7 ngày |
+| **Quản lý đặt bàn**    | Xem toàn bộ danh sách đặt bàn kèm thông tin user & bàn                           |
+| **Quản lý bàn**        | CRUD bàn: thêm mới, sửa (tên, sức chứa, vị trí, giá, ảnh, trạng thái), xóa       |
+| **Thống kê doanh thu** | Doanh thu tháng hiện tại; bảng doanh thu theo từng ngày (10 ngày gần nhất)       |
+| **Báo cáo tổng hợp**   | Thống kê bàn theo trạng thái, tổng đặt bàn, tổng doanh thu, tổng & mới user      |
+| **Xuất báo cáo Excel** | Xuất file `.xlsx` toàn bộ dữ liệu báo cáo qua Maatwebsite Excel                  |
 
 ---
 
@@ -151,14 +242,14 @@ website/
 ### Yêu cầu hệ thống
 
 - **PHP** >= 8.3
-- **Composer** (để cài đặt dependencies Laravel)
-- **Node.js** >= 16 (để build Tailwind CSS với Vite)
+- **Composer** >= 2.x
+- **Node.js** >= 18
 - **MySQL** >= 5.7
-- **XAMPP** hoặc máy chủ web tương tự
+- **XAMPP** hoặc server tương đương
 
 ### Các bước cài đặt
 
-1. **Clone hoặc tải source code**:
+1. **Di chuyển vào thư mục dự án**:
 
    ```bash
    cd website
@@ -176,7 +267,7 @@ website/
    npm install
    ```
 
-4. **Tạo file .env từ template**:
+4. **Tạo file `.env` từ template**:
 
    ```bash
    copy .env.example .env
@@ -188,7 +279,7 @@ website/
    php artisan key:generate
    ```
 
-6. **Cấu hình Database trong file .env**:
+6. **Cấu hình Database trong file `.env`**:
 
    ```env
    DB_CONNECTION=mysql
@@ -199,31 +290,59 @@ website/
    DB_PASSWORD=
    ```
 
-7. **Chạy migration để tạo bảng**:
+7. **Cấu hình Mail (SMTP) trong file `.env`** (để gửi email xác nhận):
+
+   ```env
+   MAIL_MAILER=smtp
+   MAIL_HOST=smtp.gmail.com
+   MAIL_PORT=587
+   MAIL_USERNAME=your_email@gmail.com
+   MAIL_PASSWORD=your_app_password
+   MAIL_ENCRYPTION=tls
+   MAIL_FROM_ADDRESS=your_email@gmail.com
+   MAIL_FROM_NAME="Golden Spoons"
+   ```
+
+8. **Cấu hình Google OAuth** (tùy chọn) trong `.env`:
+
+   ```env
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
+   GOOGLE_REDIRECT_URI=http://127.0.0.1:8000/auth/google/callback
+   ```
+
+9. **Chạy migration để tạo bảng**:
 
    ```bash
    php artisan migrate
    ```
 
-8. **Chạy seeder để thêm dữ liệu mẫu** (tùy chọn):
+10. **Chạy seeder để thêm dữ liệu mẫu**:
 
-   ```bash
-   php artisan db:seed
-   ```
+    ```bash
+    php artisan db:seed
+    ```
 
-9. **Build Tailwind CSS**:
+11. **Build Tailwind CSS**:
 
-   ```bash
-   npm run dev
-   ```
+    ```bash
+    npm run dev
+    ```
 
-10. **Khởi động development server**:
+12. **Khởi động development server**:
 
     ```bash
     php artisan serve
     ```
 
-11. **Truy cập ứng dụng**:
+13. **Khởi động Queue Worker** (để gửi email async):
+
+    ```bash
+    php artisan queue:work
+    ```
+
+14. **Truy cập ứng dụng**:
+    - Trang đăng nhập: `http://127.0.0.1:8000/login`
     - Trang khách hàng: `http://127.0.0.1:8000/customer/dashboard`
     - Trang admin: `http://127.0.0.1:8000/admin/dashboard`
 
@@ -231,34 +350,32 @@ website/
 
 ## Hướng dẫn sử dụng
 
-### Đăng Nhập Khách Hàng
+### Đăng nhập Khách Hàng
 
 1. Truy cập `http://127.0.0.1:8000/login`
-2. Nhập tên đăng nhập và mật 
-- username: customer
-- password: password
-3. Nhấn "Đăng nhập"
-4. Sau khi đăng nhập, khách hàng có thể:
-   - Xem danh sách bàn trên Dashboard
-   - Đặt bàn bằng cách truy cập menu "Đặt bàn"
-   - Xem lịch sử đặt bàn
-   - Xem menu thực đơn
+2. Nhập thông tin:
+   - username: `customer`
+   - password: `password`
+3. Sau khi đăng nhập có thể:
+   - Tìm kiếm bàn theo ngày, giờ, số khách
+   - Đặt bàn và thanh toán qua VietQR
+   - Xem lịch sử và chi tiết đặt bàn
+   - Huỷ đặt bàn (trạng thái pending)
    - Cập nhật hồ sơ cá nhân
 
-### Đăng Nhập Admin
+### Đăng nhập Admin
 
 1. Truy cập `http://127.0.0.1:8000/login`
-2. Đăng nhập với tài khoản admin
-- username: admin
-- password: password
-3. Chuyển hướng tới `http://127.0.0.1:8000/admin/dashboard`
-4. Tại trang admin, quản trị viên có thể:
-   - Xem tổng quan thống kê
-   - Quản lý đặt bàn
-   - Quản lý danh sách bàn
-   - Quản lý người dùng
-   - Xem thống kê doanh thu
-   - Xem báo cáo hệ thống
+2. Nhập thông tin:
+   - username: `admin`
+   - password: `password`
+3. Sau khi đăng nhập được chuyển tới `http://127.0.0.1:8000/admin/dashboard`
+4. Tại trang admin có thể:
+   - Xem tổng quan thống kê và biểu đồ doanh thu
+   - Quản lý toàn bộ đơn đặt bàn
+   - Thêm, sửa, xóa bàn nhà hàng
+   - Xem thống kê doanh thu theo ngày
+   - Xem và xuất báo cáo tổng hợp ra Excel
 
 ---
 
@@ -284,8 +401,7 @@ Tất cả tài liệu đặc tả yêu cầu phần mềm (SRS) được lưu t
 ## Ghi chú quan trọng
 
 - Đảm bảo MySQL server đang chạy trước khi khởi động ứng dụng
-- File `.env` chứa thông tin nhạy cảm, không nên commit lên Git
-- Tất cả routes được định nghĩa trong `routes/web.php`
-- Sử dụng Blade template syntax trong các file view
-
----
+- File `.env` chứa thông tin nhạy cảm, không commit lên Git
+- Phải chạy `php artisan queue:work` để email xác nhận được gửi sau thanh toán
+- Tất cả routes được định nghĩa trong `routes/web.php` và `routes/api.php`
+- Ảnh bàn được lưu trong `storage/app/public/table/`; cần chạy `php artisan storage:link` lần đầu

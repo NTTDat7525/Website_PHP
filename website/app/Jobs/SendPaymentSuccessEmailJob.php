@@ -1,33 +1,30 @@
 <?php
-
 namespace App\Jobs;
 
-use App\Mail\BookingSuccessMail;
+use App\Mail\PaymentSuccessMail;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendBookingEmailJob implements ShouldQueue
+class SendPaymentSuccessEmailJob implements ShouldQueue
 {
-    use Queueable, Dispatchable, InteractsWithQueue, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     public $booking;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct($booking)
     {
         $this->booking = $booking;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
-        Mail::to($this->booking->email)->send(new BookingSuccessMail($this->booking));
+        \Log::info("QUEUE RUNNING OK");
+
+        Mail::to($this->booking->user->email)
+            ->send(new PaymentSuccessMail($this->booking));
     }
 }

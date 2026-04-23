@@ -19,7 +19,7 @@
         </div>
 
         <div class="w-full lg:w-1/2 flex items-center justify-center p-8 ">
-            <div class="w-full max-w-md">
+            <div class="w-full max-w-md bg-white rounded-2xl p-8 border border-gray-200 shadow-lg relative">
                 <button onclick="window.history.back()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900">
                     <i class="fas fa-times text-2xl"></i>
                 </button>
@@ -69,11 +69,6 @@
                         <i class="fas fa-check-circle"></i>
                         Xác nhận đặt bàn
                     </button>
-
-                    <button onclick="window.history.back()" class="w-full text-center text-violet-600 hover:text-violet-700 font-semibold py-2 text-sm flex items-center justify-center gap-2">
-                        <i class="fas fa-edit"></i>
-                        Chỉnh sửa thông tin
-                    </button>
                 </div>
             </div>
         </div>
@@ -94,7 +89,6 @@
             <div class="p-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-                    <!-- QR -->
                     <div class="flex flex-col items-center">
                         <div class="bg-slate-800 border border-slate-700 p-6 rounded-xl mb-4 flex justify-center">
                             <img 
@@ -108,10 +102,9 @@
                         </p>
                     </div>
 
-                    <!-- Bank Info -->
                     <div>
                         <div class="mb-8">
-                            <h3 class="text-lg font-bold text-slate-100 mb-4 flex items-center gap-2">
+                            <h3 class="text-lg font-bold text-slate-100 mb-4 flex items-center gap-2 text-slate-600">
                                 <i class="fas fa-university text-violet-400"></i>
                                 Thông Tin Ngân Hàng
                             </h3>
@@ -146,7 +139,7 @@
                     <div class="bg-gradient-to-r from-violet-600/10 to-purple-600/10 border border-slate-700 rounded-xl p-6 flex justify-between">
                         <div>
                             <p class="text-sm text-slate-400 font-semibold mb-1">TỔNG TIỀN</p>
-                            <p class="text-3xl font-bold text-white">
+                            <p class="text-3xl font-bold text-slate-700">
                                 {{ number_format($booking->total_price, 0, ',', '.') }}đ
                             </p>
                         </div>

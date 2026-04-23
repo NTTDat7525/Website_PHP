@@ -24,10 +24,6 @@
 
                 <div class="flex items-center gap-6 mr-4">
 
-                    <a href="#" class="text-slate-300 hover:text-white transition">
-                        Khám phá
-                    </a>
-
                     <a href="{{ route('customer.booking.index') }}"
                         class="text-slate-300 hover:text-white transition">
                         Đặt bàn
@@ -48,8 +44,8 @@
                             
                             <div class="py-1 bg-slate-800 rounded-lg">
                                 <a href="{{ route('customer.profile') }}"
-                                class="block px-4 py-2 text-white hover:bg-slate-700 transition">
-                                Tài khoản
+                                    class="block px-4 py-2 hover:bg-slate-700 transition text-slate-400 hover:text-slate-200">
+                                    Tài khoản
                                 </a>
 
                                 <form method="POST" action="{{ route('auth.logout') }}">
@@ -74,16 +70,16 @@
         </div>
 
         <div class="flex gap-3 mb-8 pb-4 border-b border-gray-200">
-            <button class="px-4 py-2 bg-indigo-100 text-indigo-600 rounded-lg font-medium hover:bg-indigo-200 transition" onclick="filterBookings('all')">
+            <button class="filter-btn px-4 py-2 bg-indigo-100 text-indigo-600 rounded-lg font-medium hover:bg-indigo-200 transition" data-type="all" onclick="filterBookings('all', this)">
                 Tất cả
             </button>
-            <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition" onclick="filterBookings('upcoming')">
+            <button class="filter-btn px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition" data-type="upcoming" onclick="filterBookings('upcoming', this)">
                 Sắp tới
             </button>
-            <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition" onclick="filterBookings('completed')">
+            <button class="filter-btn px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition" data-type="completed" onclick="filterBookings('completed', this)">
                 Đã hoàn thành
             </button>
-            <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition" onclick="filterBookings('cancelled')">
+            <button class="filter-btn px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium transition" data-type="cancelled" onclick="filterBookings('cancelled', this)">
                 Đã hủy
             </button>
         </div>
@@ -91,7 +87,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
             <div class="lg:col-span-2">
                 @foreach($bookings as $booking)
-                <div class="booking-item bg-white rounded-2xl shadow-lg overflow-hidden mb-4"
+                <div class="booking-item bg-white rounded-2xl shadow-lg overflow-hidden mb-4 transition duration-300 transform hover:scale-[1.01]"
                     data-status="{{ $booking->status }}"
                     data-time="{{ $booking->time }}">
 
@@ -238,28 +234,38 @@
         </div>
     </main>
 
-    <footer class="bg-slate-900 text-slate-300 mt-20 py-8 border-t border-slate-800">
-        <div class="max-w-7xl mx-auto px-4">
+    <footer class="bg-slate-900 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div>
-                    <h3 class="font-bold text-white mb-3">VỀ CHÚNG TÔI</h3>
-                    <p class="text-sm text-slate-400">Nền tảng đặt bàn nhà hàng hàng đầu tại Việt Nam</p>
+                    <h4 class="font-bold text-white mb-4">Golden Spoons</h4>
+                    <p class="text-sm text-slate-400">© 2026 Golden Spoons. Technological Luxury.</p>
                 </div>
                 <div>
-                    <h3 class="font-bold text-white mb-3">ĐIỀU KHOẢN</h3>
-                    <p class="text-sm text-slate-400">Chính sách & Điều kiện</p>
+                    <h4 class="font-semibold text-slate-300 mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><a href="" class="hover:text-violet-400 transition">Make Reservation</a></li>
+                        <li><a href="" class="hover:text-violet-400 transition">Search Tables</a></li>
+                        <li><a href="" class="hover:text-violet-400 transition">My Bookings</a></li>
+                    </ul>
                 </div>
                 <div>
-                    <h3 class="font-bold text-white mb-3">LIÊN HỆ</h3>
-                    <p class="text-sm text-slate-400">Hỗ trợ khách hàng</p>
+                    <h4 class="font-semibold text-slate-300 mb-4">Information</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><a href="#" class="hover:text-violet-400 transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-violet-400 transition">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-violet-400 transition">Contact Support</a></li>
+                    </ul>
                 </div>
                 <div>
-                    <h3 class="font-bold text-white mb-3">CẢU HỎI THƯỜNG GẶP</h3>
-                    <p class="text-sm text-slate-400">Giải đáp thắc mắc</p>
+                    <h4 class="font-semibold text-slate-300 mb-4">Get In Touch</h4>
+                    <p class="text-sm text-slate-400 mb-2"><i class="fas fa-phone mr-2"></i>(555) 123-4567</p>
+                    <p class="text-sm text-slate-400"><i class="fas fa-envelope mr-2"></i>reservations@goldspoons.com</p>
                 </div>
             </div>
-            <div class="border-t border-slate-800 pt-6 text-center text-sm text-slate-400">
-                <p>&copy; 2024 Luminous Epicure. Tính hóa ẩm thực Việt.</p>
+
+            <div class="border-t border-slate-800 pt-8 text-center text-sm text-slate-500">
+                <p>&copy; 2026 Golden Spoons Restaurant. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -287,11 +293,34 @@
                     dropdown.classList.toggle("hidden");
                 });
             });
-        </script>
-        <script>
-            function filterBookings(type) {
+            function filterBookings(type, element) {
                 const items = document.querySelectorAll('.booking-item');
+                const buttons = document.querySelectorAll('.filter-btn');
                 const now = new Date();
+
+                buttons.forEach(btn => {
+                    btn.classList.remove(
+                        'bg-indigo-100',
+                        'text-indigo-600',
+                        'ring-2',
+                        'ring-indigo-400',
+                        'scale-105'
+                    );
+
+                    btn.classList.add('text-gray-600');
+                });
+
+                element.classList.add(
+                    'bg-indigo-100',
+                    'text-indigo-600',
+                    'ring-2',
+                    'ring-indigo-400',
+                    'scale-105'
+                );
+
+                element.classList.remove('text-gray-600');
+
+                let firstVisible = null;
 
                 items.forEach(item => {
                     const status = item.dataset.status;
@@ -301,22 +330,23 @@
 
                     if (type === 'all') {
                         show = true;
-                    } 
-                    else if (type === 'upcoming') {
+                    } else if (type === 'upcoming') {
                         show = (status === 'pending') || (status === 'confirmed' && time > now);
-                    } 
-                    else if (type === 'completed') {
+                    } else if (type === 'completed') {
                         show = (status === 'confirmed' && time < now);
-                    } 
-                    else if (type === 'cancelled') {
+                    } else if (type === 'cancelled') {
                         show = (status === 'cancelled');
                     }
 
-                    item.style.display = show ? 'block' : 'none';
+                    if (show) {
+                        item.style.display = 'block';
+                        if (!firstVisible) firstVisible = item;
+                    } else {
+                        item.style.display = 'none';
+                    }
                 });
             }
-        </script>
-
+    </script>
 </body>
 
 </html>

@@ -24,10 +24,6 @@
 
                 <div class="flex items-center gap-6 mr-4">
 
-                    <a href="#" class="text-slate-300 hover:text-white transition">
-                        Khám phá
-                    </a>
-
                     <a href="{{ route('customer.booking.index') }}"
                         class="text-slate-300 hover:text-white transition">
                         Đặt bàn
@@ -48,7 +44,7 @@
                             
                             <div class="py-1 bg-slate-800 rounded-lg">
                                 <a href="{{ route('customer.profile') }}"
-                                    class="block px-4 py-2 hover:bg-slate-700 transition">
+                                    class="block px-4 py-2 hover:bg-slate-700 transition text-slate-400 hover:text-slate-200">
                                     Tài khoản
                                 </a>
 
@@ -153,45 +149,45 @@
         </div>
     </div>
 
-<div id="profileModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-    <div class="bg-white rounded-2xl w-full max-w-2xl p-6 relative">
+    <div id="profileModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl w-full max-w-2xl p-6 relative">
 
-        <h2 class="text-xl font-bold mb-4">Cập nhật thông tin</h2>
+            <h2 class="text-xl font-bold mb-4">Cập nhật thông tin</h2>
 
-        <form method="POST" action="{{ route('profile.update') }}">
-            @csrf
-            @method('PUT')
+            <form method="POST" action="{{ route('profile.update') }}">
+                @csrf
+                @method('PUT')
 
-            <div class="grid grid-cols-2 gap-4">
-                <input type="text" name="name"
-                       value="{{ auth()->user()->name }}"
-                       class="border p-2 rounded"
-                       placeholder="Họ và tên">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" name="name"
+                        value="{{ auth()->user()->name }}"
+                        class="border p-2 rounded"
+                        placeholder="Họ và tên">
 
-                <input type="text" name="phone"
-                       value="{{ auth()->user()->phone }}"
-                       class="border p-2 rounded"
-                       placeholder="Số điện thoại">
-            </div>
+                    <input type="text" name="phone"
+                        value="{{ auth()->user()->phone }}"
+                        class="border p-2 rounded"
+                        placeholder="Số điện thoại">
+                </div>
 
-            <textarea name="bio"
-                      class="border p-2 rounded w-full mt-4 h-32"
-                      placeholder="Tiểu sử">{{ auth()->user()->bio }}</textarea>
+                <textarea name="bio"
+                        class="border p-2 rounded w-full mt-4 h-32"
+                        placeholder="Tiểu sử">{{ auth()->user()->bio }}</textarea>
 
-            <div class="flex justify-end gap-3 mt-4">
-                <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded">
-                    Hủy
-                </button>
+                <div class="flex justify-end gap-3 mt-4">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded">
+                        Hủy
+                    </button>
 
-                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded">
-                    Lưu
-                </button>
-            </div>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded">
+                        Lưu
+                    </button>
+                </div>
 
-        </form>
+            </form>
 
+        </div>
     </div>
-</div>
 
     <script>
         function openModal() {

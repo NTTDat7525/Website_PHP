@@ -24,10 +24,6 @@
 
                 <div class="flex items-center gap-6 mr-4">
 
-                    <a href="#" class="text-slate-300 hover:text-white transition">
-                        Khám phá
-                    </a>
-
                     <a href="{{ route('customer.booking.index') }}"
                         class="text-slate-300 hover:text-white transition">
                         Đặt bàn
@@ -210,48 +206,48 @@
 
                     @if($booking->payment_status !== 'paid' && $booking->status !== 'cancelled')
                         <a href="{{ route('customer.booking.confirm_test', $booking->id) }}"
-    class="w-full block text-center bg-yellow-400 text-black font-bold py-3 rounded-lg hover:bg-yellow-300 transition">
-    <i class="fas fa-credit-card mr-2"></i>
-    Thanh toán ngay
-</a>
+                            class="w-full block text-center bg-yellow-400 text-black font-bold py-3 rounded-lg hover:bg-yellow-300 transition">
+                            <i class="fas fa-credit-card mr-2"></i>
+                            Thanh toán ngay
+                        </a>
                     @endif
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="bg-gray-900 text-white mt-20">
-        <div class="max-w-7xl mx-auto px-4 py-12">
+    <footer class="bg-slate-900 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div>
-                    <h4 class="font-bold mb-4">Grafit Lumina</h4>
-                    <p class="text-sm text-gray-400">© 2026 Grafit Lumina. The Luminous Epicure.</p>
+                    <h4 class="font-bold text-white mb-4">Golden Spoons</h4>
+                    <p class="text-sm text-slate-400">© 2026 Golden Spoons. Technological Luxury.</p>
                 </div>
                 <div>
-                    <h4 class="font-semibold text-gray-300 mb-4">Quick Links</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="#" class="hover:text-blue-400 transition">Make Reservation</a></li>
-                        <li><a href="#" class="hover:text-blue-400 transition">Search Tables</a></li>
-                        <li><a href="#" class="hover:text-blue-400 transition">My Bookings</a></li>
+                    <h4 class="font-semibold text-slate-300 mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><a href="" class="hover:text-violet-400 transition">Make Reservation</a></li>
+                        <li><a href="" class="hover:text-violet-400 transition">Search Tables</a></li>
+                        <li><a href="" class="hover:text-violet-400 transition">My Bookings</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-semibold text-gray-300 mb-4">Information</h4>
-                    <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="#" class="hover:text-blue-400 transition">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-blue-400 transition">Terms of Service</a></li>
-                        <li><a href="#" class="hover:text-blue-400 transition">Contact Support</a></li>
+                    <h4 class="font-semibold text-slate-300 mb-4">Information</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><a href="#" class="hover:text-violet-400 transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-violet-400 transition">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-violet-400 transition">Contact Support</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-semibold text-gray-300 mb-4">Get In Touch</h4>
-                    <p class="text-sm text-gray-400 mb-2"><i class="fas fa-phone mr-2"></i>(555) 123-4567</p>
-                    <p class="text-sm text-gray-400"><i class="fas fa-envelope mr-2"></i>reservations@grafit.com</p>
+                    <h4 class="font-semibold text-slate-300 mb-4">Get In Touch</h4>
+                    <p class="text-sm text-slate-400 mb-2"><i class="fas fa-phone mr-2"></i>(555) 123-4567</p>
+                    <p class="text-sm text-slate-400"><i class="fas fa-envelope mr-2"></i>reservations@goldspoons.com</p>
                 </div>
             </div>
 
-            <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
-                <p>&copy; 2026 Grafit Lumina. All rights reserved.</p>
+            <div class="border-t border-slate-800 pt-8 text-center text-sm text-slate-500">
+                <p>&copy; 2026 Golden Spoons Restaurant. All rights reserved.</p>
             </div>
         </div>
     </footer>
