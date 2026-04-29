@@ -83,8 +83,8 @@ class BookingController extends Controller
             'time' => $request->booking_time,
 
             'guest_count' => $request->guest_count,
-            'email' => Auth::user()->email,
-            'phone' => Auth::user()->phone,
+            'email' => $request->email ?? Auth::user()->email,
+            'phone' => $request->phone ?? Auth::user()->phone,
             'special_requests' => $request->special_requests,
             'total_price' => $table->price,
             'status' => 'pending',
@@ -148,7 +148,7 @@ class BookingController extends Controller
 
         try {
             Mail::to($booking->user->email)
-                ->send(new PaymentSuccessMail($booking));
+                ->queue(new PaymentSuccessMail($booking));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
@@ -156,9 +156,12 @@ class BookingController extends Controller
         return response()->json(['success' => true]);
     }
 
+
+
+    
     public function checkStatus($id)
     {
-        $booking = $this->getUserBooking($id);
+        $booking = Booking::findOrFail($id);
 
         return response()->json([
             'paid' => $booking->payment_status === 'paid'

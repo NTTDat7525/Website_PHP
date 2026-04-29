@@ -40,4 +40,46 @@ class PaymentController extends Controller
             'message' => 'Thanh toán thành công'
         ]);
     }
+
+    public function webhook(Request $request)
+    {
+        Log::info('SePay webhook:', $request->all());
+
+        // 🔒 Verify API KEY
+        if ($request->header('Authorization') !== env('SEPAY_API_KEY')) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $content = $request->content;
+        $amount = $request->amount;
+
+        // 🔍 Lấy ORDER_ID
+        preg_match('/ORDER_(\d+)/', $content, $matches);
+
+        if (!isset($matches[1])) {
+            return response()->json(['message' => 'No order id']);
+        }
+
+        $bookingId = $matches[1];
+        $booking = Booking::find($bookingId);
+
+        if (!$booking) {
+            return response()->json(['message' => 'Not found']);
+        }
+
+        // tránh xử lý lại
+        if ($booking->payment_status === 'paid') {
+            return response()->json(['message' => 'Already paid']);
+        }
+
+        // 💰 check tiền
+        if ($amount >= $booking->total_price) {
+            $booking->update([
+                'payment_status' => 'paid',
+                'status' => 'confirmed'
+            ]);
+        }
+
+        return response()->json(['message' => 'OK']);
+    }
 }

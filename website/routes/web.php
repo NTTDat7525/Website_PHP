@@ -76,6 +76,8 @@ Route::middleware('auth')->prefix('customer')->name('customer.')->group(function
     
     Route::post('/booking/cancel/{id}', [BookingController::class, 'cancel'])
         ->name('booking.cancel');
+
+    Route::post('/api/webhook/sepay', [PaymentController::class, 'webhook']);
 });
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
@@ -96,6 +98,5 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/reports', [ReportController::class, 'index'])->name('reports');
     Route::get('/export', [ReportController::class, 'export'])->name('reports.export');
-
 });
 
