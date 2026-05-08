@@ -8,8 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-//lấy tất cả user
-    public function index()
+    public function index() //done
     {
         return response()->json([
             'data' => User::all(),
@@ -17,8 +16,7 @@ class UserController extends Controller
             ], 200);
     }
 
-//lấy thông tin cá nhân 1 user
-    public function show($id)
+    public function show($id) //done
     {
         $user = User::findOrFail($id);
 
@@ -28,7 +26,7 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function updateProfile(Request $request)
+    public function updateProfile(Request $request) //done
     {
         $userId = $request->input('user_id');
         $user = User::find($userId);
@@ -63,11 +61,11 @@ class UserController extends Controller
             'new_password' => 'required|string|min:8|different:current_password'
         ]);
 
-        if (!bcrypt($validated['current_password'], $user->password)) {
+        if (!Hash::check($validated['current_password'], $user->password)) {
             return response()->json(['message' => 'Mật khẩu hiện tại không đúng'], 401);
         }
 
-        $user->update(['password' => bcrypt($validated['new_password'])]);
+        $user->update(['password' => Hash::make($validated['new_password'])]);
 
         return response()->json(['message' => 'Thay đổi mật khẩu thành công'], 200);
     }

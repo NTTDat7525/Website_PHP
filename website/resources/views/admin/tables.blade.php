@@ -30,6 +30,8 @@
                     </thead>
                     <tbody>
                     @foreach($tables as $table)
+                    {{-- PROPOSE: Thêm cột "Số booking hôm nay" để admin biết người dùng nào đã đặt bàn này hôm nay.
+                         Hoặc thêm nút xem lịch (“Xem booking”) để admin xem toàn bộ khung giờ đã bị đặt theo từng ngày. --}}
                     <tr class="border-b hover:bg-gray-50">
                         <td class="py-3">
                             {{ $table->name }}
@@ -70,6 +72,19 @@
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:underline ml-4">Xóa</button>
                             </form>
+
+                            @if($table->status === 'reserved')
+                                <form action="{{ route('admin.tables.occupy', $table->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" class="text-orange-600 hover:underline ml-4">Đang dùng</button>
+                                </form>
+                            @elseif($table->status === 'occupied')
+                                <form action="{{ route('admin.tables.release', $table->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" class="text-green-600 hover:underline ml-4">Giải phóng</button>
+                                </form>
+                            @endif
+
                         </td>
 
                     </tr>

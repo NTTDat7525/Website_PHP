@@ -11,26 +11,23 @@ use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Table;
 
-Route::get('/', [AuthController::class, 'showLoginForm'])->name('auth.login'); //done
+Route::get('/', [AuthController::class, 'showLoginForm'])->name('home');//done
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.login'); //done
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login.post'); //done
 
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
-Route::post('/register', [AuthController::class, 'register'])->name('auth.register.post');
-Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
-Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
-Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');//done
+Route::post('/register', [AuthController::class, 'register'])->name('auth.register.post');//done
+Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');//done
+Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');//done
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);//done
 
-Route::middleware('auth')->prefix('customer')->name('customer.')->group(function () {
+Route::middleware(['auth', 'customer'])->prefix('customer')->name('customer.')->group(function () {
 
     Route::get('/dashboard', function () { //done
         $tables = Table::all();
         return view('customer.dashboard', compact('tables'));
     })->name('dashboard');
-
-    // Route::get('/tables', [TableController::class, 'index'])->name('tables.index');
-    // Route::get('/tables/{table}', [TableController::class, 'show'])->name('tables.show');
 
     Route::get('/booking', [BookingController::class, 'index'])//done
         ->name('booking.index');
@@ -40,11 +37,11 @@ Route::middleware('auth')->prefix('customer')->name('customer.')->group(function
         ->name('booking.create');
 
     // Lưu booking và chuyển đến trang xác nhận
-    Route::post('/booking/store/{id}', [BookingController::class, 'store'])
+    Route::post('/booking/store/{id}', [BookingController::class, 'store'])//done
         ->name('booking.store');
 
     // Trang xác nhận thanh toán
-    Route::get('/booking/confirm/{id}', [BookingController::class, 'confirm'])
+    Route::get('/booking/confirm/{id}', [BookingController::class, 'confirm'])//done
         ->name('booking.confirm');
 
     // API xác nhận thanh toán
@@ -54,13 +51,13 @@ Route::middleware('auth')->prefix('customer')->name('customer.')->group(function
     Route::get('/booking/status/{id}', [BookingController::class, 'checkStatus'])
         ->name('booking.status');
 
-    Route::get('/booking/confirm-test/{id}', [BookingController::class, 'confirm_test'])
-        ->name('booking.confirm_test');
+    Route::get('/booking/payment-status/{id}', [BookingController::class, 'paymentStatus'])//done
+        ->name('booking.payment.status');
 
-    Route::get('/booking/booked-times', [BookingController::class, 'getBookedTimes']);
+    Route::get('/booking/booked-times', [BookingController::class, 'getBookedTimes']);//done
     
     // Xem chi tiết booking
-    Route::get('/booking/detail/{id}', [BookingController::class, 'show'])
+    Route::get('/booking/detail/{id}', [BookingController::class, 'show'])//done
         ->name('booking.show');
 
     //chuyển đến trang profile
@@ -74,29 +71,34 @@ Route::middleware('auth')->prefix('customer')->name('customer.')->group(function
     Route::get('/search', [BookingController::class, 'search']) //done
         ->name('search');
     
-    Route::post('/booking/cancel/{id}', [BookingController::class, 'cancel'])
+    Route::post('/booking/cancel/{id}', [BookingController::class, 'cancel'])//done
         ->name('booking.cancel');
 
-    Route::post('/api/webhook/sepay', [PaymentController::class, 'webhook']);
 });
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
+
+Route::middleware('auth')->group(function () { //done
     Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
 });
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');//done
 
     Route::get('/bookings', [BookingController::class, 'adminIndex'])->name('bookings');//done
     Route::get('/tables', [TableController::class, 'adminIndex'])->name('tables');//done
-    Route::get('/tables/create', [TableController::class, 'create'])->name('tables.create');
-    Route::post('/tables/store', [TableController::class, 'store'])->name('tables.store');
-    Route::get('/tables/{id}/edit', [TableController::class, 'edit'])->name('tables.edit');
-    Route::put('/tables/{id}', [TableController::class, 'update'])->name('tables.update');
-    Route::delete('/tables/{id}', [TableController::class, 'destroy'])->name('tables.destroy');
+    Route::get('/tables/create', [TableController::class, 'create'])->name('tables.create');//done
+    Route::post('/tables/store', [TableController::class, 'store'])->name('tables.store');//done
+    Route::get('/tables/{id}/edit', [TableController::class, 'edit'])->name('tables.edit');//done
+    Route::put('/tables/{id}', [TableController::class, 'update'])->name('tables.update');//done
+    Route::delete('/tables/{id}', [TableController::class, 'destroy'])->name('tables.destroy');//done
+
+    Route::post('/table/{id}/occupy', [TableController::class, 'occupy'])->name('tables.occupy');
+    Route::post('/table/{id}/release', [TableController::class, 'release'])->name('tables.release');
 
     Route::get('/revenue', [RevenueController::class, 'index'])->name('revenue');//done
 
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports');
-    Route::get('/export', [ReportController::class, 'export'])->name('reports.export');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports');//done
+    Route::get('/export', [ReportController::class, 'export'])->name('reports.export');//done
 });
 
+
+Route::post('/webhook/sepay', [PaymentController::class, 'handle'])//done
+        ->name('webhook.sepay');

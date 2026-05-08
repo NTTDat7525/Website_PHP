@@ -22,8 +22,6 @@ class SendPaymentSuccessEmailJob implements ShouldQueue
 
     public function handle(): void
     {
-        \Log::info("QUEUE RUNNING OK");
-
         Mail::to($this->booking->user->email)
             ->send(new PaymentSuccessMail($this->booking));
     }

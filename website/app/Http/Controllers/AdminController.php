@@ -10,35 +10,28 @@ use Carbon\Carbon;
 
 class AdminController extends Controller
 {
-    public function dashboard()
+    public function dashboard()//done
     {
-        // Đặt bàn hôm nay
-        $todayBookings = Booking::whereDate('time', Carbon::today())->count();
+        $todayBookings = Booking::whereDate('date', Carbon::today())->count();
 
-        // Tổng bàn
         $totalTables = Table::count();
 
-        // Bàn đang được đặt hôm nay
-        $bookedTables = Booking::whereDate('time', Carbon::today())
+        $bookedTables = Booking::whereDate('date', Carbon::today())
             ->distinct('table_id')
             ->count('table_id');
 
         $availableTables = $totalTables - $bookedTables;
 
-        // Doanh thu tháng (triệu)
-        $monthlyRevenue = Booking::whereMonth('time', Carbon::now()->month)
+        $monthlyRevenue = Booking::whereMonth('date', Carbon::now()->month)
             ->sum('total_price') / 1000000;
 
-        // Tổng user
         $totalUsers = User::count();
 
-        // Booking gần đây
         $recentBookings = Booking::with(['user', 'table'])
             ->latest()
             ->take(5)
             ->get();
 
-        // Chart doanh thu 7 ngày
         $labels = [];
         $revenues = [];
 
@@ -47,11 +40,10 @@ class AdminController extends Controller
 
             $labels[] = $date->format('d/m');
 
-            $revenues[] = Booking::whereDate('time', $date)
+            $revenues[] = Booking::whereDate('date', $date)
                 ->sum('total_price') / 1000000;
         }
 
-        // Trạng thái booking
         $confirmed = Booking::where('status', 'confirmed')->count();
         $pending = Booking::where('status', 'pending')->count();
         $cancelled = Booking::where('status', 'cancelled')->count();
@@ -70,4 +62,5 @@ class AdminController extends Controller
             'cancelled'
         ));
     }
+
 }

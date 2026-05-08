@@ -1,6 +1,4 @@
 <?php
-
-use Faker\Provider\Payment;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -24,8 +22,9 @@ return new class extends Migration
             $table->text('special_requests')->nullable();
             $table->bigInteger('total_price')->default(0);
             $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
-            $table->enum('payment_method', ['Chuyển khoản', 'Tiền mặt'])->default('Chuyển khoản');
-            $table->enum('payment_status', ['unpaid', 'paid'])->default('unpaid');
+            $table->enum('payment_method', ['bank_transfer', 'cash'])->default('bank_transfer');
+            $table->enum('payment_status', ['unpaid', 'paid', 'failed'])->default('unpaid');
+            $table->timestamp('paid_at')->nullable();
             $table->timestamps();
         });
     }

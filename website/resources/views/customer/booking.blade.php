@@ -262,7 +262,7 @@
                                 <label class="block text-xs font-semibold text-slate-300 mb-3">CHỌN GIỜ</label>
 
                                 <div class="grid grid-cols-3 gap-2">
-                                    @foreach(['19:00','19:30','20:00','20:30','21:00'] as $time)
+                                    @foreach(config('booking.time_slots') as $time)
                                         <button type="button"
                                             class="time-slot bg-slate-700 text-slate-400 py-2 rounded text-xs font-semibold relative"
                                             data-time="{{ $time }}">
@@ -355,7 +355,7 @@
                     b.disabled = false;
                 });
 
-                fetch(`/booking/booked-times?table_id={{ $table->id ?? 0 }}&date=${date}`)
+                fetch(`/customer/booking/booked-times?table_id={{ $table->id ?? 0 }}&date=${date}`)
                     .then(res => res.json())
                     .then(data => {
 
@@ -415,45 +415,45 @@
                 document.getElementById('booking_time').value = selectedTime;
             });
         });
-            document.addEventListener("DOMContentLoaded", function () {
-                const container = document.getElementById("userMenuContainer");
-                const dropdown = document.getElementById("userDropdown");
-                const button = document.getElementById("userMenuButton");
-                let hideTimeout;
+        document.addEventListener("DOMContentLoaded", function () {
+            const container = document.getElementById("userMenuContainer");
+            const dropdown = document.getElementById("userDropdown");
+            const button = document.getElementById("userMenuButton");
+            let hideTimeout;
 
-                container.addEventListener("mouseenter", function () {
-                    clearTimeout(hideTimeout);
-                    dropdown.classList.remove("hidden");
-                });
-
-                dropdown.addEventListener("mouseenter", function () {
-                    clearTimeout(hideTimeout);
-                });
-
-                container.addEventListener("mouseleave", function () {
-                    hideTimeout = setTimeout(() => {
-                        dropdown.classList.add("hidden");
-                    }, 100);
-                });
-
-                dropdown.addEventListener("mouseleave", function () {
-                    hideTimeout = setTimeout(() => {
-                        dropdown.classList.add("hidden");
-                    }, 100);
-                });
-
-                button.addEventListener("click", function (e) {
-                    e.stopPropagation();
-                    dropdown.classList.toggle("hidden");
-                });
-
-                document.addEventListener("click", function (e) {
-                    if (!container.contains(e.target)) {
-                        dropdown.classList.add("hidden");
-                    }
-                });
+            container.addEventListener("mouseenter", function () {
+                clearTimeout(hideTimeout);
+                dropdown.classList.remove("hidden");
             });
-        </script>
+
+            dropdown.addEventListener("mouseenter", function () {
+                clearTimeout(hideTimeout);
+            });
+
+            container.addEventListener("mouseleave", function () {
+                hideTimeout = setTimeout(() => {
+                    dropdown.classList.add("hidden");
+                }, 100);
+            });
+
+            dropdown.addEventListener("mouseleave", function () {
+                hideTimeout = setTimeout(() => {
+                    dropdown.classList.add("hidden");
+                }, 100);
+            });
+
+            button.addEventListener("click", function (e) {
+                e.stopPropagation();
+                dropdown.classList.toggle("hidden");
+            });
+
+            document.addEventListener("click", function (e) {
+                if (!container.contains(e.target)) {
+                    dropdown.classList.add("hidden");
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

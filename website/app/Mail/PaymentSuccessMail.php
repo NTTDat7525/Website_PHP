@@ -14,9 +14,6 @@ class PaymentSuccessMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
     public $booking;
-    /**
-     * Create a new message instance.
-     */
     public function __construct($booking)
     {
         $this->booking = $booking->load(['user', 'table']);

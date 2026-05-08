@@ -9,16 +9,10 @@ class UserMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        $userId = $request->input('user_id');
-
-        if (!$userId) {
-            return response()->json(['message' => 'Unauthorized - Vui lòng cung cấp user_id'], 401);
-        }
-
-        $user = \App\Models\User::find($userId);
-
-        if (!$user) {
-            return response()->json(['message' => 'Người dùng không tồn tại'], 404);
+        if(!auth()->check() || auth()->user()->role !== 'customer') {
+            return response()->json([
+                'message' => 'Trang này chỉ dành cho khách hàng'
+            ], 403);
         }
 
         return $next($request);

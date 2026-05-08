@@ -8,8 +8,27 @@ class Booking extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'table_id', 'date', 'time', 'guest_count', 'status', 'email', 'phone', 'special_requests', 'total_price', 'payment_method', 'payment_status'];
-    protected $dates = ['date', 'time'];
+    protected $fillable = [
+        'user_id',
+        'table_id',
+        'date',
+        'time',
+        'guest_count',
+        'status',
+        'email',
+        'phone',
+        'special_requests',
+        'total_price',
+        'payment_method',
+        'payment_status',
+        'paid_at'
+    ];
+        
+    protected $casts = [
+        'date' => 'date',
+        'time' => 'datetime:H:i',
+        'paid_at' => 'datetime'
+    ];
 
     public function user()
     {
@@ -19,5 +38,26 @@ class Booking extends Model
     public function table()
     {
         return $this->belongsTo(Table::class);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(
+            Transaction::class
+        );
+    }
+
+    public function isPaid()
+    {
+        return
+            $this->payment_status
+            === 'paid';
+    }
+
+    public function isUnpaid()
+    {
+        return
+            $this->payment_status
+            === 'unpaid';
     }
 }

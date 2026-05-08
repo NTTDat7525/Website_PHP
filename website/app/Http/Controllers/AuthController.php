@@ -14,18 +14,18 @@ use Laravel\Socialite\Facades\Socialite;
 class AuthController extends Controller
 {
 
-    public function showLoginForm()
+    public function showLoginForm()//done
     {
         return view('auth.login');
     }
 
-    public function showRegisterForm()
+    public function showRegisterForm()//done
     {
         return view('auth.register');
     }
 
 
-    public function register(Request $request)
+    public function register(Request $request)//done
     {
         $validated = $request->validate([
             'username' => 'required|string',
@@ -39,7 +39,7 @@ class AuthController extends Controller
         return redirect()->route('auth.login')->with('success', 'Đăng ký thành công, vui lòng đăng nhập');
     }
 
-    public function login(Request $request)
+    public function login(Request $request)//done
     {
         $credentials = $request->only('username', 'password');
 
@@ -61,7 +61,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request)//done
     {
         Auth::logout();
         $request->session()->invalidate();
@@ -88,18 +88,20 @@ class AuthController extends Controller
 
         return back()->with('success', 'Cập nhật thành công');
     }
-    public function profile()
+
+
+    public function profile()//done
     {
         $user = auth()->user();
 
         $completedBookings = Booking::where('user_id', $user->id)
             ->where('status', 'confirmed')
-            ->where('time', '<', Carbon::now())
+            ->where('date', '<', Carbon::today())
             ->count();
 
         $upcomingBookings = Booking::where('user_id', $user->id)
             ->where('status', 'confirmed')
-            ->where('time', '>=', Carbon::now())
+            ->where('date', '>=', Carbon::today())
             ->count();
 
         $totalSpent = Booking::where('user_id', $user->id)
@@ -113,12 +115,12 @@ class AuthController extends Controller
             'totalSpent'
         ));
     }
-    public function redirectToGoogle()
+    public function redirectToGoogle()//done
     {
         return Socialite::driver('google')->redirect();
     }
 
-    public function handleGoogleCallback()
+    public function handleGoogleCallback()//done
     {
         $googleUser = Socialite::driver('google')->user();
 

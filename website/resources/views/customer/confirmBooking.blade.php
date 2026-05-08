@@ -74,7 +74,7 @@
         </div>
     </div>
 
-    <div id="paymentModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" data-booking-id="{{ $booking->id }}" data-total-price="{{ $booking->total_price ?? 0 }}" data-transfer-content="LUMINOUS-{{ str_pad($booking->id, 6, '0', STR_PAD_LEFT) }}">
+    <div id="paymentModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" data-booking-id="{{ $booking->id }}" data-total-price="{{ $booking->total_price ?? 0 }}" data-transfer-content="BOOKING-{{ str_pad($booking->id, 6, '0', STR_PAD_LEFT) }}">
         <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div class="sticky top-0 bg-gradient-to-r from-violet-600 to-purple-600 text-white p-6 flex items-center justify-between">
                 <div>
@@ -97,6 +97,12 @@
                                 class="w-64 h-64 rounded-lg"
                             >
                         </div>
+                        <div
+    id="payment-status"
+    class="mt-4 px-4 py-2 rounded-lg bg-yellow-100 text-yellow-700 text-sm font-bold"
+>
+    Đang chờ thanh toán...
+</div>
                         <p class="text-sm text-slate-400 text-center">
                             Quét mã QR bằng ứng dụng ngân hàng của bạn
                         </p>
@@ -146,16 +152,29 @@
                     </div>
                 </div>
 
-                <div class="mt-8 space-y-3">
-                    <button onclick="confirmPayment(event)" 
-                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl">
-                        <i class="fas fa-check-circle mr-2"></i>
-                        Xác nhận
+                <div class="mt-8 space-y-4">
+
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                        <div class="flex items-center gap-3">
+
+                            <i class="fas fa-clock text-yellow-500 text-xl"></i>
+
+                            <div>
+                                <p class="font-bold text-yellow-700">
+                                    Đang chờ thanh toán
+                                </p>
+
+                                <p class="text-sm text-yellow-600">
+                                    Hệ thống sẽ tự động xác nhận
+                                    sau khi bạn chuyển khoản thành công
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="closePaymentModal()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl">
+                        Đóng
                     </button>
-                    <button onclick="closePaymentModal()" 
-                        class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl">
-                        Hủy
-                    </button>
+
                 </div>
             </div>
         </div>
@@ -166,63 +185,193 @@
     </div>
 
     <script>
-        const paymentModal = document.getElementById('paymentModal');
-        const bookingId = paymentModal.dataset.bookingId;
+
+        const paymentModal =
+            document.getElementById(
+                'paymentModal'
+            );
+
+        const bookingId =
+            paymentModal.dataset.bookingId;
+
+        const statusBox =
+            document.getElementById(
+                'payment-status'
+            );
+
+        let paymentInterval = null;
+
+        let isPaid = false;
 
         function openPaymentModal() {
-            paymentModal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+
+            paymentModal.classList.remove(
+                'hidden'
+            );
+
+            document.body.style.overflow =
+                'hidden';
+
+            startPaymentPolling();
         }
 
         function closePaymentModal() {
-            paymentModal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
+
+            paymentModal.classList.add(
+                'hidden'
+            );
+
+            document.body.style.overflow =
+                'auto';
+
+            stopPaymentPolling();
         }
 
-        function confirmPayment(event) {
-            const btn = event.currentTarget;
+        function startPaymentPolling() {
 
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Đang xác nhận...';
+            if (paymentInterval) return;
 
-            fetch(`/customer/booking/confirm-payment/${bookingId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            checkPaymentStatus();
+
+            paymentInterval = setInterval(
+                checkPaymentStatus,
+                3000
+            );
+        }
+
+        function stopPaymentPolling() {
+
+            if (paymentInterval) {
+
+                clearInterval(
+                    paymentInterval
+                );
+
+                paymentInterval = null;
+            }
+        }
+
+        async function checkPaymentStatus() {
+
+            if (isPaid) return;
+
+            try {
+
+                const response = await fetch(
+                    `/customer/booking/payment-status/${bookingId}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        `HTTP ${response.status}`
+                    );
                 }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    showSuccessToast("Thanh toán thành công");
+
+                const data =
+                    await response.json();
+
+                console.log(
+                    'Payment status:',
+                    data
+                );
+
+                if (
+                    data.payment_status ===
+                    'paid'
+                ) {
+
+                    isPaid = true;
+
+                    stopPaymentPolling();
+
+                    statusBox.className =
+                        'mt-4 px-4 py-2 rounded-lg bg-green-100 text-green-700 text-sm font-bold';
+
+                    statusBox.innerHTML =
+                        '<i class="fas fa-check-circle mr-2"></i>Thanh toán thành công';
+
+                    showSuccessToast(
+                        'Thanh toán thành công'
+                    );
 
                     setTimeout(() => {
-                        window.location.href = "/customer/booking/detail/" + bookingId;
+
+                        window.location.href =
+                            `/customer/booking/detail/${bookingId}`;
+
                     }, 1500);
+
+                    return;
                 }
-            })
-            .catch(() => {
-                alert("Có lỗi xảy ra!");
-                btn.disabled = false;
-            });
+
+                statusBox.className =
+                    'mt-4 px-4 py-2 rounded-lg bg-yellow-100 text-yellow-700 text-sm font-bold';
+
+                statusBox.innerHTML =
+                    '<i class="fas fa-clock mr-2"></i>Đang chờ thanh toán...';
+
+            } catch (error) {
+
+                console.error(
+                    'Payment check error:',
+                    error
+                );
+
+                statusBox.className =
+                    'mt-4 px-4 py-2 rounded-lg bg-red-100 text-red-700 text-sm font-bold';
+
+                statusBox.innerHTML =
+                    '<i class="fas fa-exclamation-circle mr-2"></i>Lỗi kiểm tra thanh toán';
+            }
         }
 
         function showSuccessToast(message) {
-            const toast = document.getElementById('toast-success');
-            const text = document.getElementById('toast-message');
+
+            const toast =
+                document.getElementById(
+                    'toast-success'
+                );
+
+            const text =
+                document.getElementById(
+                    'toast-message'
+                );
 
             text.innerText = message;
-            toast.classList.remove('hidden');
+
+            toast.classList.remove(
+                'hidden'
+            );
 
             setTimeout(() => {
-                toast.classList.add('hidden');
+
+                toast.classList.add(
+                    'hidden'
+                );
+
             }, 2000);
         }
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closePaymentModal();
-        });
+        document.addEventListener(
+            'keydown',
+            (e) => {
+
+                if (
+                    e.key === 'Escape'
+                ) {
+
+                    closePaymentModal();
+                }
+            }
+        );
+
     </script>
 </body>
 

@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 use App\Models\Booking;
+use App\Models\Transaction;
 use App\Jobs\SendPaymentSuccessEmailJob;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
 
     public function generateVietQr($booking)
     {
-        $bankCode = "MB";
-        $accountNo = "0394782424";
-        $accountName = "Nguyễn Trịnh Tiến Đạt";
+        $bankCode = config('payment.bank_code');
+        $accountNo = config('payment.account_no');
+        $accountName = config('payment.account_name');
 
         $amount = $booking->total_price;
         $content = "BOOKING-" . str_pad($booking->id, 6, '0', STR_PAD_LEFT);
@@ -24,62 +26,193 @@ class PaymentController extends Controller
             . "&accountName=" . urlencode($accountName);
     }
 
-    public function success($bookingId)
+    public function handle(Request $request)//done
     {
-        $booking = Booking::findOrFail($bookingId);
 
-        // update trạng thái thanh toán
-        $booking->payment_status = 'paid';
-        $booking->status = 'confirmed';
-        $booking->save();
+        try {
+            $authorization = trim($request->header('Authorization'));
 
-        // GỬI MAIL SAU KHI THANH TOÁN THÀNH CÔNG
-        SendPaymentSuccessEmailJob::dispatch($booking);
+            $expected = 'Apikey ' . trim(config('payment.secret'));
 
-        return response()->json([
-            'message' => 'Thanh toán thành công'
-        ]);
-    }
+            if ($authorization !== $expected) {
 
-    public function webhook(Request $request)
-    {
-        Log::info('SePay webhook:', $request->all());
+                return response()->json([
 
-        // 🔒 Verify API KEY
-        if ($request->header('Authorization') !== env('SEPAY_API_KEY')) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+                    'success' => false,
 
-        $content = $request->content;
-        $amount = $request->amount;
+                    'message' => 'Unauthorized'
 
-        // 🔍 Lấy ORDER_ID
-        preg_match('/ORDER_(\d+)/', $content, $matches);
+                ], 401);
+            }
 
-        if (!isset($matches[1])) {
-            return response()->json(['message' => 'No order id']);
-        }
+            $gateway = $request->gateway;
 
-        $bookingId = $matches[1];
-        $booking = Booking::find($bookingId);
+            $transactionDate = $request->transactionDate;
 
-        if (!$booking) {
-            return response()->json(['message' => 'Not found']);
-        }
+            $accountNumber = $request->accountNumber;
 
-        // tránh xử lý lại
-        if ($booking->payment_status === 'paid') {
-            return response()->json(['message' => 'Already paid']);
-        }
+            $subAccount = $request->subAccount;
 
-        // 💰 check tiền
-        if ($amount >= $booking->total_price) {
-            $booking->update([
-                'payment_status' => 'paid',
-                'status' => 'confirmed'
+            $transferType = $request->transferType;
+            if ($request->transferType !== 'in') {
+
+                return response()->json([
+
+                    'success' => false,
+
+                    'message' => 'Invalid transfer type'
+
+                ], 400);
+            }
+
+            $transferAmount = $request->transferAmount;
+
+            $accumulated = $request->accumulated;
+
+            $code = $request->code;
+
+            $content = trim($request->content ?? $request->description ?? '');
+
+            $referenceCode = $request->referenceCode;
+
+            $description = $request->description;
+
+            preg_match(
+                '/BOOKING[-_ ]?0*(\d+)/i',
+                $content,
+                $matches
+            );
+
+            if (empty($matches)) {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid booking code'
+                ], 400);
+            }
+
+            $bookingId = (int) $matches[1];
+
+            $booking = Booking::find($bookingId);
+
+            if (!$booking) {
+
+                return response()->json([
+
+                    'success' => false,
+
+                    'message' => 'Booking not found'
+
+                ], 404);
+            }
+
+            $exists = Transaction::where('reference_number', $referenceCode)->exists();
+
+            if ($exists) {
+
+                return response()->json([
+
+                    'success' => true,
+
+                    'message' => 'Duplicate transaction'
+
+                ]);
+            }
+
+            Transaction::create([
+
+                'booking_id' => $booking->id,
+
+                'gateway' => $gateway,
+
+                'transaction_date' => $transactionDate,
+
+                'account_number' => $accountNumber,
+
+                'sub_account' => $subAccount,
+
+                'amount_in' =>
+                    $transferType == 'in'
+                    ? $transferAmount
+                    : 0,
+
+                'amount_out' =>
+                    $transferType == 'out'
+                    ? $transferAmount
+                    : 0,
+
+                'accumulated' => $accumulated,
+
+                'code' => $code,
+
+                'transaction_content' => $content,
+
+                'reference_number' => $referenceCode,
+
+                'body' => $description,
+
+                'raw_data' => $request->all()
             ]);
-        }
 
-        return response()->json(['message' => 'OK']);
+            if (
+                $booking->payment_status
+                === 'paid'
+            ) {
+
+                return response()->json([
+
+                    'success' => true,
+
+                    'message' => 'Already paid'
+                ]);
+            }
+
+            if (
+                $transferAmount
+                < $booking->total_price
+            ) {
+
+                return response()->json([
+
+                    'success' => false,
+
+                    'message' => 'Amount mismatch'
+
+                ], 400);
+            }
+
+            $booking->update([
+
+                'payment_status' => 'paid',
+
+                'payment_method' => 'bank_transfer',
+
+                'status' => 'confirmed',
+
+                'paid_at' => now()
+            ]);
+
+            SendPaymentSuccessEmailJob::dispatch(
+                $booking
+            );
+
+            return response()->json([
+
+                'success' => true,
+
+                'message' => 'Payment success'
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+
+                'success' => false,
+
+                'message' => 'Webhook error'
+
+            ], 500);
+        }
     }
+
 }

@@ -205,7 +205,7 @@
                     </div>
 
                     @if($booking->payment_status !== 'paid' && $booking->status !== 'cancelled')
-                        <a href="{{ route('customer.booking.confirm_test', $booking->id) }}"
+                        <a href="{{ route('customer.booking.confirm', $booking->id) }}"
                             class="w-full block text-center bg-yellow-400 text-black font-bold py-3 rounded-lg hover:bg-yellow-300 transition">
                             <i class="fas fa-credit-card mr-2"></i>
                             Thanh toán ngay
@@ -253,29 +253,29 @@
     </footer>
 
     <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const container = document.getElementById("userMenuContainer");
-                const dropdown = document.getElementById("userDropdown");
-                let timeout;
+        document.addEventListener("DOMContentLoaded", function () {
+            const container = document.getElementById("userMenuContainer");
+            const dropdown = document.getElementById("userDropdown");
+            let timeout;
 
-                container.addEventListener("mouseenter", function () {
-                    clearTimeout(timeout);
-                    dropdown.classList.remove("hidden");
-                });
-
-                container.addEventListener("mouseleave", function () {
-                    timeout = setTimeout(() => {
-                        dropdown.classList.add("hidden");
-                    }, 200);
-                });
-                
-                const button = document.getElementById("userMenuButton");
-                button.addEventListener("click", function (e) {
-                    e.stopPropagation();
-                    dropdown.classList.toggle("hidden");
-                });
+            container.addEventListener("mouseenter", function () {
+                clearTimeout(timeout);
+                dropdown.classList.remove("hidden");
             });
-        </script>
+
+            container.addEventListener("mouseleave", function () {
+                timeout = setTimeout(() => {
+                    dropdown.classList.add("hidden");
+                }, 200);
+            });
+            
+            const button = document.getElementById("userMenuButton");
+            button.addEventListener("click", function (e) {
+                e.stopPropagation();
+                dropdown.classList.toggle("hidden");
+            });
+        });
+    </script>
 </body>
 
 </html>

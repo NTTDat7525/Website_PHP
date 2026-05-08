@@ -23,18 +23,39 @@
                             <th class="pb-2 font-bold">Mã Đặt</th>
                             <th class="pb-2 font-bold">Bàn</th>
                             <th class="pb-2 font-bold">Khách Hàng</th>
-                            <th class="pb-2 font-bold">Thời Gian</th>
+                            <th class="pb-2 font-bold">Số điện thoại</th>
+                            <th class="pb-2 font-bold">Ngày Đặt</th>
+                            <th class="pb-2 font-bold">Giờ Đặt</th>
                             <th class="pb-2 font-bold">Trạng Thái</th>
                         </tr>
                     </thead>
                     <tbody>
                     @foreach($bookings as $booking)
-                    <tr>
+                    <tr class="border-b hover:bg-gray-50">
                         <td>#{{ $booking->id }}</td>
                         <td>{{ $booking->table->name ?? '' }}</td>
                         <td>{{ $booking->user->username ?? '' }}</td>
-                        <td>{{ \Carbon\Carbon::parse($booking->time)->format('d/m/Y H:i') }}</td>
-                        <td>{{ $booking->status }}</td>
+                        <td>{{ $booking->phone }}</td>
+                        <td>{{ \Carbon\Carbon::parse($booking->date)->format('d/m/Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($booking->time)->format('H:i') }}</td>
+                        <td>
+                            @switch($booking->status)
+                                @case('confirmed')
+                                    <span class="text-green-600">Đã xác nhận</span>
+                                    @break
+                                @case('pending')
+                                    <span class="text-yellow-600">Chờ xử lý</span>
+                                    @break
+                                @case('cancelled')
+                                    <span class="text-red-600">Đã hủy</span>
+                                    @break
+                                @case('completed')
+                                    <span class="text-blue-600">Hoàn thành</span>
+                                    @break
+                                @default
+                                    <span>{{ $booking->status }}</span>
+                            @endswitch
+                        </td>
                     </tr>
                     @endforeach
                     </tbody>

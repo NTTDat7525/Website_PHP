@@ -8,7 +8,7 @@ use Carbon\Carbon;
 
 class RevenueController extends Controller
 {
-    public function index()
+    public function index()//done
     {
         $monthlyRevenue = Booking::whereMonth('time', Carbon::now()->month)
             ->sum('total_price');

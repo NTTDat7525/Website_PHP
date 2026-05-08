@@ -14,19 +14,18 @@ class TableController extends Controller
         return view('admin.tables', compact('tables'));
     }
 
-    // Lấy chi tiết một bàn theo ID
+    // Lấy chi tiết một bàn theo ID (hiện chưa có route — có thể dùng cho API sau này)
     public function show($id)
     {
         $table = Table::findOrFail($id);
         return response()->json($table, 200);
     }
 
-    // Thêm bàn mới
-    public function create()
+    public function create() //done
     {
-        return view('admin.tables.create');
+        return redirect()->route('admin.tables');
     }
-    public function store(Request $request)
+    public function store(Request $request) //done
     {
         $request->validate([
             'name' => 'required|string|unique:tables',
@@ -49,15 +48,13 @@ class TableController extends Controller
         ]);
         return redirect()->route('admin.tables')->with('success', 'Thêm bàn mới thành công');
     }
-
-    // Cập nhật thông tin bàn
-    public function edit($id)
+    public function edit($id) //done
     {
         $table = Table::findOrFail($id);
-        return view('admin.tables.edit', compact('table'));
+        return redirect()->route('admin.tables');
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id) //done
     {
         $table = Table::findOrFail($id);
 
@@ -81,7 +78,7 @@ class TableController extends Controller
     }
 
     // Xóa bàn
-    public function destroy($id)
+    public function destroy($id) //done
     {
         $table = Table::findOrFail($id);
 
@@ -94,10 +91,7 @@ class TableController extends Controller
         return redirect()->route('admin.tables')->with('success', 'Xóa bàn thành công');
     }
 
-
-
-
-    // Đặt trạng thái bàn thành "occupied"
+    // Đặt trạng thái bàn thành "occupied" (tính năng dự kiến — chưa có route)
     public function occupy($id)
     {
         $table = Table::findOrFail($id);
@@ -110,7 +104,7 @@ class TableController extends Controller
         return redirect()->route('admin.tables')->with('success', 'Bàn đang được sử dụng');
     }
 
-    // Set trạng thái bàn thành "available"
+    // Set trạng thái bàn thành "available" (tính năng dự kiến — chưa có route)
     public function release($id)
     {
         $table = Table::findOrFail($id);

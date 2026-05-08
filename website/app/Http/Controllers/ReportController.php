@@ -10,21 +10,17 @@ use Illuminate\Support\Facades\DB;
 use App\Exports\ReportsExport;
 use Maatwebsite\Excel\Facades\Excel;
 
-class ReportController extends Controller
+class ReportController extends Controller //done
 {
-    // Trang báo cáo
     public function index()
     {
-        // ===== Báo cáo bàn =====
-        $emptyTables = Table::where('status', 'empty')->count();
-        $bookedTables = Table::where('status', 'booked')->count();
-        $usingTables = Table::where('status', 'using')->count();
+        $emptyTables = Table::where('status', 'available')->count();
+        $bookedTables = Table::where('status', 'reserved')->count();
+        $usingTables = Table::where('status', 'occupied')->count();
 
-        // ===== Báo cáo hoạt động =====
         $totalBookings = Booking::count();
         $totalRevenue = Booking::sum('total_price');
 
-        // ===== Báo cáo khách hàng =====
         $totalUsers = User::count();
         $newUsersToday = User::whereDate('created_at', today())->count();
 

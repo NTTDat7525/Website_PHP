@@ -31,21 +31,7 @@ class BookingController extends Controller
         return view('admin.bookings', compact('bookings'));
     }
 
-    public function revenue()
-    {
-        $revenue = Booking::where('status', 'confirmed')->sum('total_price');
-        return view('admin.revenue', compact('revenue'));
-    }
 
-    public function reports()
-    {
-        $bookings = Booking::with('user', 'table')
-        ->latest()
-        ->get();
-        return view('admin.reports', compact('bookings'));
-    }
-
-    //hiển thị form đặt bàn
     public function create($id)//user
     {
         $table = Table::findOrFail($id);
@@ -66,9 +52,9 @@ class BookingController extends Controller
         ]);
 
         $exists = Booking::where('table_id', $table->id)
-        
             ->where('date', $request->booking_date)
             ->where('time', $request->booking_time)
+            ->where('status', '!=', 'cancelled')
             ->exists();
 
         if ($exists) {
@@ -88,14 +74,14 @@ class BookingController extends Controller
             'special_requests' => $request->special_requests,
             'total_price' => $table->price,
             'status' => 'pending',
-            'payment_method' => $request->payment_method ?? 'Chuyển khoản',
+            'payment_method' => $request->payment_method ?? 'bank_transfer',
         ]);
 
         return redirect()->route('customer.booking.confirm', $booking->id);
     }
 
     // Hiển thị trang xác nhận booking
-    public function confirm($id)
+    public function confirm($id)//done
     {
         $booking = Booking::with('table')->findOrFail($id);
 
@@ -110,25 +96,9 @@ class BookingController extends Controller
         return view('customer.confirmBooking', compact('booking', 'vietQrUrl'));
     }
 
-    public function confirm_test($id)
-    {
-        $booking = Booking::with('table')->findOrFail($id);
-
-        if ($booking->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized');
-        }
-
-        $paymentController = new PaymentController();
-        $vietQrUrl = $paymentController->generateVietQr($booking);
-
-        return view('customer.confirmBooking', [
-            'booking' => $booking,
-            'vietQrUrl' => $vietQrUrl
-        ]);
-    }
 
     // Cập nhật trạng thái thanh toán
-    public function confirmPayment($id)
+    public function confirmPayment($id)//done
     {
         $booking = Booking::with(['user', 'table'])
             ->where('id', $id)
@@ -168,14 +138,12 @@ class BookingController extends Controller
         ]);
     }
 
-    public function history()
+    public function history()//done
     {
         $user = Auth::user();
-
         $bookings = Booking::with('table')
             ->where('user_id', $user->id)
-            ->orderByDesc('time')
-            ->get();
+            ->orderByDesc('date')->orderBy('date', 'desc')->get();
 
         return view('customer.history', compact('bookings'));
     }
@@ -235,6 +203,7 @@ class BookingController extends Controller
             'bookingTimes' => $bookedTimes
         ]);
     }
+
     public function cancel($id)
     {
         $booking = Booking::where('id', $id)
@@ -245,7 +214,14 @@ class BookingController extends Controller
             return back()->with('error', 'Booking đã bị hủy rồi');
         }
 
-        $bookingDateTime = Carbon::parse($booking->date . ' ' . $booking->time);
+        $bookingDateTime = Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            \Carbon\Carbon::parse($booking->date)
+                ->format('Y-m-d')
+            . ' ' .
+            \Carbon\Carbon::parse($booking->time)
+                ->format('H:i:s')
+        );
 
         if ($bookingDateTime->isPast()) {
             return back()->with('error', 'Không thể hủy booking đã diễn ra');
@@ -264,16 +240,49 @@ class BookingController extends Controller
 
     public function getBookedTimes(Request $request)
     {
-        if (!$request->table_id || !$request->date) {
+        if (
+            !$request->table_id ||
+            !$request->date
+        ) {
             return response()->json([]);
         }
 
-        $times = Booking::where('table_id', $request->table_id)
-            ->where('date', $request->date)
+        $times = Booking::where(
+                'table_id',
+                $request->table_id
+            )
+            ->where(
+                'date',
+                $request->date
+            )
+
+            ->where('status', '!=', 'cancelled')
+
             ->pluck('time')
-            ->map(fn($t) => Carbon::parse($t)->format('H:i'))
+            ->map(fn($t) =>
+                Carbon::parse($t)
+                    ->format('H:i')
+            )
             ->toArray();
 
         return response()->json($times);
+    }
+
+        public function paymentStatus($id)
+    {
+        $booking = Booking::find($id);
+
+        if (!$booking) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Booking not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'payment_status' => $booking->payment_status,
+            'status' => $booking->status
+        ]);
     }
 }
