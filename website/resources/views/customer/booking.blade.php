@@ -195,6 +195,8 @@
                             </div>
                         </div>
                     </div>
+                    <form action="{{ route('customer.booking.store', $table->id ?? 0) }}" method="POST" class="space-y-6" id="booking-form">
+                        @csrf
 
                     <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700">
                         <h3 class="text-lg font-bold mb-6">Thông tin khách hàng</h3>
@@ -231,10 +233,6 @@
                 <div class="space-y-6">
                     <div class="bg-slate-800 rounded-2xl p-6 border border-slate-700 sticky top-24">
                         <h3 class="text-lg font-bold mb-6">Chọn thời gian</h3>
-
-                        <form action="{{ route('customer.booking.store', $table->id ?? 0) }}" method="POST" class="space-y-6" id="booking-form">
-                            @csrf
-
                             @if($table)
                             <input type="hidden" name="table_id" value="{{ $table->id }}">
                             @endif

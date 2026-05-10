@@ -53,6 +53,12 @@
                     </button>
                 </div>
             </div>
+
+            <a href="{{ route('forgot.password') }}"
+                class="text-sm text-green-600 hover:underline">
+                Quên mật khẩu?
+            </a>
+            
             <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition font-medium">
                 Đăng nhập
             </button>

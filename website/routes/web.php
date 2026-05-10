@@ -78,6 +78,7 @@ Route::middleware(['auth', 'customer'])->prefix('customer')->name('customer.')->
 
 Route::middleware('auth')->group(function () { //done
     Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profile/password', [AuthController::class, 'changePassword'])->name('profile.password');
 });
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');//done
@@ -103,12 +104,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 Route::post('/webhook/sepay', [PaymentController::class, 'handle'])//done
         ->name('webhook.sepay');
 
-Route::get('/verify-email', function () {
+Route::get('/verify-email', function () {//done
     return view('auth.verify-email');
 })->name('verify.email');
 
-Route::post('/send-otp', [AuthController::class, 'sendOtp'])
+Route::post('/send-otp', [AuthController::class, 'sendOtp'])//done
     ->name('send.otp');
 
-Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])//done
     ->name('verify.otp');
+
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+})->name('forgot.password');
+
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])
+    ->name('forgot.password.post');

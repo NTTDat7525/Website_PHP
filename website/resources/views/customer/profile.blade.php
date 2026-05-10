@@ -153,6 +153,12 @@
         <div class="bg-white rounded-2xl w-full max-w-2xl p-6 relative">
 
             <h2 class="text-xl font-bold mb-4">Cập nhật thông tin</h2>
+            
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg mb-4">
+                    {{ session('success') }}
+                </div>
+            @endif
 
             <form method="POST" action="{{ route('profile.update') }}">
                 @csrf
@@ -181,6 +187,72 @@
 
                     <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded">
                         Lưu
+                    </button>
+                </div>
+
+            </form>
+
+            <form method="POST"
+                action="{{ route('profile.password') }}"
+                class="mt-6">
+
+                @csrf
+                @method('PUT')
+
+                <hr class="my-6">
+
+                <h3 class="text-lg font-semibold mb-4">
+                    Đổi mật khẩu
+                </h3>
+
+                <div class="space-y-4">
+
+                    <div>
+                        <label class="block text-sm mb-1">
+                            Mật khẩu hiện tại
+                        </label>
+
+                        <input
+                            type="password"
+                            name="current_password"
+                            class="border p-2 rounded w-full"
+                            placeholder="Nhập mật khẩu hiện tại"
+                            required
+                        >
+                        @error('current_password')
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm mb-1">
+                            Mật khẩu mới
+                        </label>
+
+                        <input
+                            type="password"
+                            name="new_password"
+                            class="border p-2 rounded w-full"
+                            placeholder="Nhập mật khẩu mới"
+                            required
+                        >
+                        @error('new_password')
+                            <p class="text-red-500 text-sm mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+
+                </div>
+
+                <div class="flex justify-end mt-4">
+                    <button
+                        type="submit"
+                        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                    >
+                        Đổi mật khẩu
                     </button>
                 </div>
 

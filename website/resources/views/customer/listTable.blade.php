@@ -173,14 +173,26 @@
                             </div>
 
                             <div class="p-4">
-                                <h3 class="text-lg font-bold">{{ $table->name }}</h3>
-                                <p class="text-sm text-slate-400 mb-2">
-                                    {{ $table->capacity }} người
-                                </p>
 
-                                <p class="text-sm mb-4">
-                                    {{ $table->location ?? 'Sảnh chính' }}
-                                </p>
+                                <div class="flex justify-between items-center mb-2">
+                                    <h3 class="text-lg font-bold">
+                                        {{ $table->name }}
+                                    </h3>
+
+                                    <span class="text-emerald-400 font-bold text-lg">
+                                        {{ number_format($table->price) }}đ
+                                    </span>
+                                </div>
+
+                                <div class="flex justify-between items-center mb-4">
+                                    <p class="text-sm text-slate-400">
+                                        {{ $table->capacity }} người
+                                    </p>
+
+                                    <p class="text-sm text-slate-300">
+                                        {{ $table->location ?? 'Sảnh chính' }}
+                                    </p>
+                                </div>
 
                                 @if($table->status === 'available')
                                 <a href="{{ route('customer.booking.create', ['id' => $table->id]) }}"

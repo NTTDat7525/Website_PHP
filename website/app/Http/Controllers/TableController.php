@@ -36,7 +36,7 @@ class TableController extends Controller
         ]);
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('table', 'public');
+            $imagePath = $request->file('image')->store('tables', 'public');
         }
 
         Table::create([

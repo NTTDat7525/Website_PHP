@@ -12,6 +12,8 @@ use App\Models\EmailOtp;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendOtpMail;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
+use App\Mail\ForgotPasswordMail;
 
 
 class AuthController extends Controller
@@ -171,7 +173,7 @@ class AuthController extends Controller
 
     //Gửi OTP
 
-    public function sendOtp(Request $request)
+    public function sendOtp(Request $request)//done
     {
         $request->validate([
             'email' => 'required|email'
@@ -206,7 +208,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function verifyOtp(Request $request)
+    public function verifyOtp(Request $request)//done
     {
         $request->validate([
             'email' => 'required|email',
@@ -232,5 +234,61 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Xác thực email thành công'
         ]);
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+
+            return back()->withErrors([
+                'email' => 'Email không tồn tại'
+            ]);
+        }
+
+        $newPassword = Str::random(10);
+
+        $user->password = bcrypt($newPassword);
+
+        $user->save();
+
+        Mail::to($user->email)
+            ->queue(new ForgotPasswordMail($newPassword));
+
+        return redirect()->route('auth.login')->with(
+            'success',
+            'Mật khẩu mới đã được gửi qua email'
+        );
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:6|confirmed',
+        ]);
+
+        $user = auth()->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+
+            return back()->withErrors([
+                'current_password' => 'Mật khẩu hiện tại không đúng'
+            ]);
+        }
+
+        $user->password = bcrypt($request->new_password);
+
+        $user->save();
+
+        return back()->with(
+            'success',
+            'Đổi mật khẩu thành công'
+        );
     }
 }
