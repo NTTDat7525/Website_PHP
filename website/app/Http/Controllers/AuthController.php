@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Booking;
 use Carbon\Carbon;
+use App\Models\EmailOtp;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendOtpMail;
 use Laravel\Socialite\Facades\Socialite;
 
 
@@ -30,13 +33,35 @@ class AuthController extends Controller
         $validated = $request->validate([
             'username' => 'required|string',
             'email' => 'required|email|unique:users',
+            'otp' => 'required',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        $validated['password'] = bcrypt($validated['password']);
-        $user = User::create($validated);
+        $otpRecord = EmailOtp::where('email', $request->email)
+        ->where('otp', $request->otp)
+        ->first();
 
-        return redirect()->route('auth.login')->with('success', 'Đăng ký thành công, vui lòng đăng nhập');
+        if (!$otpRecord) {
+            return back()->withErrors(['otp' => 'Mã OTP không hợp lệ'])->withInput();
+        }
+
+        if (Carbon::now()->gt($otpRecord->expired_at)) {
+            return back()->withErrors(['otp' => 'Mã OTP đã hết hạn'])->withInput();
+        }
+
+        $user = User::create([
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'email_verified' => true
+            ]);
+
+            // Xóa OTP sau khi dùng
+            $otpRecord->delete();
+
+            return redirect()
+                ->route('auth.login')
+                ->with('success', 'Đăng ký thành công');
     }
 
     public function login(Request $request)//done
@@ -131,6 +156,7 @@ class AuthController extends Controller
                 'username' => $googleUser->name,
                 'email' => $googleUser->email,
                 'password' => bcrypt('123456dummy'),
+                'email_verified' => true
             ]);
         }
 
@@ -141,5 +167,70 @@ class AuthController extends Controller
         }
 
         return redirect()->route('customer.dashboard');
+    }
+
+    //Gửi OTP
+
+    public function sendOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        if (
+            EmailOtp::where('email', $request->email)
+            ->where('created_at', '>=', now()->subMinute())
+            ->exists()
+        ) {
+
+            return response()->json([
+                'message' => 'Vui lòng chờ 60 giây để gửi lại OTP'
+            ], 429);
+        }
+
+        $otp = rand(100000, 999999);
+
+        EmailOtp::updateOrCreate(
+            ['email' => $request->email],
+            [
+                'otp' => $otp,
+                'expired_at' => Carbon::now()->addMinutes(5)
+            ]
+        );
+
+        Mail::to($request->email)
+            ->send(new SendOtpMail($otp));
+
+        return response()->json([
+            'message' => 'OTP đã được gửi'
+        ]);
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp' => 'required'
+        ]);
+
+        $otpRecord = EmailOtp::where('email', $request->email)
+            ->where('otp', $request->otp)
+            ->first();
+
+        if (!$otpRecord) {
+            return response()->json([
+                'message' => 'OTP không chính xác'
+            ], 400);
+        }
+
+        if (Carbon::now()->gt($otpRecord->expired_at)) {
+            return response()->json([
+                'message' => 'OTP đã hết hạn'
+            ], 400);
+        }
+
+        return response()->json([
+            'message' => 'Xác thực email thành công'
+        ]);
     }
 }

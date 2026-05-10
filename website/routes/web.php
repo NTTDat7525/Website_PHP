@@ -102,3 +102,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 Route::post('/webhook/sepay', [PaymentController::class, 'handle'])//done
         ->name('webhook.sepay');
+
+Route::get('/verify-email', function () {
+    return view('auth.verify-email');
+})->name('verify.email');
+
+Route::post('/send-otp', [AuthController::class, 'sendOtp'])
+    ->name('send.otp');
+
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])
+    ->name('verify.otp');
