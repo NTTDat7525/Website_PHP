@@ -199,7 +199,7 @@
                             <span class="text-sm">Phương thức</span>
                             <span class="flex items-center gap-1 text-sm">
                                 <i class="fas fa-credit-card"></i>
-                                <span>{{ $booking->payment_method === 'Chuyển khoản' ? 'Chuyển khoản' : 'Tiền mặt' }}</span>
+                                <span>{{ $booking->payment_method === 'bank_transfer' ? 'Chuyển khoản' : 'Tiền mặt' }}</span>
                             </span>
                         </div>
                     </div>

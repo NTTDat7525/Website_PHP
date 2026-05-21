@@ -245,6 +245,20 @@
                         @enderror
                     </div>
 
+                    <div>
+                        <label class="block text-sm mb-1">
+                            Xác nhận mật khẩu mới
+                        </label>
+
+                        <input
+                            type="password"
+                            name="new_password_confirmation"
+                            class="border p-2 rounded w-full"
+                            placeholder="Nhập lại mật khẩu mới"
+                            required
+                        >
+                        </div>
+
                 </div>
 
                 <div class="flex justify-end mt-4">
@@ -277,32 +291,38 @@
                 closeModal();
             }
         });
+        document.addEventListener("DOMContentLoaded", function () {
+            const container = document.getElementById("userMenuContainer");
+            const dropdown = document.getElementById("userDropdown");
+            let timeout;
 
+            container.addEventListener("mouseenter", function () {
+                clearTimeout(timeout);
+                dropdown.classList.remove("hidden");
+            });
+
+            container.addEventListener("mouseleave", function () {
+                timeout = setTimeout(() => {
+                    dropdown.classList.add("hidden");
+                }, 200);
+            });
+            
+            const button = document.getElementById("userMenuButton");
+            button.addEventListener("click", function (e) {
+                e.stopPropagation();
+                dropdown.classList.toggle("hidden");
+            });
+        });
     </script>
-            <script>
+
+    @if ($errors->any() || session('success'))
+        <script>
             document.addEventListener("DOMContentLoaded", function () {
-                const container = document.getElementById("userMenuContainer");
-                const dropdown = document.getElementById("userDropdown");
-                let timeout;
-
-                container.addEventListener("mouseenter", function () {
-                    clearTimeout(timeout);
-                    dropdown.classList.remove("hidden");
-                });
-
-                container.addEventListener("mouseleave", function () {
-                    timeout = setTimeout(() => {
-                        dropdown.classList.add("hidden");
-                    }, 200);
-                });
-                
-                const button = document.getElementById("userMenuButton");
-                button.addEventListener("click", function (e) {
-                    e.stopPropagation();
-                    dropdown.classList.toggle("hidden");
-                });
+                openModal();
             });
         </script>
+    @endif
+
 </body>
 
 </html>
