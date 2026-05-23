@@ -138,12 +138,12 @@
                                 {{ $booking->table->location ?? 'Sảnh chính' }}
                             </p>
                             <p class="text-xs text-gray-500 font-semibold mb-1">NGÀY</p>
-                            <p class="text-lg font-bold text-gray-900">{{ \Carbon\Carbon::parse($booking->time)->format('d/m/Y') }}</p>
+                            <p class="text-lg font-bold text-gray-900">{{ \Carbon\Carbon::parse($booking->date)->format('d/m/Y') }}</p>
                         </div>
                         <div>
                             <p class="text-xs text-gray-500 font-semibold mb-1">GIỜ</p>
                             <p class="text-lg font-bold text-gray-900">
-                                {{ \Carbon\Carbon::parse($booking->time)->format('H:i') }}-{{ \Carbon\Carbon::parse($booking->time)->addHour()->format('H:i') }}</p>
+                                {{ \Carbon\Carbon::parse($booking->time)->format('H:i') }}</p>
                         </div>
                     </div>
                 </div>

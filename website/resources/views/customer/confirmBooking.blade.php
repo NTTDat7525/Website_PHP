@@ -20,9 +20,9 @@
 
         <div class="w-full lg:w-1/2 flex items-center justify-center p-8 ">
             <div class="w-full max-w-md bg-white rounded-2xl p-8 border border-gray-200 shadow-lg relative">
-                <button onclick="window.history.back()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900">
+                <a href="{{ route('customer.booking.index') }}" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900">
                     <i class="fas fa-times text-2xl"></i>
-                </button>
+                </a>
 
                 <div class="mb-8">
                     <p class="text-sm font-bold text-gray-500 tracking-widest mb-2">BƯỚC CUỐI CÙNG</p>

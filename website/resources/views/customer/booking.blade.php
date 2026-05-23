@@ -158,7 +158,7 @@
                                     <svg class="w-5 h-5 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
                                     </svg>
-                                    <span>{{ $table?->capacity ?? '4' }} - {{ ($table?->capacity ?? 4) + 2 }} NGƯỜI</span>
+                                    <span>TỐI ĐA {{ $table?->capacity ?? '4' }} NGƯỜI</span>
                                 </div>
                             </div>
 
@@ -281,7 +281,7 @@
                                 <label class="block text-xs font-semibold text-slate-300 mb-2">SỐ KHÁCH</label>
                                 <select name="guest_count" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:border-violet-500">
                                     <option value="" disabled selected>Chọn số khách</option>
-                                    @for($i = 1; $i <= $table->capacity + 2; $i++)
+                                    @for($i = 1; $i <= $table->capacity; $i++)
                                         <option value="{{ $i }}">{{ $i }} người</option>
                                     @endfor
                                 </select>

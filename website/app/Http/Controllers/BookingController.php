@@ -48,7 +48,7 @@ class BookingController extends Controller
         $validated = $request->validate([
             'booking_date' => 'required|date|after_or_equal:today',
             'booking_time' => 'required',
-            'guest_count' => 'required|integer|min:1',
+            'guest_count' => 'required|integer|min:1|max:' . $table->capacity,
         ]);
 
         $exists = Booking::where('table_id', $table->id)
