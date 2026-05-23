@@ -50,6 +50,12 @@
             Gửi mật khẩu mới
         </button>
 
+        <div>
+            <a href="{{ route('auth.login') }}" class="text-blue-600 hover:underline">
+                Quay lại đăng nhập
+            </a>
+        </div>
+
     </form>
 
 </div>

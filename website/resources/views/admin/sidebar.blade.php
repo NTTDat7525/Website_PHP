@@ -1,6 +1,6 @@
 <aside class="w-64 bg-gray-900 text-white min-h-screen p-6">
     <div class="mb-8">
-        <h2 class="text-xl font-bold">Quản Lý</h2>
+        <h2 class="text-xl font-bold">Quản Lý nhà hàng</h2>
     </div>
 
     <nav class="space-y-3">

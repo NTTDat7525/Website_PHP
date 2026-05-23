@@ -115,7 +115,7 @@ class TableController extends Controller
             'image' => $imagePath,
         ]);
 
-        return redirect()->route('admin.tables')->with('success', 'Them ban moi thanh cong');
+        return redirect()->route('admin.tables')->with('success', 'Thêm bàn mới thành công');
     }
 
     public function edit($id)
@@ -148,7 +148,7 @@ class TableController extends Controller
 
         $table->update($validated);
 
-        return redirect()->route('admin.tables')->with('success', 'Cap nhat ban thanh cong');
+        return redirect()->route('admin.tables')->with('success', 'Cập nhật bàn thành công');
     }
 
     public function destroy($id)
@@ -162,7 +162,7 @@ class TableController extends Controller
 
         if ($hasFutureBookings) {
             return redirect()->route('admin.tables')
-                ->with('error', 'Khong the xoa ban dang co booking tuong lai');
+                ->with('error', 'Không thể xóa bàn đang có booking');
         }
 
         if ($table->image) {
@@ -171,7 +171,7 @@ class TableController extends Controller
 
         $table->delete();
 
-        return redirect()->route('admin.tables')->with('success', 'Xoa ban thanh cong');
+        return redirect()->route('admin.tables')->with('success', 'Xóa bàn thành công');
     }
 
     public function occupy($id)
@@ -179,12 +179,12 @@ class TableController extends Controller
         $table = Table::findOrFail($id);
 
         if ($table->status !== 'reserved') {
-            return redirect()->route('admin.tables')->with('error', 'Ban phai duoc dat truoc khi chuyen sang dang dung');
+            return redirect()->route('admin.tables')->with('error', 'Bàn phải được đặt trước khi chuyển sang đang dùng');
         }
 
         $table->update(['status' => 'occupied']);
 
-        return redirect()->route('admin.tables')->with('success', 'Ban dang duoc su dung');
+        return redirect()->route('admin.tables')->with('success', 'Bàn đang được sử dụng');
     }
 
     public function release($id)
@@ -192,6 +192,6 @@ class TableController extends Controller
         $table = Table::findOrFail($id);
         $table->update(['status' => 'available']);
 
-        return redirect()->route('admin.tables')->with('success', 'Ban da trong');
+        return redirect()->route('admin.tables')->with('success', 'Bàn đã trống');
     }
 }

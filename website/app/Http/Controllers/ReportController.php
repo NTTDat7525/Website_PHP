@@ -33,16 +33,16 @@ class ReportController extends Controller
         $report = $this->buildReportData($from, $to);
 
         $rows = [
-            ['Report range', $from->format('d/m/Y') . ' - ' . $to->format('d/m/Y')],
+            ['Thời gian báo cáo', $from->format('d/m/Y') . ' - ' . $to->format('d/m/Y')],
             [],
-            ['Overview', 'Value'],
-            ['Total bookings', $report['bookingStats']['total']],
-            ['Paid revenue', $report['paymentStats']['paid_revenue']],
-            ['Inbound transaction revenue', $report['paymentStats']['transaction_revenue']],
-            ['Total users', $report['userStats']['total_users']],
-            ['New users in range', $report['userStats']['new_users']],
+            ['Tổng quan', 'Giá trị'],
+            ['Tổng số booking', $report['bookingStats']['total']],
+            ['Tổng tiền đã thanh toán', $report['paymentStats']['paid_revenue']],
+            ['Doanh thu giao dịch', $report['paymentStats']['transaction_revenue']],
+            ['Tổng người dùng', $report['userStats']['total_users']],
+            ['Người dùng mới trong kỳ', $report['userStats']['new_users']],
             [],
-            ['Booking status', 'Count'],
+            ['Trạng thái booking', 'Số lượng'],
         ];
 
         foreach ($report['bookingStatusBreakdown'] as $status => $count) {
@@ -50,19 +50,19 @@ class ReportController extends Controller
         }
 
         $rows[] = [];
-        $rows[] = ['Payment status', 'Count'];
+        $rows[] = ['Trạng thái thanh toán', 'Số lượng'];
         foreach ($report['paymentStatusBreakdown'] as $status => $count) {
             $rows[] = [$status, $count];
         }
 
         $rows[] = [];
-        $rows[] = ['Location', 'Bookings', 'Revenue'];
+        $rows[] = ['Địa điểm', 'Số booking', 'Doanh thu'];
         foreach ($report['locationBreakdown'] as $item) {
             $rows[] = [$item->location ?: 'N/A', $item->booking_count, $item->revenue];
         }
 
         $rows[] = [];
-        $rows[] = ['Top table', 'Bookings', 'Revenue'];
+        $rows[] = ['Bàn được đặt nhiều nhất', 'Số lượng booking', 'Doanh thu'];
         foreach ($report['topTables'] as $item) {
             $rows[] = [$item->table_name, $item->booking_count, $item->revenue];
         }

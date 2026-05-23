@@ -37,7 +37,6 @@
                 <div class="mb-4 p-4 bg-red-100 text-red-800 rounded-lg">{{ $errors->first() }}</div>
             @endif
 
-            {{-- TODO: Production improvement - operational table stats for availability and booking pressure. --}}
             <section class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
                 <div class="bg-white rounded-lg shadow-sm p-4">
                     <p class="text-xs text-gray-500">Tổng bàn</p>
@@ -61,7 +60,6 @@
                 </div>
             </section>
 
-            {{-- TODO: Production improvement - filters make table administration usable with larger floor plans. --}}
             <section class="bg-white rounded-lg shadow-sm p-5 mb-6">
                 <form method="GET" action="{{ route('admin.tables') }}" class="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
                     <div class="md:col-span-2">

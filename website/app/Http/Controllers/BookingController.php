@@ -71,7 +71,7 @@ class BookingController extends Controller
         $table = Table::findOrFail($id);
 
         if ($table->status !== 'available') {
-            return response()->json(['error' => 'Ban da duoc dat truoc'], 400);
+            return response()->json(['error' => 'Bàn này đã có người đặt'], 400);
         }
 
         return view('customer.booking', compact('table'));
@@ -119,7 +119,7 @@ class BookingController extends Controller
         });
 
         if (!$booking) {
-            return redirect()->back()->with('error', 'Khung gio da duoc dat');
+            return redirect()->back()->with('error', 'Khung giờ này đã có người đặt');
         }
 
         return redirect()->route('customer.booking.confirm', $booking->id);
@@ -241,7 +241,7 @@ class BookingController extends Controller
         return view('customer.listTable', [
             'tables' => $tables,
             'noResult' => $tables->isEmpty(),
-            'error' => $tables->isEmpty() ? 'Khong tim thay ban phu hop voi yeu cau cua ban' : null,
+            'error' => $tables->isEmpty() ? 'Không tìm thấy bàn phù hợp với yêu cầu của bạn' : null,
             'bookingTimes' => $bookedTimes,
         ]);
     }
@@ -253,7 +253,7 @@ class BookingController extends Controller
             ->firstOrFail();
 
         if ($booking->status === 'cancelled') {
-            return back()->with('error', 'Booking da bi huy roi');
+            return back()->with('error', 'Booking đã bị hủy');
         }
 
         $bookingDateTime = Carbon::createFromFormat(
@@ -262,7 +262,7 @@ class BookingController extends Controller
         );
 
         if ($bookingDateTime->isPast()) {
-            return back()->with('error', 'Khong the huy booking da dien ra');
+            return back()->with('error', 'Không thể hủy booking đã diễn ra');
         }
 
         $booking->update([
@@ -270,7 +270,7 @@ class BookingController extends Controller
             'cancelled_at' => now(),
         ]);
 
-        return back()->with('success', 'Huy booking thanh cong');
+        return back()->with('success', 'Hủy booking thành công');
     }
 
     public function getBookedTimes(Request $request)
@@ -298,7 +298,7 @@ class BookingController extends Controller
         if (!$booking) {
             return response()->json([
                 'success' => false,
-                'message' => 'Booking not found',
+                'message' => 'Không tìm thấy booking',
             ], 404);
         }
 
@@ -368,18 +368,18 @@ class BookingController extends Controller
         $this->applyAdminBookingFilters($query, $filters);
 
         $rows = [[
-            'Ma booking',
-            'Khach hang',
+            'Mã booking',
+            'Khách hàng',
             'Email',
-            'So dien thoai',
-            'Ban',
-            'Ngay dat',
-            'Gio dat',
-            'So khach',
-            'Trang thai booking',
-            'Trang thai thanh toan',
-            'Tong tien',
-            'Ngay tao',
+            'Số điện thoại',
+            'Bàn',
+            'Ngày đặt',
+            'Giờ đặt',
+            'Số khách',
+            'Trạng thái booking',
+            'Trạng thái thanh toán',
+            'Tổng tiền',
+            'Ngày tạo',
         ]];
 
         foreach ($query->get() as $booking) {
@@ -432,20 +432,7 @@ class BookingController extends Controller
         $booking->update($updates);
         $this->recordStatusHistory($booking, $oldStatus, $newStatus, $validated['note'] ?? null);
 
-        return back()->with('success', 'Cap nhat trang thai booking thanh cong');
-    }
-
-    public function adminUpdateNote(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'internal_note' => 'nullable|string|max:2000',
-        ]);
-
-        Booking::findOrFail($id)->update([
-            'internal_note' => $validated['internal_note'] ?? null,
-        ]);
-
-        return back()->with('success', 'Cap nhat ghi chu noi bo thanh cong');
+        return back()->with('success', 'Cập nhật trạng thái booking thành công');
     }
 
     public function adminResendEmail($id)
@@ -453,13 +440,13 @@ class BookingController extends Controller
         $booking = Booking::with(['user', 'table'])->findOrFail($id);
 
         if ($booking->payment_status !== 'paid') {
-            return back()->with('error', 'Chi gui lai email xac nhan cho booking da thanh toan');
+            return back()->with('error', 'Chỉ gửi lại email xác nhận cho booking đã thanh toán');
         }
 
         Mail::to($booking->email ?: $booking->user->email)
             ->queue(new PaymentSuccessMail($booking));
 
-        return back()->with('success', 'Da dua email xac nhan vao hang doi gui lai');
+        return back()->with('success', 'Đã đưa email xác nhận vào hàng đợi gửi lại');
     }
 
     private function recordStatusHistory(Booking $booking, ?string $fromStatus, string $toStatus, ?string $note = null): void

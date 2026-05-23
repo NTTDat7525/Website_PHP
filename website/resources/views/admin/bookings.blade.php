@@ -75,7 +75,6 @@
                 </div>
             @endif
 
-            {{-- TODO: Production improvement - quick operational stats for today's workload and payment-aware revenue. --}}
             <section class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
                 <div class="bg-white rounded-lg shadow-sm p-4">
                     <p class="text-xs text-gray-500">Tổng đơn hôm nay</p>
@@ -103,7 +102,6 @@
                 </div>
             </section>
 
-            {{-- TODO: Production improvement - practical filters/search for front-desk booking lookup. --}}
             <section class="bg-white rounded-lg shadow-sm p-5 mb-6">
                 <form method="GET" action="{{ route('admin.bookings') }}" class="grid grid-cols-1 md:grid-cols-6 gap-4">
                     <div class="md:col-span-2">
@@ -253,10 +251,10 @@
 
                                                 <div class="flex flex-wrap gap-2">
                                                     <form method="POST" action="{{ route('admin.bookings.resend-email', $booking->id) }}"
-                                                          onsubmit="return confirm('Gui lai email xac nhan cho booking nay?')">
+                                                          onsubmit="return confirm('Gửi lại email xác nhận cho booking này?')">
                                                         @csrf
                                                         <button class="px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">
-                                                            Gui lai email
+                                                            Gửi lại email
                                                         </button>
                                                     </form>
                                                 </div>

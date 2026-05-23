@@ -72,15 +72,15 @@ class RevenueController extends Controller
         [$from, $to] = $this->resolveDateRange($request);
 
         $rows = [[
-            'Reference',
-            'Booking',
-            'Customer',
-            'Table',
-            'Gateway',
-            'Amount In',
-            'Expected Amount',
-            'Transaction Date',
-            'Content',
+            'Mã giao dịch',
+            'Mã booking',
+            'Khách hàng',
+            'Bàn',
+            'Cổng thanh toán',
+            'Số tiền',
+            'Số tiền booking',
+            'Ngày giao dịch',
+            'Nội dung',
         ]];
 
         Transaction::with('booking.user', 'booking.table')
