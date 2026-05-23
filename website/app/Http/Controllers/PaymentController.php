@@ -30,6 +30,22 @@ class PaymentController extends Controller
     {
 
         try {
+            $validator = validator($request->all(), [
+                'transferType' => 'required|string',
+                'transferAmount' => 'required|numeric|min:1',
+                'referenceCode' => 'required|string',
+                'content' => 'nullable|string',
+                'description' => 'nullable|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid webhook payload',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
             $authorization = trim($request->header('Authorization'));
 
             $expected = 'Apikey ' . trim(config('payment.secret'));
@@ -189,7 +205,9 @@ class PaymentController extends Controller
 
                 'status' => 'confirmed',
 
-                'paid_at' => now()
+                'paid_at' => now(),
+
+                'confirmed_at' => now()
             ]);
 
             SendPaymentSuccessEmailJob::dispatch(
@@ -204,6 +222,10 @@ class PaymentController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            Log::error('SePay webhook error', [
+                'message' => $e->getMessage(),
+                'payload' => $request->all(),
+            ]);
 
             return response()->json([
 

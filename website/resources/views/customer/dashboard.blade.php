@@ -61,56 +61,7 @@
 
 
 <body class="bg-slate-950 text-slate-100">
-
-    <nav class="fixed top-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md z-50 border-b border-slate-800">
-        <div class="w-full px-4">
-            <div class="flex justify-between items-center h-24">
-
-                <div class="flex items-center gap-6 ml-4">
-                    <a href="{{ route('customer.dashboard') }}"
-                        class="text-4xl font-bold bg-gradient-to-r from-[#4647D3] to-[#8126CF] text-transparent bg-clip-text">
-                        Golden Spoons
-                    </a>
-                </div>
-                <div class="flex items-center gap-6 mr-4">
-                    <a href="{{ route('customer.booking.index') }}"
-                        class="text-slate-300 hover:text-white transition">
-                        Đặt bàn
-                    </a>
-
-                    <a href="{{ route('customer.history') }}" class="text-slate-300 hover:text-white transition">
-                        Lịch sử
-                    </a>
-
-                    <div class="relative group" id="userMenuContainer">
-                        <button id="userMenuButton" type="button"
-                            class="p-2 hover:bg-slate-800 rounded-lg transition text-slate-400 hover:text-slate-200">
-                            <i class="fas fa-user-circle text-3xl"></i>
-                        </button>
-
-                        <div id="userDropdown"
-                            class="hidden group-hover:block absolute right-0 top-full mt-0 pt-2 w-48 bg-slate-800 rounded-lg shadow-lg border border-slate-700 z-[9999]">
-                            
-                            <div class="py-1 bg-slate-800 rounded-lg">
-                                <a href="{{ route('customer.profile') }}"
-                                    class="block px-4 py-2 hover:bg-slate-700 transition">
-                                    Tài khoản
-                                </a>
-
-                                <form method="POST" action="{{ route('auth.logout') }}">
-                                    @csrf
-                                    <button type="submit"
-                                        class="w-full text-left px-4 py-2 hover:bg-slate-700 text-red-400 transition">
-                                        Đăng xuất
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+    @include('customer.header')
 
     <section class="pt-28 pb-12 hero-bg h-screen flex items-center relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -230,42 +181,7 @@
             </div>
         </div>
     </main>
-
-    <footer class="bg-slate-900 border-t border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-                <div>
-                    <h4 class="font-bold text-white mb-4">Golden Spoons</h4>
-                    <p class="text-sm text-slate-400">© 2026 Golden Spoons. Technological Luxury.</p>
-                </div>
-                <div>
-                    <h4 class="font-semibold text-slate-300 mb-4">Quick Links</h4>
-                    <ul class="space-y-2 text-sm text-slate-400">
-                        <li><a href="" class="hover:text-violet-400 transition">Make Reservation</a></li>
-                        <li><a href="" class="hover:text-violet-400 transition">Search Tables</a></li>
-                        <li><a href="" class="hover:text-violet-400 transition">My Bookings</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold text-slate-300 mb-4">Information</h4>
-                    <ul class="space-y-2 text-sm text-slate-400">
-                        <li><a href="#" class="hover:text-violet-400 transition">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-violet-400 transition">Terms of Service</a></li>
-                        <li><a href="#" class="hover:text-violet-400 transition">Contact Support</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold text-slate-300 mb-4">Get In Touch</h4>
-                    <p class="text-sm text-slate-400 mb-2"><i class="fas fa-phone mr-2"></i>(555) 123-4567</p>
-                    <p class="text-sm text-slate-400"><i class="fas fa-envelope mr-2"></i>reservations@goldspoons.com</p>
-                </div>
-            </div>
-
-            <div class="border-t border-slate-800 pt-8 text-center text-sm text-slate-500">
-                <p>&copy; 2026 Golden Spoons Restaurant. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    @include('customer.footer')
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const container = document.getElementById("userMenuContainer");

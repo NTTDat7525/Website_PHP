@@ -2,56 +2,183 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Exports\ReportsExport;
 use App\Models\Booking;
 use App\Models\Table;
+use App\Models\Transaction;
 use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Exports\ReportsExport;
 use Maatwebsite\Excel\Facades\Excel;
 
-class ReportController extends Controller //done
+class ReportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $emptyTables = Table::where('status', 'available')->count();
-        $bookedTables = Table::where('status', 'reserved')->count();
-        $usingTables = Table::where('status', 'occupied')->count();
+        [$from, $to] = $this->resolveDateRange($request);
 
-        $totalBookings = Booking::count();
-        $totalRevenue = Booking::sum('total_price');
+        $report = $this->buildReportData($from, $to);
+        $filters = [
+            'from' => $from->format('Y-m-d'),
+            'to' => $to->format('Y-m-d'),
+        ];
 
-        $totalUsers = User::count();
-        $newUsersToday = User::whereDate('created_at', today())->count();
-
-        return view('admin.reports', compact(
-            'emptyTables',
-            'bookedTables',
-            'usingTables',
-            'totalBookings',
-            'totalRevenue',
-            'totalUsers',
-            'newUsersToday'
-        ));
+        return view('admin.reports', array_merge($report, compact('filters')));
     }
 
-    // Export báo cáo (nếu cần sau này)
-    public function export()
-{
-    $data = [
-        ['Loại báo cáo', 'Giá trị'],
+    public function export(Request $request)
+    {
+        [$from, $to] = $this->resolveDateRange($request);
+        $report = $this->buildReportData($from, $to);
 
-        ['Số bàn trống', $emptyTables = \App\Models\Table::where('status', 'available')->count()],
-        ['Số bàn đã đặt', $bookedTables = \App\Models\Table::where('status', 'reserved')->count()],
-        ['Số bàn đang sử dụng', $usingTables = \App\Models\Table::where('status', 'occupied')->count()],
+        $rows = [
+            ['Report range', $from->format('d/m/Y') . ' - ' . $to->format('d/m/Y')],
+            [],
+            ['Overview', 'Value'],
+            ['Total bookings', $report['bookingStats']['total']],
+            ['Paid revenue', $report['paymentStats']['paid_revenue']],
+            ['Inbound transaction revenue', $report['paymentStats']['transaction_revenue']],
+            ['Total users', $report['userStats']['total_users']],
+            ['New users in range', $report['userStats']['new_users']],
+            [],
+            ['Booking status', 'Count'],
+        ];
 
-        ['Tổng đặt bàn', $totalBookings = \App\Models\Booking::count()],
-        ['Tổng doanh thu', $totalRevenue = \App\Models\Booking::sum('total_price')],
+        foreach ($report['bookingStatusBreakdown'] as $status => $count) {
+            $rows[] = [$status, $count];
+        }
 
-        ['Tổng khách hàng', $totalUsers = \App\Models\User::count()],
-        ['Khách hàng mới hôm nay', $newUsersToday = \App\Models\User::whereDate('created_at', today())->count()],
-    ];
+        $rows[] = [];
+        $rows[] = ['Payment status', 'Count'];
+        foreach ($report['paymentStatusBreakdown'] as $status => $count) {
+            $rows[] = [$status, $count];
+        }
 
-    return Excel::download(new ReportsExport($data), 'bao_cao.xlsx');
-}
+        $rows[] = [];
+        $rows[] = ['Location', 'Bookings', 'Revenue'];
+        foreach ($report['locationBreakdown'] as $item) {
+            $rows[] = [$item->location ?: 'N/A', $item->booking_count, $item->revenue];
+        }
+
+        $rows[] = [];
+        $rows[] = ['Top table', 'Bookings', 'Revenue'];
+        foreach ($report['topTables'] as $item) {
+            $rows[] = [$item->table_name, $item->booking_count, $item->revenue];
+        }
+
+        return Excel::download(new ReportsExport($rows), 'bao_cao.xlsx');
+    }
+
+    private function resolveDateRange(Request $request): array
+    {
+        $from = $request->filled('from')
+            ? Carbon::parse($request->from)
+            : Carbon::now()->startOfMonth();
+
+        $to = $request->filled('to')
+            ? Carbon::parse($request->to)
+            : Carbon::now();
+
+        if ($from->gt($to)) {
+            [$from, $to] = [$to, $from];
+        }
+
+        return [$from, $to];
+    }
+
+    private function buildReportData(Carbon $from, Carbon $to): array
+    {
+        $fromDate = $from->copy()->startOfDay();
+        $toDate = $to->copy()->endOfDay();
+
+        $bookingQuery = Booking::whereBetween('created_at', [$fromDate, $toDate]);
+        $bookingStatusBreakdown = [
+            'pending' => (clone $bookingQuery)->where('status', 'pending')->count(),
+            'confirmed' => (clone $bookingQuery)->where('status', 'confirmed')->count(),
+            'cancelled' => (clone $bookingQuery)->where('status', 'cancelled')->count(),
+            'completed' => (clone $bookingQuery)->where('status', 'completed')->count(),
+            'no_show' => (clone $bookingQuery)->where('status', 'no_show')->count(),
+        ];
+
+        $bookingStats = [
+            'total' => (clone $bookingQuery)->count(),
+            'guests' => (clone $bookingQuery)->sum('guest_count'),
+        ];
+
+        $paidBookingQuery = Booking::where('payment_status', 'paid')
+            ->whereBetween('paid_at', [$fromDate, $toDate]);
+
+        $paymentStatusBreakdown = [
+            'paid' => (clone $paidBookingQuery)->count(),
+            'unpaid' => Booking::where('payment_status', 'unpaid')
+                ->whereBetween('created_at', [$fromDate, $toDate])
+                ->count(),
+            'failed' => Booking::where('payment_status', 'failed')
+                ->whereBetween('created_at', [$fromDate, $toDate])
+                ->count(),
+        ];
+
+        $transactionRevenue = Transaction::where('amount_in', '>', 0)
+            ->whereBetween('transaction_date', [$fromDate, $toDate])
+            ->sum('amount_in');
+
+        $paymentStats = [
+            'paid_revenue' => (clone $paidBookingQuery)->sum('total_price'),
+            'transaction_revenue' => $transactionRevenue,
+            'average_paid_booking' => (clone $paidBookingQuery)->count() > 0
+                ? (clone $paidBookingQuery)->sum('total_price') / (clone $paidBookingQuery)->count()
+                : 0,
+        ];
+
+        $tableStats = [
+            'total' => Table::count(),
+            'available' => Table::where('status', 'available')->count(),
+            'reserved' => Table::where('status', 'reserved')->count(),
+            'occupied' => Table::where('status', 'occupied')->count(),
+        ];
+
+        $locationBreakdown = Booking::join('tables', 'bookings.table_id', '=', 'tables.id')
+            ->selectRaw("tables.location, COUNT(bookings.id) as booking_count, SUM(CASE WHEN bookings.payment_status = 'paid' THEN bookings.total_price ELSE 0 END) as revenue")
+            ->whereBetween('bookings.created_at', [$fromDate, $toDate])
+            ->groupBy('tables.location')
+            ->orderByDesc('booking_count')
+            ->get();
+
+        $topTables = Booking::join('tables', 'bookings.table_id', '=', 'tables.id')
+            ->selectRaw("tables.name as table_name, tables.location, COUNT(bookings.id) as booking_count, SUM(CASE WHEN bookings.payment_status = 'paid' THEN bookings.total_price ELSE 0 END) as revenue")
+            ->whereBetween('bookings.created_at', [$fromDate, $toDate])
+            ->groupBy('tables.id', 'tables.name', 'tables.location')
+            ->orderByDesc('booking_count')
+            ->take(5)
+            ->get();
+
+        $userStats = [
+            'total_users' => User::count(),
+            'new_users' => User::whereBetween('created_at', [$fromDate, $toDate])->count(),
+            'users_with_bookings' => Booking::whereBetween('created_at', [$fromDate, $toDate])
+                ->distinct('user_id')
+                ->count('user_id'),
+        ];
+
+        $topCustomers = Booking::join('users', 'bookings.user_id', '=', 'users.id')
+            ->selectRaw("users.username, users.email, COUNT(bookings.id) as booking_count, SUM(CASE WHEN bookings.payment_status = 'paid' THEN bookings.total_price ELSE 0 END) as spent")
+            ->whereBetween('bookings.created_at', [$fromDate, $toDate])
+            ->groupBy('users.id', 'users.username', 'users.email')
+            ->orderByDesc('spent')
+            ->take(5)
+            ->get();
+
+        return compact(
+            'bookingStats',
+            'bookingStatusBreakdown',
+            'paymentStats',
+            'paymentStatusBreakdown',
+            'tableStats',
+            'locationBreakdown',
+            'topTables',
+            'userStats',
+            'topCustomers'
+        );
+    }
 }

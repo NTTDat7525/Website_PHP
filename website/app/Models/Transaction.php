@@ -24,6 +24,12 @@ class Transaction extends Model
     ];
     protected $casts = [
 
-    'raw_data' => 'array'
-];
+        'raw_data' => 'array',
+        'transaction_date' => 'datetime',
+    ];
+
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
 }

@@ -75,57 +75,7 @@
 </head>
 
 <body class="bg-slate-950 text-slate-100">
-     <nav class="fixed top-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md z-50 border-b border-slate-800">
-        <div class="w-full px-4">
-            <div class="flex justify-between items-center h-24">
-
-                <div class="flex items-center gap-6 ml-4">
-                    <a href="{{ route('customer.dashboard') }}"
-                        class="text-4xl font-bold bg-gradient-to-r from-[#4647D3] to-[#8126CF] text-transparent bg-clip-text">
-                        Golden Spoons
-                    </a>
-                </div>
-
-                <div class="flex items-center gap-6 mr-4">
-
-                    <a href="{{ route('customer.booking.index') }}"
-                        class="text-slate-300 hover:text-white transition">
-                        Đặt bàn
-                    </a>
-
-                    <a href="{{ route('customer.history') }}" class="text-slate-300 hover:text-white transition">
-                        Lịch sử
-                    </a>
-
-                    <div class="relative group" id="userMenuContainer">
-                        <button id="userMenuButton" type="button"
-                            class="p-2 hover:bg-slate-800 rounded-lg transition text-slate-400 hover:text-slate-200">
-                            <i class="fas fa-user-circle text-3xl"></i>
-                        </button>
-
-                        <div id="userDropdown"
-                            class="hidden group-hover:block absolute right-0 top-full mt-0 pt-2 w-48 bg-slate-800 rounded-lg shadow-lg border border-slate-700 z-[9999]">
-                            
-                            <div class="py-1 bg-slate-800 rounded-lg">
-                                <a href="{{ route('customer.profile') }}"
-                                    class="block px-4 py-2 hover:bg-slate-700 transition">
-                                    Tài khoản
-                                </a>
-
-                                <form method="POST" action="{{ route('auth.logout') }}">
-                                    @csrf
-                                    <button type="submit"
-                                        class="w-full text-left px-4 py-2 hover:bg-slate-700 text-red-400 transition">
-                                        Đăng xuất
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+    @include('customer.header')
 
     <div class="flex pt-16 min-h-screen gap-0">
         <main class="ml-20 flex-1 p-8 mt-8 mr-8">
@@ -158,7 +108,7 @@
                                     <svg class="w-5 h-5 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
                                     </svg>
-                                    <span>TỐI ĐA {{ $table?->capacity ?? '4' }} NGƯỜI</span>
+                                    <span>{{ $table?->capacity ?? '4' }} - {{ ($table?->capacity ?? 4) + 2 }} NGƯỜI</span>
                                 </div>
                             </div>
 
@@ -281,6 +231,7 @@
                                 <label class="block text-xs font-semibold text-slate-300 mb-2">SỐ KHÁCH</label>
                                 <select name="guest_count" class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:border-violet-500">
                                     <option value="" disabled selected>Chọn số khách</option>
+                                    {{-- TODO: Production improvement - keep customer selectable guest count aligned with server-side table capacity validation. --}}
                                     @for($i = 1; $i <= $table->capacity; $i++)
                                         <option value="{{ $i }}">{{ $i }} người</option>
                                     @endfor
@@ -452,6 +403,7 @@
             });
         });
     </script>
+    @include('customer.footer')
 </body>
 
 </html>

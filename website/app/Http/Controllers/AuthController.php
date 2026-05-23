@@ -157,7 +157,7 @@ class AuthController extends Controller
             $user = User::create([
                 'username' => $googleUser->name,
                 'email' => $googleUser->email,
-                'password' => bcrypt('123456dummy'),
+                'password' => bcrypt(Str::random(40)),//random mật khẩu khi đăng nhập qr
                 'email_verified' => true
             ]);
         }

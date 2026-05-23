@@ -18,16 +18,24 @@ class Booking extends Model
         'email',
         'phone',
         'special_requests',
+        'internal_note',
+        'cancel_reason',
         'total_price',
         'payment_method',
         'payment_status',
-        'paid_at'
+        'paid_at',
+        'confirmed_at',
+        'cancelled_at',
+        'completed_at'
     ];
         
     protected $casts = [
         'date' => 'date',
         'time' => 'datetime:H:i',
-        'paid_at' => 'datetime'
+        'paid_at' => 'datetime',
+        'confirmed_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+        'completed_at' => 'datetime'
     ];
 
     public function user()
@@ -45,6 +53,11 @@ class Booking extends Model
         return $this->hasMany(
             Transaction::class
         );
+    }
+
+    public function statusHistories()
+    {
+        return $this->hasMany(BookingStatusHistory::class);
     }
 
     public function isPaid()

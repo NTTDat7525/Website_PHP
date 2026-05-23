@@ -77,27 +77,67 @@ Route::middleware(['auth', 'customer'])->prefix('customer')->name('customer.')->
 });
 
 Route::middleware('auth')->group(function () { //done
-    Route::put('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
-    Route::put('/profile/password', [AuthController::class, 'changePassword'])->name('profile.password');
+    Route::put('/profile', [AuthController::class, 'updateProfile'])
+        ->name('profile.update');
+
+    Route::put('/profile/password', [AuthController::class, 'changePassword'])
+        ->name('profile.password');
 });
+
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');//done
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])
+        ->name('dashboard');//done
 
-    Route::get('/bookings', [BookingController::class, 'adminIndex'])->name('bookings');//done
-    Route::get('/tables', [TableController::class, 'adminIndex'])->name('tables');//done
-    Route::get('/tables/create', [TableController::class, 'create'])->name('tables.create');//done
-    Route::post('/tables/store', [TableController::class, 'store'])->name('tables.store');//done
-    Route::get('/tables/{id}/edit', [TableController::class, 'edit'])->name('tables.edit');//done
-    Route::put('/tables/{id}', [TableController::class, 'update'])->name('tables.update');//done
-    Route::delete('/tables/{id}', [TableController::class, 'destroy'])->name('tables.destroy');//done
+    Route::get('/bookings', [BookingController::class, 'adminIndex'])
+        ->name('bookings');//done
 
-    Route::post('/table/{id}/occupy', [TableController::class, 'occupy'])->name('tables.occupy');
-    Route::post('/table/{id}/release', [TableController::class, 'release'])->name('tables.release');
+    Route::get('/bookings/export', [BookingController::class, 'adminExport'])
+        ->name('bookings.export');
 
-    Route::get('/revenue', [RevenueController::class, 'index'])->name('revenue');//done
+    Route::patch('/bookings/{id}/status', [BookingController::class, 'adminUpdateStatus'])
+        ->name('bookings.status');
 
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports');//done
-    Route::get('/export', [ReportController::class, 'export'])->name('reports.export');//done
+    Route::patch('/bookings/{id}/note', [BookingController::class, 'adminUpdateNote'])
+        ->name('bookings.note');
+
+    Route::post('/bookings/{id}/resend-email', [BookingController::class, 'adminResendEmail'])
+        ->name('bookings.resend-email');
+
+    Route::get('/tables', [TableController::class, 'adminIndex'])
+        ->name('tables');//done
+
+    Route::get('/tables/create', [TableController::class, 'create'])
+        ->name('tables.create');//done
+
+    Route::post('/tables/store', [TableController::class, 'store'])
+        ->name('tables.store');//done
+
+    Route::get('/tables/{id}/edit', [TableController::class, 'edit'])
+        ->name('tables.edit');//done
+
+    Route::put('/tables/{id}', [TableController::class, 'update'])
+        ->name('tables.update');//done
+        
+    Route::delete('/tables/{id}', [TableController::class, 'destroy'])
+        ->name('tables.destroy');//done
+
+    Route::post('/table/{id}/occupy', [TableController::class, 'occupy'])
+        ->name('tables.occupy');
+        
+    Route::post('/table/{id}/release', [TableController::class, 'release'])
+        ->name('tables.release');
+
+    Route::get('/revenue', [RevenueController::class, 'index'])
+        ->name('revenue');//done
+
+    Route::get('/revenue/export', [RevenueController::class, 'export'])
+        ->name('revenue.export');
+
+    Route::get('/reports', [ReportController::class, 'index'])
+        ->name('reports');//done
+
+    Route::get('/export', [ReportController::class, 'export'])
+        ->name('reports.export');//done
 });
 
 

@@ -20,9 +20,9 @@
 
         <div class="w-full lg:w-1/2 flex items-center justify-center p-8 ">
             <div class="w-full max-w-md bg-white rounded-2xl p-8 border border-gray-200 shadow-lg relative">
-                <a href="{{ route('customer.booking.index') }}" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900">
+                <button onclick="window.history.back()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900">
                     <i class="fas fa-times text-2xl"></i>
-                </a>
+                </button>
 
                 <div class="mb-8">
                     <p class="text-sm font-bold text-gray-500 tracking-widest mb-2">BƯỚC CUỐI CÙNG</p>
@@ -41,7 +41,8 @@
                     <div class="grid grid-cols-2 gap-6 mb-6">
                         <div>
                             <p class="text-xs text-gray-500 font-semibold tracking-widest mb-2">NGÀY & GIỜ</p>
-                            <p class="text-sm font-bold text-gray-900">{{ \Carbon\Carbon::parse($booking->time)->format('d \T\h\á\n\g m, Y') }}</p>
+                            {{-- TODO: Production improvement - display booking date from the date column instead of parsing the time column. --}}
+                            <p class="text-sm font-bold text-gray-900">{{ \Carbon\Carbon::parse($booking->date)->format('d/m/Y') }}</p>
                             <p class="text-sm font-bold text-gray-900">{{ \Carbon\Carbon::parse($booking->time)->format('H:i') }}</p>
                         </div>
 
@@ -98,11 +99,11 @@
                             >
                         </div>
                         <div
-    id="payment-status"
-    class="mt-4 px-4 py-2 rounded-lg bg-yellow-100 text-yellow-700 text-sm font-bold"
->
-    Đang chờ thanh toán...
-</div>
+                            id="payment-status"
+                            class="mt-4 px-4 py-2 rounded-lg bg-yellow-100 text-yellow-700 text-sm font-bold"
+                        >
+                            Đang chờ thanh toán...
+                        </div>
                         <p class="text-sm text-slate-400 text-center">
                             Quét mã QR bằng ứng dụng ngân hàng của bạn
                         </p>
@@ -118,19 +119,20 @@
                             <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 space-y-4">
                                 <div>
                                     <p class="text-xs text-slate-400 font-semibold mb-1">NGÂN HÀNG</p>
-                                    <p class="text-lg font-bold text-slate-100">MBBank</p>
+                                    {{-- TODO: Production improvement - render bank details from config/env instead of hardcoded account data. --}}
+                                    <p class="text-lg font-bold text-slate-100">{{ config('payment.bank_code') }}</p>
                                 </div>
 
                                 <div>
                                     <p class="text-xs text-slate-400 font-semibold mb-1">CHỦ TÀI KHOẢN</p>
-                                    <p class="text-lg font-bold text-slate-100">Nguyễn Trịnh Tiến Đạt</p>
+                                    <p class="text-lg font-bold text-slate-100">{{ config('payment.account_name') }}</p>
                                 </div>
 
                                 <div>
                                     <p class="text-xs text-slate-400 font-semibold mb-1">SỐ TÀI KHOẢN</p>
                                     <div class="flex items-center gap-2">
-                                        <p class="text-lg font-bold text-slate-100 font-mono">0394782424</p>
-                                        <button onclick="copyToClipboard('0394782424')" 
+                                        <p class="text-lg font-bold text-slate-100 font-mono">{{ config('payment.account_no') }}</p>
+                                        <button onclick="copyToClipboard('{{ config('payment.account_no') }}')" 
                                             class="text-violet-400 hover:text-violet-300">
                                             <i class="fas fa-copy"></i>
                                         </button>
@@ -185,6 +187,10 @@
     </div>
 
     <script>
+        function copyToClipboard(value) {
+            navigator.clipboard.writeText(value);
+            showSuccessToast('Da copy thong tin thanh toan');
+        }
 
         const paymentModal =
             document.getElementById(

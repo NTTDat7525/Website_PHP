@@ -9,10 +9,8 @@ class UserMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if(!auth()->check() || auth()->user()->role !== 'customer') {
-            return response()->json([
-                'message' => 'Trang này chỉ dành cho khách hàng'
-            ], 403);
+        if (!auth()->check() || auth()->user()->role !== 'customer') {
+            abort(403, 'Trang này chỉ dành cho khách hàng');
         }
 
         return $next($request);

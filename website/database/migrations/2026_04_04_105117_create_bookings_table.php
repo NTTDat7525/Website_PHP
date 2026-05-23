@@ -21,10 +21,15 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->text('special_requests')->nullable();
             $table->bigInteger('total_price')->default(0);
-            $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'confirmed', 'cancelled', 'completed', 'no_show'])->default('pending');
             $table->enum('payment_method', ['bank_transfer', 'cash'])->default('bank_transfer');
             $table->enum('payment_status', ['unpaid', 'paid', 'failed'])->default('unpaid');
             $table->timestamp('paid_at')->nullable();
+            $table->text('internal_note')->nullable();
+            $table->text('cancel_reason')->nullable();
+            $table->timestamp('confirmed_at')->nullable();
+            $table->timestamp('cancelled_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
         });
     }
