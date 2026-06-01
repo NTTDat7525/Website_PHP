@@ -159,6 +159,7 @@ website/
 │   └── payment.php
 ├── composer.json
 ├── package.json
+├── .env.example
 ├── tailwind.config.js
 ├── vite.config.js
 └── artisan
@@ -327,6 +328,102 @@ jobs và failed_jobs dùng cho Laravel Queue.
 
 ---
 
+## Hình ảnh minh họa hệ thống
+
+### [Đăng ký tài khoản](./PICTURES/Giao%20diện%20demo/DangKy.png)
+
+![Đăng ký](./PICTURES/Giao%20diện%20demo/DangKy.png)
+
+---
+
+### [Đăng nhập hệ thống](./PICTURES/Giao%20diện%20demo/Dangnhap.png)
+
+![Đăng nhập](./PICTURES/Giao%20diện%20demo/Dangnhap.png)
+
+---
+
+### [Quên mật khẩu](./PICTURES/Giao%20diện%20demo/QuenMk.png)
+
+![Quên mật khẩu](./PICTURES/Giao%20diện%20demo/QuenMk.png)
+
+---
+
+### [Trang chủ khách hàng](./PICTURES/Giao%20diện%20demo/Userhome.png)
+
+![User Home](./PICTURES/Giao%20diện%20demo/Userhome.png)
+
+---
+
+### [Danh sách bàn khách hàng](./PICTURES/Giao%20diện%20demo/Userdb.png)
+
+![User Dashboard](./PICTURES/Giao%20diện%20demo/Userdb.png)
+
+---
+
+### [Lịch sử đặt bàn khách hàng](./PICTURES/Giao%20diện%20demo/Userlsdb.png)
+
+![User List Table](./PICTURES/Giao%20diện%20demo/Userlsdb.png)
+
+---
+
+### [Chi tiết đặt bàn khách hàng](./PICTURES/Giao%20diện%20demo/Userctdb.png)
+
+![User Chi tiết bàn](./PICTURES/Giao%20diện%20demo/Userctdb.png)
+
+---
+
+### [Thanh toán khách hàng](./PICTURES/Giao%20diện%20demo/Usertt.png)
+
+![User Đặt bàn](./PICTURES/Giao%20diện%20demo/Usertt.png)
+
+---
+
+### [Xác nhận đặt bàn](./PICTURES/Giao%20diện%20demo/Userxndb.png)
+
+![User Xác nhận đặt bàn](./PICTURES/Giao%20diện%20demo/Userxndb.png)
+
+---
+
+### [Quản lý tài khoản](./PICTURES/Giao%20diện%20demo/Userqltk.png)
+
+![User Lịch sử đặt bàn](./PICTURES/Giao%20diện%20demo/Userqltk.png)
+
+---
+
+### [Cập nhật thông tin cá nhân](./PICTURES/Giao%20diện%20demo/Usercntt.png)
+
+![User Profile](./PICTURES/Giao%20diện%20demo/Usercntt.png)
+
+---
+
+### [Dashboard admin](./PICTURES/Giao%20diện%20demo/adminDashboard.png)
+
+![Admin Dashboard](./PICTURES/Giao%20diện%20demo/adminDashboard.png)
+
+---
+
+### [Quản lý bàn](./PICTURES/Giao%20diện%20demo/AdminQlb.png)
+
+![Admin Quản lý bàn](./PICTURES/Giao%20diện%20demo/AdminQlb.png)
+
+---
+
+### [Quản lý doanh thu](./PICTURES/Giao%20diện%20demo/AdminDt.png)
+
+![Admin Chi tiết bàn](./PICTURES/Giao%20diện%20demo/AdminDt.png)
+
+---
+
+### [Báo cáo tổng hợp](./PICTURES/Giao%20diện%20demo/AdminBc.png)
+
+![Admin Báo cáo](./PICTURES/Giao%20diện%20demo/AdminBc.png)
+
+---
+
+### [Quản lý đặt bàn](./PICTURES/Giao%20diện%20demo/AdminQldb.png)
+
+![Admin Quản lý đặt bàn](./PICTURES/Giao%20diện%20demo/AdminQldb.png)
+
 ## Hướng dẫn cài đặt
 
 ### Yêu cầu hệ thống
@@ -472,10 +569,10 @@ composer run dev
 
 Seeder hiện tạo 2 tài khoản:
 
-| Vai trò | Username | Email | Password |
-| ------- | -------- | ----- | -------- |
-| Admin | `admin` | `admin@example.com` | `password` |
-| Customer | `customer` | `customer@example.com` | `password` |
+| Vai trò | Username   | Email                  | Password   |
+| ------- | ---------- | ---------------------- | ---------- |
+| Admin   | `admin`    | `admin@example.com`    | `password` |
+| Customer| `customer` | `customer@example.com` | `password` |
 
 ### Đăng nhập khách hàng
 
