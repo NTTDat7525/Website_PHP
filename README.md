@@ -31,11 +31,11 @@
 ## Thành viên
 
 
-| Thành viên            | Vai trò                                | Mã sinh viên| Công việc thực hiện                                                                                             |
-| --------------------- | -------------------------------------- | ------------| ----------------------------------------------------------------------------------------------------------------|
-| Nguyễn Trịnh Tiến Đạt | Backend Developer                      | 23810310148 | Phân tích yêu cầu, thiết kế hệ thống, xây dựng chức năng authentication, booking, payment, middleware, database |
-| Bùi Minh Đức          | Frontend Developer (Customer)          | 23810310110 | Thiết kế giao diện người dùng                                                                                   |
-| Đồng Việt Tiến        | Frontend Developer (Admin)/ Tester     | 23810310142 | Thiết kế giao diện admin, kiểm thử hệ thống                                                                     |
+| Thành viên            | Vai trò     | Mã sinh viên| Công việc thực hiện                                                                                |
+| --------------------- | ----------- | ------------| ---------------------------------------------------------------------------------------------------|
+| Nguyễn Trịnh Tiến Đạt | Nhóm trưởng | 23810310148 | Trang đặt bàn, nhập thông tin, thanh toán, xác nhận, lịch sử đặt bàn, deploy dự án, cấu hình route |
+| Bùi Minh Đức          | Thành viên  | 23810310110 | Trang đăng ký, đăng nhập, quên mật khẩu, trang chủ, hồ sơ                                          |
+| Đồng Việt Tiến        | Thành viên  | 23810310142 | Giao diện admin, kiểm thử hệ thống                                                                 |
 
 
 ---
