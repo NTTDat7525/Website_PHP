@@ -1,4 +1,9 @@
 # Website Đặt Bàn Online - Golden Spoons
+![Laravel](https://img.shields.io/badge/Laravel-13-red) 
+![PHP](https://img.shields.io/badge/PHP-8.3-blue) 
+![MySQL](https://img.shields.io/badge/MySQL-8-orange) 
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-38BDF8) 
+![License](https://img.shields.io/badge/license-Educational-green)
 
 Hệ thống website đặt bàn online cho nhà hàng **Golden Spoons** được xây dựng bằng **Laravel 13** và **Tailwind CSS 4**. Dự án hỗ trợ luồng nghiệp vụ cho **khách hàng** như đăng ký, xác thực email bằng OTP, đăng nhập Google, tìm bàn, đặt bàn, thanh toán qua SePay/VietQR, xem lịch sử, cập nhật hồ sơ; đồng thời hỗ trợ **quản trị viên** quản lý bàn, quản lý đặt bàn, thống kê doanh thu và xuất báo cáo Excel.
 
@@ -6,11 +11,13 @@ Hệ thống website đặt bàn online cho nhà hàng **Golden Spoons** đượ
 
 ## Thành viên
 
-| STT | Họ và tên             | Mã sinh viên |
-| --- | --------------------- | ------------ |
-| 1   | Nguyễn Trịnh Tiến Đạt | 23810310142  |
-| 2   | Bùi Minh Đức          | 23810310110  |
-| 3   | Đồng Việt Tiến        | 23810310148  |
+
+| Thành viên            | Vai trò                                | Mã sinh viên| Công việc thực hiện                                                                                             |
+| --------------------- | -------------------------------------- | ------------| ----------------------------------------------------------------------------------------------------------------|
+| Nguyễn Trịnh Tiến Đạt | Backend Developer                      | 23810310148 | Phân tích yêu cầu, thiết kế hệ thống, xây dựng chức năng authentication, booking, payment, middleware, database |
+| Bùi Minh Đức          | Frontend Developer (Customer)          | 23810310110 | Thiết kế giao diện người dùng                                                                                   |
+| Đồng Việt Tiến        | Frontend Developer (Admin)/ Tester     | 23810310142 | Thiết kế giao diện admin, kiểm thử hệ thống                                                                     |
+
 
 ---
 
@@ -23,6 +30,21 @@ Hệ thống website đặt bàn online cho nhà hàng **Golden Spoons** đượ
 - [Hướng dẫn cài đặt](#hướng-dẫn-cài-đặt)
 - [Hướng dẫn sử dụng](#hướng-dẫn-sử-dụng)
 
+---
+
+## Quick Start 
+```bash
+git clone <repository-url> 
+cd website
+composer install
+npm install
+copy .env.example .env
+php artisan key:generate
+ php artisan migrate --seed
+php artisan storage:link
+npm run build
+php artisan serve
+```
 ---
 
 ## Công nghệ sử dụng
@@ -505,3 +527,8 @@ Seeder hiện tạo 2 tài khoản:
 | `/api/sepay/webhook` | Webhook SePay qua API route |
 
 ---
+
+### Video demo
+
+## Website deploy online 
+- Website: https://tadneit07525.site
