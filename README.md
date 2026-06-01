@@ -1,11 +1,30 @@
-# Website Đặt Bàn Online - Golden Spoons
-![Laravel](https://img.shields.io/badge/Laravel-13-red) 
-![PHP](https://img.shields.io/badge/PHP-8.3-blue) 
-![MySQL](https://img.shields.io/badge/MySQL-8-orange) 
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-38BDF8) 
-![License](https://img.shields.io/badge/license-Educational-green)
+<div align="center">
 
-Hệ thống website đặt bàn online cho nhà hàng **Golden Spoons** được xây dựng bằng **Laravel 13** và **Tailwind CSS 4**. Dự án hỗ trợ luồng nghiệp vụ cho **khách hàng** như đăng ký, xác thực email bằng OTP, đăng nhập Google, tìm bàn, đặt bàn, thanh toán qua SePay/VietQR, xem lịch sử, cập nhật hồ sơ; đồng thời hỗ trợ **quản trị viên** quản lý bàn, quản lý đặt bàn, thống kê doanh thu và xuất báo cáo Excel.
+<h1>Golden Spoons</h1>
+
+<p>
+  <strong>Hệ thống đặt bàn nhà hàng trực tuyến</strong><br/>
+</p>
+
+<p>
+  <a href="https://github.com/NTTDat7525/GoldenSpoons/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"/>
+  </a>
+  <a href="https://laravel.com">
+    <img src="https://img.shields.io/badge/Laravel-13.x-FF2D20?logo=laravel&logoColor=white" alt="Laravel"/>
+  </a>
+  <a href="https://www.php.net">
+    <img src="https://img.shields.io/badge/PHP-8.3+-777BB4?logo=php&logoColor=white" alt="PHP"/>
+  </a>
+  <a href="https://www.mysql.com">
+    <img src="https://img.shields.io/badge/MySQL-8.x-4479A1?logo=mysql&logoColor=white" alt="MySQL"/>
+  </a>
+  <img src="https://img.shields.io/badge/TailwindCSS-4.x-06B6D4?logo=tailwindcss&logoColor=white" alt="TailwindCSS"/>
+  <a href="https://tadneit07525.site">
+    <img src="https://img.shields.io/badge/Demo-Live-brightgreen" alt="Live Demo"/>
+  </a>
+</p>
+</div>
 
 ---
 
@@ -34,7 +53,7 @@ Hệ thống website đặt bàn online cho nhà hàng **Golden Spoons** đượ
 
 ## Quick Start 
 ```bash
-git clone <repository-url> 
+git clone https://github.com/NTTDat7525/Website_PHP.git
 cd website
 composer install
 npm install
